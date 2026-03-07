@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMRFORGE — SMR Simulation Software | Accelerating Reactor Development</title>
+  <meta name="description" content="SMRFORGE builds high-performance simulation software that compresses advanced reactor development timelines. Monte Carlo, deterministic, hybrid.">
+  <link rel="icon" href="images/smrforge_logo_white_transparent.png" type="image/png">
+  <meta property="og:title" content="SMRFORGE — Accelerating SMR Development Through Simulation">
+  <meta property="og:description" content="High-performance simulation software that compresses advanced reactor development timelines. Monte Carlo. Deterministic. Hybrid.">
+  <meta property="og:image" content="https://www.smrforge.io/images/smrforge_logo_white_transparent.png">
+  <meta property="og:url" content="https://www.smrforge.io">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SMRFORGE — Accelerating SMR Development Through Simulation">
+  <meta name="twitter:description" content="High-performance simulation software that compresses advanced reactor development timelines.">
+  <meta name="twitter:image" content="https://www.smrforge.io/images/smrforge_logo_white_transparent.png">
+  <link rel="canonical" href="https://www.smrforge.io">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.smrforge.io/#organization",
+        "name": "SMRFORGE",
+        "url": "https://www.smrforge.io",
+        "logo": "https://www.smrforge.io/images/smrforge_logo_white_transparent.png",
+        "description": "High-performance simulation software that compresses advanced reactor development timelines. Monte Carlo, deterministic, hybrid.",
+        "sameAs": [
+          "https://www.linkedin.com/company/smrforge/",
+          "https://x.com/smrforge"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "email": "support@smrforge.io",
+          "contactType": "customer support"
+        }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "SMRFORGE",
+        "applicationCategory": "EngineeringApplication",
+        "operatingSystem": "Windows, macOS, Linux",
+        "description": "SMRFORGE is high-performance simulation software for Small Modular Reactor design and analysis. It accelerates modeling, prototyping, and Monte Carlo simulation workflows—reducing development timelines for SMR teams.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@id": "https://www.smrforge.io/#organization"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is SMRFORGE?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "SMRFORGE is high-performance simulation software for Small Modular Reactor (SMR) design and analysis. It compresses advanced reactor development timelines by accelerating modeling, prototyping, and Monte Carlo simulation workflows. SMRFORGE provides neutronics, thermal-hydraulics, safety analysis, and burnup in one unified platform."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What's the difference between Community and Pro?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and web dashboard. Pro adds Serpent/OpenMC/MCNP converters, BenchmarkRunner, ReportGenerator, regulatory traceability, surrogate/ML workflows, and air-gapped deployment."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does ENDF setup work?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "SMRFORGE includes a guided setup wizard and supports bulk storage. You can download ENDF/B-VIII.1 from NNDC or IAEA and point the tool to your directory. The wizard walks you through configuration."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Docker or air-gapped deployment supported?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Community supports Docker. Pro includes air-gapped bundles for regulated environments without internet access."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What Python version is required?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Python 3.8 or higher. Works with standard pip, uv, or conda."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <nav class="nav">
+      <a href="#" class="logo">SMRFORGE</a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#built-for">Built For</a></li>
+        <li><a href="#use-cases">Use Cases</a></li>
+        <li><a href="#products">Products</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#docs">Documentation</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <p class="hero-badge">Advanced Engineering Simulation Software</p>
+        <p class="hero-problem">Simulation shouldn't be the bottleneck in SMR development.</p>
+        <h1 class="hero-title">Accelerating SMR Development Through Simulation</h1>
+        <p class="hero-desc">
+          High-performance simulation software that compresses advanced reactor development timelines. 
+          We reduce simulation bottlenecks and streamline Monte Carlo workflows—so SMR teams can prototype faster and iterate sooner. 
+          We don't build reactors. We build the computational infrastructure that helps them get built.
+        </p>
+        <div class="hero-ctas">
+          <a href="https://github.com/SMRFORGE/smrforge" class="btn btn-primary" target="_blank" rel="noopener">Get Community (Free)</a>
+          <a href="#contact" class="btn btn-secondary">Contact for Pro</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="images/smrforge_logo_white_transparent.png" alt="SMRFORGE" class="hero-logo">
+      </div>
+    </section>
+
+    <section id="about" class="section about">
+      <div class="container">
+        <h2 class="section-title">Engineering Time Advantage</h2>
+        <p class="section-desc section-desc-lead">
+          Three tools, two weeks per iteration—or one platform, two days.
+        </p>
+        <p class="section-desc">
+          Simulation bottlenecks. Fragmented tools. Slow iteration cycles. SMRFORGE addresses these pain points with a unified platform—neutronics, thermal-hydraulics, safety, and burnup in one place—so you spend less time on tool handoffs and more on design. Numba-accelerated solvers deliver near-C++ performance. 5000+ tests, production-ready. Community edition is open source. Pro for enterprise.
+        </p>
+      </div>
+    </section>
+
+    <section id="built-for" class="section built-for">
+      <div class="container">
+        <h2 class="section-title">Built For</h2>
+        <p class="section-desc">SMRFORGE serves the teams advancing the next generation of nuclear energy.</p>
+        <ul class="built-for-list">
+          <li>SMR developers</li>
+          <li>Advanced reactor startups</li>
+          <li>Nuclear engineering firms</li>
+          <li>National labs & research institutions</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="use-cases" class="section use-cases">
+      <div class="container">
+        <h2 class="section-title">Built for Workflows Like</h2>
+        <ul class="use-cases-list">
+          <li>Design and iterate on a new core in days, not weeks</li>
+          <li>Reproduce benchmarks for papers or validation</li>
+          <li>Generate regulatory documentation with traceability</li>
+          <li>Run parameter sweeps and design exploration overnight</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="products" class="section products">
+      <div class="container">
+        <h2 class="section-title">Community & Pro</h2>
+        <div class="product-cards">
+          <article class="product-card">
+            <h3>Community</h3>
+            <p class="product-tag">MIT · Open Source</p>
+            <p>Skip the fragmented toolchain—neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and web dashboard in one platform. Guided ENDF setup—no more hunting for cross-section files. Prototype faster. Deploy sooner.</p>
+            <a href="https://github.com/SMRFORGE/smrforge" class="btn btn-outline" target="_blank" rel="noopener">GitHub →</a>
+          </article>
+          <article class="product-card product-card-pro">
+            <h3>Pro</h3>
+            <p class="product-tag">Licensed · Enterprise</p>
+            <p>Eliminate format lock-in with Serpent, OpenMC, and MCNP converters. Reduce regulatory documentation burden with automated traceability. Surrogate models and ML-accelerated workflows for faster design sweeps. Air-gapped deployment for regulated environments. BenchmarkRunner, ReportGenerator, and high-performance Monte Carlo infrastructure for enterprise workflows.</p>
+            <a href="#contact" class="btn btn-primary">Contact Sales</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="section features">
+      <div class="container">
+        <h2 class="section-title">Simulation Built for Reactor Speed</h2>
+        <p class="section-desc">Built to address slow solvers, scattered workflows, and validation gaps—so simulation keeps pace with design iteration.</p>
+        <ul class="feature-grid">
+          <li><span class="feature-icon">◇</span> Multi-group diffusion solver</li>
+          <li><span class="feature-icon">◇</span> Monte Carlo transport (OpenMC, MCNP)</li>
+          <li><span class="feature-icon">◇</span> Thermal-hydraulics & safety</li>
+          <li><span class="feature-icon">◇</span> Burnup & decay heat</li>
+          <li><span class="feature-icon">◇</span> HTGR, LWR SMR presets</li>
+          <li><span class="feature-icon">◇</span> ENDF/B parsing & self-shielding</li>
+          <li><span class="feature-icon">◇</span> 3D visualization & dashboard</li>
+          <li><span class="feature-icon">◇</span> Uncertainty quantification</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="faq" class="section faq">
+      <div class="container">
+        <h2 class="section-title">FAQ</h2>
+        <dl class="faq-list">
+          <dt>What is SMRFORGE?</dt>
+          <dd>SMRFORGE is high-performance simulation software for Small Modular Reactor (SMR) design and analysis. It compresses advanced reactor development timelines by accelerating modeling, prototyping, and Monte Carlo simulation workflows. SMRFORGE provides neutronics, thermal-hydraulics, safety analysis, and burnup in one unified platform.</dd>
+          <dt>What's the difference between Community and Pro?</dt>
+          <dd>Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and web dashboard. Pro adds Serpent/OpenMC/MCNP converters, BenchmarkRunner, ReportGenerator, regulatory traceability, surrogate/ML workflows, and air-gapped deployment.</dd>
+          <dt>How does ENDF setup work?</dt>
+          <dd>SMRFORGE includes a guided setup wizard and supports bulk storage. You can download ENDF/B-VIII.1 from NNDC or IAEA and point the tool to your directory. The wizard walks you through configuration.</dd>
+          <dt>Is Docker or air-gapped deployment supported?</dt>
+          <dd>Yes. Community supports Docker. Pro includes air-gapped bundles for regulated environments without internet access.</dd>
+          <dt>What Python version is required?</dt>
+          <dd>Python 3.8 or higher. Works with standard pip, uv, or conda.</dd>
+        </dl>
+      </div>
+    </section>
+
+    <section id="docs" class="section docs">
+      <div class="container">
+        <h2 class="section-title">Documentation</h2>
+        <div class="doc-links">
+          <a href="https://SMRFORGE.github.io/smrforge/" target="_blank" rel="noopener">API Reference</a>
+          <a href="https://smrforge.readthedocs.io" target="_blank" rel="noopener">Read the Docs</a>
+          <a href="https://github.com/SMRFORGE/smrforge" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section contact">
+      <div class="container">
+        <h2 class="section-title">Get in Touch</h2>
+        <p class="section-desc">Pro licensing, partnerships, or support. Build the software that builds reactors.</p>
+        <a href="mailto:support@smrforge.io" class="btn btn-primary">support@smrforge.io</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© SMRFORGE. Community: MIT. Pro: Licensed.</p>
+      <div class="footer-social">
+        <a href="https://www.linkedin.com/company/smrforge/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <a href="https://x.com/smrforge" target="_blank" rel="noopener noreferrer" aria-label="X">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -123,7 +123,7 @@
             "name": "What Python version is required?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Python 3.11 or higher. Works with standard pip, uv, or conda."
+              "text": "Python 3.11 or higher."
             }
           },
           {
@@ -332,7 +332,7 @@ smrforge keff --preset nuscale  <span class="hero-quickstart-comment"># first k-
           <dt>Is Docker or air-gapped deployment supported?</dt>
           <dd>Yes. Community supports Docker and the dashboard itself is air-gap-safe (built into the wheel, no CDN fetches at runtime). Pro adds signed air-gapped deployment bundles and K8s manifests for regulated environments without internet access.</dd>
           <dt>What Python version is required?</dt>
-          <dd>Python 3.11 or higher. Works with standard pip, uv, or conda.</dd>
+          <dd>Python 3.11 or higher.</dd>
           <dt>How do I launch the SMRFORGE dashboard?</dt>
           <dd>Install with <code>pip install smrforge[dashboard]</code> and run <code>smrforge serve</code>. The React-based dashboard opens at <code>http://127.0.0.1:8765</code> in one process — the same FastAPI gateway serves both the API and the SPA. The dashboard ships inside the wheel with no CDN runtime fetches, so it works in fully air-gapped environments.</dd>
         </dl>

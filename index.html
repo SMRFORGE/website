@@ -39,17 +39,40 @@
       },
       {
         "@type": "SoftwareApplication",
-        "name": "SMRFORGE",
+        "name": "SMRFORGE Community",
         "applicationCategory": "EngineeringApplication",
-        "operatingSystem": "Windows, macOS, Linux",
-        "description": "SMRFORGE is high-performance simulation software for Small Modular Reactor design and analysis. It accelerates modeling, prototyping, and Monte Carlo simulation workflows—reducing development timelines for SMR teams.",
+        "operatingSystem": "Windows|macOS|Linux",
+        "softwareVersion": "1.x",
+        "description": "Open-source (MIT) high-performance simulation software for Small Modular Reactor design and analysis. Includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and a React-based dashboard.",
         "offers": {
           "@type": "Offer",
           "price": "0",
           "priceCurrency": "USD"
         },
+        "downloadUrl": "https://github.com/SMRFORGE/smrforge",
+        "license": "https://opensource.org/licenses/MIT",
         "author": {
-          "@id": "https://www.smrforge.io/#organization"
+          "@id": "https://smrforge.io/#organization"
+        }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "SMRFORGE Pro",
+        "applicationCategory": "EngineeringApplication",
+        "operatingSystem": "Windows|macOS|Linux",
+        "description": "Commercial extension of SMRFORGE for enterprise and regulated workflows. Adds Serpent/OpenMC/MCNP converters, BenchmarkRunner, ReportGenerator, regulatory traceability, surrogate/ML workflows, and air-gapped deployment bundles.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "priceSpecification": {
+            "@type": "PriceSpecification",
+            "description": "Commercial license. Contact support@smrforge.io for pricing."
+          },
+          "availability": "https://schema.org/InStock"
+        },
+        "author": {
+          "@id": "https://smrforge.io/#organization"
         }
       },
       {
@@ -68,7 +91,7 @@
             "name": "What's the difference between Community and Pro?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and web dashboard. Pro adds Serpent/OpenMC/MCNP converters, BenchmarkRunner, ReportGenerator, regulatory traceability, surrogate/ML workflows, and air-gapped deployment."
+              "text": "Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, and a one-command React dashboard. Pro adds Serpent/OpenMC/MCNP converters, BenchmarkRunner, ReportGenerator, regulatory traceability, surrogate/ML workflows, and air-gapped deployment."
             }
           },
           {
@@ -92,7 +115,15 @@
             "name": "What Python version is required?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Python 3.8 or higher. Works with standard pip, uv, or conda."
+              "text": "Python 3.11 or higher. Works with standard pip, uv, or conda."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I launch the SMRFORGE dashboard?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Install with `pip install smrforge[dashboard]` and run `smrforge serve`. The React-based dashboard opens at http://127.0.0.1:8765 in one process — the same FastAPI gateway serves both the API and the SPA. The dashboard ships inside the wheel with no CDN runtime fetches, so it works in fully air-gapped environments."
             }
           }
         ]
@@ -103,6 +134,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="images/smrforge_logo_white_transparent.png" fetchpriority="high">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -140,9 +172,13 @@
           <a href="https://github.com/SMRFORGE/smrforge" class="btn btn-primary" target="_blank" rel="noopener">Get Community (Free)</a>
           <a href="#contact" class="btn btn-secondary">Contact for Pro</a>
         </div>
+        <pre class="hero-quickstart" aria-label="Install and run SMRFORGE in three commands"><code>pip install smrforge[dashboard]
+smrforge serve            <span class="hero-quickstart-comment"># dashboard at http://127.0.0.1:8765</span>
+smrforge keff --preset nuscale  <span class="hero-quickstart-comment"># first k-eff calc</span></code></pre>
+        <p class="hero-meta">Python 3.11+ · MIT-licensed · 7,200+ tests · Air-gap-safe</p>
       </div>
       <div class="hero-visual">
-        <img src="images/smrforge_logo_white_transparent.png" alt="SMRFORGE" class="hero-logo">
+        <img src="images/smrforge_logo_white_transparent.png" alt="SMRFORGE" class="hero-logo" fetchpriority="high" decoding="async">
       </div>
     </section>
 
@@ -190,7 +226,7 @@
           <article class="product-card">
             <h3>Community</h3>
             <p class="product-tag">MIT · Open Source</p>
-            <p>Skip the fragmented toolchain—neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and web dashboard in one platform. Guided ENDF setup—no more hunting for cross-section files. Prototype faster. Deploy sooner.</p>
+            <p>Skip the fragmented toolchain—neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and a one-command React dashboard (<code>smrforge serve</code>) in one platform. Guided ENDF setup—no more hunting for cross-section files. Prototype faster. Deploy sooner.</p>
             <a href="https://github.com/SMRFORGE/smrforge" class="btn btn-outline" target="_blank" rel="noopener">GitHub →</a>
           </article>
           <article class="product-card product-card-pro">
@@ -214,7 +250,7 @@
           <li><span class="feature-icon">◇</span> Burnup & decay heat</li>
           <li><span class="feature-icon">◇</span> HTGR, LWR SMR presets</li>
           <li><span class="feature-icon">◇</span> ENDF/B parsing & self-shielding</li>
-          <li><span class="feature-icon">◇</span> 3D visualization & dashboard</li>
+          <li><span class="feature-icon">◇</span> 3D visualization &amp; React dashboard</li>
           <li><span class="feature-icon">◇</span> Uncertainty quantification</li>
         </ul>
       </div>
@@ -227,13 +263,15 @@
           <dt>What is SMRFORGE?</dt>
           <dd>SMRFORGE is high-performance simulation software for Small Modular Reactor (SMR) design and analysis. It compresses advanced reactor development timelines by accelerating modeling, prototyping, and Monte Carlo simulation workflows. SMRFORGE provides neutronics, thermal-hydraulics, safety analysis, and burnup in one unified platform.</dd>
           <dt>What's the difference between Community and Pro?</dt>
-          <dd>Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and web dashboard. Pro adds Serpent/OpenMC/MCNP converters, BenchmarkRunner, ReportGenerator, regulatory traceability, surrogate/ML workflows, and air-gapped deployment.</dd>
+          <dd>Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, and a one-command React dashboard. Pro adds Serpent/OpenMC/MCNP converters, BenchmarkRunner, ReportGenerator, regulatory traceability, surrogate/ML workflows, and air-gapped deployment.</dd>
           <dt>How does ENDF setup work?</dt>
           <dd>SMRFORGE includes a guided setup wizard and supports bulk storage. You can download ENDF/B-VIII.1 from NNDC or IAEA and point the tool to your directory. The wizard walks you through configuration.</dd>
           <dt>Is Docker or air-gapped deployment supported?</dt>
           <dd>Yes. Community supports Docker. Pro includes air-gapped bundles for regulated environments without internet access.</dd>
           <dt>What Python version is required?</dt>
-          <dd>Python 3.8 or higher. Works with standard pip, uv, or conda.</dd>
+          <dd>Python 3.11 or higher. Works with standard pip, uv, or conda.</dd>
+          <dt>How do I launch the SMRFORGE dashboard?</dt>
+          <dd>Install with <code>pip install smrforge[dashboard]</code> and run <code>smrforge serve</code>. The React-based dashboard opens at <code>http://127.0.0.1:8765</code> in one process — the same FastAPI gateway serves both the API and the SPA. The dashboard ships inside the wheel with no CDN runtime fetches, so it works in fully air-gapped environments.</dd>
         </dl>
       </div>
     </section>
@@ -260,7 +298,7 @@
 
   <footer class="footer">
     <div class="container">
-      <p>© SMRFORGE. Community: MIT. Pro: Licensed.</p>
+      <p>© <span id="footer-year">2026</span> SMRFORGE. Community: MIT. Pro: Licensed.</p>
       <div class="footer-social">
         <a href="https://www.linkedin.com/company/smrforge/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>

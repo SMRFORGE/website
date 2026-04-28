@@ -9,3 +9,9 @@ document.querySelectorAll('.nav-links a').forEach(link => {
     document.querySelector('.nav')?.classList.remove('open');
   });
 });
+
+// Footer year — keeps copyright current without a deploy
+const footerYear = document.getElementById('footer-year');
+if (footerYear) {
+  footerYear.textContent = String(new Date().getFullYear());
+}

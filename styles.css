@@ -197,6 +197,40 @@ body {
   flex-wrap: wrap;
 }
 
+.hero-quickstart {
+  margin: 1.75rem 0 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--text);
+  overflow-x: auto;
+  max-width: 560px;
+}
+
+.hero-quickstart code {
+  font-family: inherit;
+  background: transparent;
+  padding: 0;
+  white-space: pre;
+}
+
+.hero-quickstart-comment {
+  color: var(--text-muted);
+}
+
+.hero-meta {
+  margin: 0.5rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
 .btn {
   display: inline-block;
   padding: 0.75rem 1.5rem;

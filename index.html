@@ -3,30 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SMRFORGE — SMR Simulation Software | Accelerating Reactor Development</title>
-  <meta name="description" content="SMRFORGE builds high-performance simulation software that compresses advanced reactor development timelines. Monte Carlo, deterministic, hybrid.">
+  <title>SMRFORGE — Verifiable Simulation for Advanced Reactors</title>
+  <meta name="description" content="Reactor simulation software where every run produces a signed evidence bundle. Reproduce or refute any result offline. Open source (MIT). Air-gap-safe. Built for licensing-relevant work.">
   <link rel="icon" href="images/smrforge_logo_white_transparent.png" type="image/png">
-  <meta property="og:title" content="SMRFORGE — Accelerating SMR Development Through Simulation">
-  <meta property="og:description" content="High-performance simulation software that compresses advanced reactor development timelines. Monte Carlo. Deterministic. Hybrid.">
-  <meta property="og:image" content="https://www.smrforge.io/images/smrforge_logo_white_transparent.png">
-  <meta property="og:url" content="https://www.smrforge.io">
+  <meta property="og:title" content="SMRFORGE — Verifiable Simulation for Advanced Reactors">
+  <meta property="og:description" content="Every k-eff calc, every benchmark, every report ships as a signed evidence bundle. Reproduce or refute offline. Open source. Air-gap-safe.">
+  <meta property="og:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
+  <meta property="og:url" content="https://smrforge.io">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="SMRFORGE — Accelerating SMR Development Through Simulation">
-  <meta name="twitter:description" content="High-performance simulation software that compresses advanced reactor development timelines.">
-  <meta name="twitter:image" content="https://www.smrforge.io/images/smrforge_logo_white_transparent.png">
-  <link rel="canonical" href="https://www.smrforge.io">
+  <meta name="twitter:title" content="SMRFORGE — Verifiable Simulation for Advanced Reactors">
+  <meta name="twitter:description" content="Every run produces a signed evidence bundle a third party can reproduce or refute offline. Open source. Air-gap-safe.">
+  <meta name="twitter:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
+  <link rel="canonical" href="https://smrforge.io">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "Organization",
-        "@id": "https://www.smrforge.io/#organization",
+        "@id": "https://smrforge.io/#organization",
         "name": "SMRFORGE",
-        "url": "https://www.smrforge.io",
-        "logo": "https://www.smrforge.io/images/smrforge_logo_white_transparent.png",
-        "description": "High-performance simulation software that compresses advanced reactor development timelines. Monte Carlo, deterministic, hybrid.",
+        "url": "https://smrforge.io",
+        "logo": "https://smrforge.io/images/smrforge_logo_white_transparent.png",
+        "description": "Reactor simulation software where every run produces a signed evidence bundle. Reproduce or refute any result offline. Open source (MIT). Air-gap-safe. Built for licensing-relevant work.",
         "sameAs": [
           "https://www.linkedin.com/company/smrforge/",
           "https://x.com/smrforge"
@@ -128,10 +128,18 @@
           },
           {
             "@type": "Question",
+            "name": "How do I install SMRFORGE today?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "SMRFORGE is currently install-from-source. Clone github.com/SMRFORGE/smrforge and follow the README quickstart. A package-manager-friendly distribution is on the roadmap."
+            }
+          },
+          {
+            "@type": "Question",
             "name": "How do I launch the SMRFORGE dashboard?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Install with `pip install smrforge[dashboard]` and run `smrforge serve`. The React-based dashboard opens at http://127.0.0.1:8765 in one process — the same FastAPI gateway serves both the API and the SPA. The dashboard ships inside the wheel with no CDN runtime fetches, so it works in fully air-gapped environments."
+              "text": "After installing from source, run `smrforge serve`. The React dashboard opens at http://127.0.0.1:8765 in one process — the same FastAPI gateway serves the SPA, the API, and the MCP tool catalog. The dashboard ships inside the package with no CDN runtime fetches, so it works in fully air-gapped environments."
             }
           }
         ]
@@ -150,7 +158,6 @@
     <nav class="nav">
       <a href="#" class="logo">SMRFORGE</a>
       <ul class="nav-links">
-        <li><a href="#about">About</a></li>
         <li><a href="#provenance">Provenance</a></li>
         <li><a href="#gateway">Gateway</a></li>
         <li><a href="#built-for">Built For</a></li>
@@ -168,37 +175,25 @@
   <main>
     <section class="hero">
       <div class="hero-content">
-        <p class="hero-badge">Advanced Engineering Simulation Software</p>
-        <p class="hero-problem">Simulation shouldn't be the bottleneck in SMR development.</p>
-        <h1 class="hero-title">Accelerating SMR Development Through Simulation</h1>
+        <p class="hero-badge">Verifiable Reactor Simulation Software</p>
+        <p class="hero-problem">Simulation outputs aren't enough. Regulators, reviewers, and partners need evidence.</p>
+        <h1 class="hero-title">Reactor simulations you can defend.</h1>
         <p class="hero-desc">
-          High-performance simulation software that compresses advanced reactor development timelines. 
-          We reduce simulation bottlenecks and streamline Monte Carlo workflows—so SMR teams can prototype faster and iterate sooner. 
-          We don't build reactors. We build the computational infrastructure that helps them get built.
+          Every k-eff calc, every benchmark, every report ships as a signed evidence bundle:
+          SHA-256 manifest of inputs and outputs, a reproducibility block, and a
+          schema-versioned audit trail. Hand the bundle to a colleague, a reviewer, or a
+          regulator and they can reproduce or refute your number offline.
+          <strong>Reproducibility is the product, not a feature.</strong>
         </p>
         <div class="hero-ctas">
-          <a href="https://github.com/SMRFORGE/smrforge" class="btn btn-primary" target="_blank" rel="noopener">Get Community (Free)</a>
+          <a href="https://github.com/SMRFORGE/smrforge" class="btn btn-primary" target="_blank" rel="noopener">View on GitHub</a>
           <a href="#contact" class="btn btn-secondary">Contact for Pro</a>
         </div>
-        <pre class="hero-quickstart" aria-label="Install and run SMRFORGE in three commands"><code>pip install smrforge[dashboard]
-smrforge serve            <span class="hero-quickstart-comment"># dashboard at http://127.0.0.1:8765</span>
-smrforge keff --preset nuscale  <span class="hero-quickstart-comment"># first k-eff calc</span></code></pre>
-        <p class="hero-meta">Python 3.11+ · MIT · 7,200+ tests · Signed evidence bundles · Air-gap-safe</p>
+        <p class="hero-status">Currently install-from-source — see <a href="https://github.com/SMRFORGE/smrforge#readme" target="_blank" rel="noopener">setup instructions on GitHub</a>.</p>
+        <p class="hero-meta">Signed evidence bundles · Air-gap-safe · 7,200+ tests · MIT · Python 3.11+</p>
       </div>
       <div class="hero-visual">
         <img src="images/smrforge_logo_white_transparent.png" alt="SMRFORGE" class="hero-logo" fetchpriority="high" decoding="async">
-      </div>
-    </section>
-
-    <section id="about" class="section about">
-      <div class="container">
-        <h2 class="section-title">Engineering Time Advantage</h2>
-        <p class="section-desc section-desc-lead">
-          Three tools, two weeks per iteration—or one platform, two days.
-        </p>
-        <p class="section-desc">
-          Simulation bottlenecks. Fragmented tools. Slow iteration cycles. SMRFORGE addresses these pain points with a unified platform—neutronics, thermal-hydraulics, safety, and burnup in one place—so you spend less time on tool handoffs and more on design. Numba-accelerated solvers deliver near-C++ performance. 5000+ tests, production-ready. Community edition is open source. Pro for enterprise.
-        </p>
       </div>
     </section>
 
@@ -245,9 +240,8 @@ smrforge keff --preset nuscale  <span class="hero-quickstart-comment"># first k-
         <p class="section-desc">
           The SMRFORGE gateway is a single FastAPI service that fronts everything: the
           React dashboard, the public REST API, and the MCP tool catalog your AI agents
-          call. One process, one port, one OpenAPI spec, one audit log. Install it with
-          <code>pip install smrforge[dashboard]</code>, launch with <code>smrforge serve</code>,
-          and you're running the same surface that ships with Pro.
+          call. One process, one port, one OpenAPI spec, one audit log. Launch with
+          <code>smrforge serve</code> and you're running the same surface that ships with Pro.
         </p>
         <div class="gateway-grid">
           <article class="gateway-card">
@@ -300,7 +294,7 @@ smrforge keff --preset nuscale  <span class="hero-quickstart-comment"># first k-
           <article class="product-card">
             <h3>Community</h3>
             <p class="product-tag">MIT · Open Source</p>
-            <p>Skip the fragmented toolchain—neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and a one-command React dashboard (<code>smrforge serve</code>) in one platform. Every run produces a signed evidence bundle you can hand to a reviewer. Prototype faster. Deploy sooner.</p>
+            <p>Open-source neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and a one-command React dashboard (<code>smrforge serve</code>) — all wired through the same evidence-bundle plumbing. Every run produces a signed bundle you can hand to a reviewer.</p>
             <a href="https://github.com/SMRFORGE/smrforge" class="btn btn-outline" target="_blank" rel="noopener">GitHub →</a>
           </article>
           <article class="product-card product-card-pro">
@@ -333,8 +327,8 @@ smrforge keff --preset nuscale  <span class="hero-quickstart-comment"># first k-
 
     <section id="features" class="section features">
       <div class="container">
-        <h2 class="section-title">Simulation Built for Reactor Speed</h2>
-        <p class="section-desc">Built to address slow solvers, scattered workflows, and validation gaps—so simulation keeps pace with design iteration.</p>
+        <h2 class="section-title">What's Inside</h2>
+        <p class="section-desc">Neutronics, transport, thermal-hydraulics, safety, burnup — every capability shipped with the same evidence-bundle plumbing.</p>
         <ul class="feature-grid">
           <li><span class="feature-icon">◇</span> Multi-group diffusion solver</li>
           <li><span class="feature-icon">◇</span> Monte Carlo transport (OpenMC, MCNP)</li>
@@ -364,8 +358,10 @@ smrforge keff --preset nuscale  <span class="hero-quickstart-comment"># first k-
           <dd>Yes. Community supports Docker and the dashboard itself is air-gap-safe (built into the wheel, no CDN fetches at runtime). Pro adds signed air-gapped deployment bundles and K8s manifests for regulated environments without internet access.</dd>
           <dt>What Python version is required?</dt>
           <dd>Python 3.11 or higher.</dd>
+          <dt>How do I install SMRFORGE today?</dt>
+          <dd>SMRFORGE is currently install-from-source. Clone <a href="https://github.com/SMRFORGE/smrforge" target="_blank" rel="noopener">github.com/SMRFORGE/smrforge</a> and follow the README quickstart. A package-manager-friendly distribution is on the roadmap.</dd>
           <dt>How do I launch the SMRFORGE dashboard?</dt>
-          <dd>Install with <code>pip install smrforge[dashboard]</code> and run <code>smrforge serve</code>. The React-based dashboard opens at <code>http://127.0.0.1:8765</code> in one process — the same FastAPI gateway serves both the API and the SPA. The dashboard ships inside the wheel with no CDN runtime fetches, so it works in fully air-gapped environments.</dd>
+          <dd>After installing from source, run <code>smrforge serve</code>. The React dashboard opens at <code>http://127.0.0.1:8765</code> in one process — the same FastAPI gateway serves the SPA, the API, and the MCP tool catalog. The dashboard ships inside the package with no CDN runtime fetches, so it works in fully air-gapped environments.</dd>
         </dl>
       </div>
     </section>

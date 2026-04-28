@@ -349,14 +349,16 @@ body {
   color: var(--accent);
 }
 
-.provenance-grid {
+.provenance-grid,
+.gateway-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
   margin-top: 2rem;
 }
 
-.provenance-card {
+.provenance-card,
+.gateway-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-left: 3px solid var(--accent);
@@ -365,27 +367,54 @@ body {
   transition: border-color 0.2s;
 }
 
+.gateway-card {
+  border-left-color: var(--accent-secondary);
+}
+
 .provenance-card:hover {
   border-color: rgba(0, 245, 212, 0.35);
   border-left-color: var(--accent);
 }
 
-.provenance-card h3 {
+.gateway-card:hover {
+  border-color: rgba(0, 180, 216, 0.4);
+  border-left-color: var(--accent-secondary);
+}
+
+.provenance-card h3,
+.gateway-card h3 {
   font-family: var(--font-display);
   font-size: 1.05rem;
   margin: 0 0 0.5rem;
   color: var(--text);
 }
 
-.provenance-card p {
+.provenance-card p,
+.gateway-card p {
   margin: 0;
   color: var(--text-muted);
   font-size: 0.92rem;
   line-height: 1.55;
 }
 
+.gateway .section-desc {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  max-width: 760px;
+}
+
+.gateway code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--bg-elevated);
+  padding: 0.05em 0.4em;
+  border-radius: 4px;
+  color: var(--accent);
+}
+
 @media (max-width: 768px) {
-  .provenance-grid {
+  .provenance-grid,
+  .gateway-grid {
     grid-template-columns: 1fr;
   }
 }

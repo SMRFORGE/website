@@ -152,6 +152,7 @@
       <ul class="nav-links">
         <li><a href="#about">About</a></li>
         <li><a href="#provenance">Provenance</a></li>
+        <li><a href="#gateway">Gateway</a></li>
         <li><a href="#built-for">Built For</a></li>
         <li><a href="#use-cases">Use Cases</a></li>
         <li><a href="#products">Products</a></li>
@@ -237,6 +238,36 @@ smrforge keff --preset nuscale  <span class="hero-quickstart-comment"># first k-
       </div>
     </section>
 
+    <section id="gateway" class="section gateway">
+      <div class="container">
+        <h2 class="section-title">One gateway, every surface</h2>
+        <p class="section-desc section-desc-lead">
+          Dashboard, API, AI tools — one process you can audit.
+        </p>
+        <p class="section-desc">
+          The SMRFORGE gateway is a single FastAPI service that fronts everything: the
+          React dashboard, the public REST API, and the MCP tool catalog your AI agents
+          call. One process, one port, one OpenAPI spec, one audit log. Install it with
+          <code>pip install smrforge[dashboard]</code>, launch with <code>smrforge serve</code>,
+          and you're running the same surface that ships with Pro.
+        </p>
+        <div class="gateway-grid">
+          <article class="gateway-card">
+            <h3>One process, one port</h3>
+            <p>Dashboard, API, and tools served from a single FastAPI process on port 8765. API-key auth out of the box. K8s manifests included for on-prem and air-gapped clusters. Nothing to wire together.</p>
+          </article>
+          <article class="gateway-card">
+            <h3>MCP tool catalog</h3>
+            <p>Every public capability is exposed as an MCP tool. Browse the catalog from the dashboard, or call the same tools from your own agent or notebook. Pro AI Agents are clients of this catalog — your agents can be too.</p>
+          </article>
+          <article class="gateway-card">
+            <h3>Audit log + air-gap by design</h3>
+            <p>Every gateway action emits a schema-versioned event into the audit trail. No CDN runtime fetches. No telemetry. The dashboard ships inside the wheel, so the whole surface runs behind any firewall — or no network at all.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section id="built-for" class="section built-for">
       <div class="container">
         <h2 class="section-title">Built For</h2>
@@ -291,7 +322,7 @@ smrforge keff --preset nuscale  <span class="hero-quickstart-comment"># first k-
               </li>
               <li>
                 <strong>AI-assisted analysis.</strong>
-                Pro AI Agents are LLM tools that operate against signed evidence bundles, not raw chat. Every agent action is itself recorded as an audited event — so the conversation is reviewable too.
+                Pro AI Agents are LLM tools that operate against signed evidence bundles, not raw chat — exposed as gateway-served MCP tools, so your agents call the same audited surface as the dashboard. Every agent action is itself recorded as an audited event.
               </li>
             </ul>
             <a href="#contact" class="btn btn-primary">Contact Sales</a>

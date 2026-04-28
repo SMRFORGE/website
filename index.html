@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SMRFORGE — Verifiable Simulation for Advanced Reactors</title>
-  <meta name="description" content="Reactor simulation software where every run produces a verifiable evidence bundle. Reproduce or refute any result offline. Open source (MIT). Air-gap-safe. Built for licensing-relevant work.">
+  <title>SMRFORGE — Verifiable Simulation Platform for Advanced Reactors</title>
+  <meta name="description" content="Verifiable simulation platform for SMR design and analysis. Native solvers for prototyping; OpenMC, Serpent, and MCNP integrations for production. Every run produces a verifiable evidence bundle. Open source (MIT). Air-gap-safe.">
   <link rel="icon" href="images/smrforge_logo_white_transparent.png" type="image/png">
-  <meta property="og:title" content="SMRFORGE — Verifiable Simulation for Advanced Reactors">
-  <meta property="og:description" content="Every k-eff calc, every benchmark, every report ships as a verifiable evidence bundle. Reproduce or refute offline. Open source. Air-gap-safe.">
+  <meta property="og:title" content="SMRFORGE — Verifiable Simulation Platform for Advanced Reactors">
+  <meta property="og:description" content="Native solvers for prototyping; OpenMC, Serpent, and MCNP for production. Every k-eff calc, every benchmark, every report ships as a verifiable evidence bundle. Air-gap-safe.">
   <meta property="og:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
   <meta property="og:url" content="https://smrforge.io">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="SMRFORGE — Verifiable Simulation for Advanced Reactors">
-  <meta name="twitter:description" content="Every run produces a verifiable evidence bundle a third party can reproduce or refute offline. Open source. Air-gap-safe.">
+  <meta name="twitter:title" content="SMRFORGE — Verifiable Simulation Platform for Advanced Reactors">
+  <meta name="twitter:description" content="Native solvers + OpenMC/Serpent/MCNP integrations, every run wrapped in a verifiable evidence bundle a third party can reproduce or refute offline. Air-gap-safe.">
   <meta name="twitter:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
   <link rel="canonical" href="https://smrforge.io">
   <script type="application/ld+json">
@@ -26,7 +26,7 @@
         "name": "SMRFORGE",
         "url": "https://smrforge.io",
         "logo": "https://smrforge.io/images/smrforge_logo_white_transparent.png",
-        "description": "Reactor simulation software where every run produces a verifiable evidence bundle. Reproduce or refute any result offline. Open source (MIT). Air-gap-safe. Built for licensing-relevant work.",
+        "description": "Verifiable simulation platform for SMR design and analysis. Native solvers (multi-group diffusion, thermal-hydraulics, burnup, simplified Monte Carlo) plus integrations for OpenMC, Serpent, and MCNP. Every run produces a verifiable evidence bundle. Open source (MIT). Air-gap-safe.",
         "sameAs": [
           "https://www.linkedin.com/company/smrforge/",
           "https://x.com/smrforge"
@@ -43,7 +43,7 @@
         "applicationCategory": "EngineeringApplication",
         "operatingSystem": "Windows|macOS|Linux",
         "softwareVersion": "1.x",
-        "description": "Open-source (MIT) high-performance simulation software for Small Modular Reactor design and analysis. Every run produces a verifiable evidence bundle (SHA-256 manifest, reproducibility block, schema-versioned audit trail) that any third party can verify offline. Includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and a React-based dashboard.",
+        "description": "Open-source (MIT) evaluation-grade integration surface for Small Modular Reactor design and analysis. Bundles native solvers (multi-group diffusion, thermal-hydraulics, burnup, simplified Monte Carlo) with integrations to drive OpenMC, Serpent, and MCNP. Every run produces a verifiable evidence bundle (SHA-256 manifest, reproducibility block, schema-versioned audit trail) any third party can verify offline. Includes the CLI and a React-based dashboard.",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -60,7 +60,7 @@
         "name": "SMRFORGE Pro",
         "applicationCategory": "EngineeringApplication",
         "operatingSystem": "Windows|macOS|Linux",
-        "description": "Commercial extension of SMRFORGE for enterprise and regulated workflows. Turns evidence bundles into submission-ready packages with regulatory-quality V&V workflows, automated requirements-to-evidence traceability, and SRP-aligned ReportGenerator artifacts. Adds Serpent/OpenMC/MCNP deck readers, BenchmarkRunner, surrogate/ML workflows, AI agents that operate against verifiable bundles, and verifiable air-gapped deployment bundles.",
+        "description": "Commercial extension for enterprise and licensing-relevant workflows. Turns evidence bundles into submission-ready packages with assurance bundles, automated requirements-to-evidence traceability, SRP-aligned ReportGenerator artifacts, and the V&V workflows licensed regulators are willing to read. Adds Serpent/OpenMC/MCNP deck readers, BenchmarkRunner, surrogate/ML workflows, AI agents that operate against verifiable bundles, and verifiable air-gapped deployment bundles.",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -83,7 +83,7 @@
             "name": "What is SMRFORGE?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "SMRFORGE is high-performance simulation software for Small Modular Reactor (SMR) design and analysis. It compresses advanced reactor development timelines by accelerating modeling, prototyping, and Monte Carlo simulation workflows. SMRFORGE provides neutronics, thermal-hydraulics, safety analysis, and burnup in one unified platform."
+              "text": "SMRFORGE is a verifiable simulation platform for Small Modular Reactor (SMR) design and analysis. It bundles native solvers (multi-group diffusion, thermal-hydraulics, burnup, simplified Monte Carlo) with integrations that drive production solvers (OpenMC, Serpent, MCNP), and ships every run as a verifiable evidence bundle. Community is an evaluation-grade integration surface; Pro adds assurance bundles, traceability, and the V&V workflows regulators are willing to read."
             }
           },
           {
@@ -175,14 +175,15 @@
   <main>
     <section class="hero">
       <div class="hero-content">
-        <p class="hero-badge">Verifiable Reactor Simulation Software</p>
+        <p class="hero-badge">Verifiable Simulation Platform for Advanced Reactors</p>
         <p class="hero-problem">Simulation outputs aren't enough. Regulators, reviewers, and partners need evidence.</p>
         <h1 class="hero-title">Reactor simulations you can defend.</h1>
         <p class="hero-desc">
-          Every k-eff calc, every benchmark, every report ships as a verifiable evidence bundle:
-          SHA-256 manifest of inputs and outputs, a reproducibility block, and a
-          schema-versioned audit trail. Hand the bundle to a colleague, a reviewer, or a
-          regulator and they can reproduce or refute your number offline.
+          Native solvers for prototyping; OpenMC, Serpent, and MCNP integrations for
+          production. Every k-eff calc, every benchmark, every report ships as a verifiable
+          evidence bundle: SHA-256 manifest of inputs and outputs, a reproducibility block,
+          and a schema-versioned audit trail. Hand the bundle to a colleague, a reviewer,
+          or a regulator and they can reproduce or refute your number offline.
           <strong>Reproducibility is the product, not a feature.</strong>
         </p>
         <div class="hero-ctas">
@@ -190,7 +191,7 @@
           <a href="#contact" class="btn btn-secondary">Contact for Pro</a>
         </div>
         <p class="hero-status">Currently install-from-source — see <a href="https://github.com/SMRFORGE/smrforge#readme" target="_blank" rel="noopener">setup instructions on GitHub</a>.</p>
-        <p class="hero-meta">Verifiable evidence bundles · Air-gap-safe · 7,200+ tests · MIT · Python 3.11+</p>
+        <p class="hero-meta">Verifiable evidence bundles · Air-gap-safe · 6,500+ tests · MIT · Python 3.11+</p>
       </div>
       <div class="hero-visual">
         <img src="images/smrforge_logo_white_transparent.png" alt="SMRFORGE" class="hero-logo" fetchpriority="high" decoding="async">
@@ -225,7 +226,7 @@
           </article>
           <article class="provenance-card">
             <h3>Locked surface, gated drift</h3>
-            <p>OpenAPI spec committed and CI-enforced. 7,200+ tests, golden snapshots, brand and lint gates. Every change to the public surface is reviewed before it ships.</p>
+            <p>OpenAPI spec committed and CI-enforced. 6,500+ tests, golden snapshots, brand and lint gates. Every change to the public surface is reviewed before it ships.</p>
           </article>
         </div>
       </div>
@@ -294,7 +295,7 @@
           <article class="product-card">
             <h3>Community</h3>
             <p class="product-tag">MIT · Open Source</p>
-            <p>Open-source neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and a one-command React dashboard (<code>smrforge serve</code>) — all wired through the same evidence-bundle plumbing. Every run produces a verifiable bundle you can hand to a reviewer.</p>
+            <p>Open-source neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and a one-command React dashboard (<code>smrforge serve</code>) — all wired through the same evidence-bundle plumbing. Every run produces a verifiable bundle you can hand to a reviewer. <em>Community is an evaluation-grade integration surface — production work generally pairs it with OpenMC, Serpent, or MCNP.</em></p>
             <a href="https://github.com/SMRFORGE/smrforge" class="btn btn-outline" target="_blank" rel="noopener">GitHub →</a>
           </article>
           <article class="product-card product-card-pro">
@@ -304,7 +305,7 @@
             <ul class="pro-pillars">
               <li>
                 <strong>Regulatory submission acceleration.</strong>
-                Turn evidence bundles into submission-ready packages. ReportGenerator emits SRP-aligned sections. Automated traceability matrix maps requirements to models to results to evidence. Regulatory-quality V&amp;V workflows.
+                Assurance bundles, automated traceability that maps requirements to models to results to evidence, ReportGenerator artifacts that map to standard SRP sections, and the V&amp;V workflows licensed regulators are willing to read.
               </li>
               <li>
                 <strong>Use the decks you already have.</strong>
@@ -328,10 +329,10 @@
     <section id="features" class="section features">
       <div class="container">
         <h2 class="section-title">What's Inside</h2>
-        <p class="section-desc">Neutronics, transport, thermal-hydraulics, safety, burnup — every capability shipped with the same evidence-bundle plumbing.</p>
+        <p class="section-desc">Neutronics, transport, thermal-hydraulics, safety, burnup — every capability shipped with the same evidence-bundle plumbing. Native solvers cover prototyping and parity checks; OpenMC, Serpent, and MCNP are external solvers SMRFORGE drives — install separately.</p>
         <ul class="feature-grid">
           <li><span class="feature-icon">◇</span> Multi-group diffusion solver</li>
-          <li><span class="feature-icon">◇</span> Monte Carlo transport (OpenMC, MCNP)</li>
+          <li><span class="feature-icon">◇</span> Monte Carlo transport (native + OpenMC, Serpent, MCNP integrations)</li>
           <li><span class="feature-icon">◇</span> Thermal-hydraulics & safety</li>
           <li><span class="feature-icon">◇</span> Burnup & decay heat</li>
           <li><span class="feature-icon">◇</span> HTGR, LWR SMR presets</li>
@@ -347,7 +348,7 @@
         <h2 class="section-title">FAQ</h2>
         <dl class="faq-list">
           <dt>What is SMRFORGE?</dt>
-          <dd>SMRFORGE is high-performance simulation software for Small Modular Reactor (SMR) design and analysis. It compresses advanced reactor development timelines by accelerating modeling, prototyping, and Monte Carlo simulation workflows. SMRFORGE provides neutronics, thermal-hydraulics, safety analysis, and burnup in one unified platform.</dd>
+          <dd>SMRFORGE is a verifiable simulation platform for Small Modular Reactor (SMR) design and analysis. It bundles native solvers (multi-group diffusion, thermal-hydraulics, burnup, simplified Monte Carlo) with integrations that drive production solvers (OpenMC, Serpent, MCNP), and ships every run as a verifiable evidence bundle. Community is an evaluation-grade integration surface; Pro adds assurance bundles, traceability, and the V&amp;V workflows regulators are willing to read.</dd>
           <dt>What's the difference between Community and Pro?</dt>
           <dd>Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, and the full evidence-bundle plumbing. Pro adds Serpent/OpenMC/MCNP converters, BenchmarkRunner, ReportGenerator, regulatory-quality V&amp;V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment.</dd>
           <dt>How does SMRFORGE handle reproducibility?</dt>

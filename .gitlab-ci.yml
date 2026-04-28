@@ -1,0 +1,91 @@
+# GitLab CI for the SMRFORGE marketing website (smrforge.io).
+#
+# Runs on every push to the canonical source (github.com/SMRFORGE/website)
+# via the GitLab pull mirror, and on direct pushes to gitlab.com/smrforge/website.
+# All jobs are lightweight; total wall clock is ~1-2 min on shared runners.
+
+stages:
+  - lint
+
+default:
+  interruptible: true
+
+variables:
+  GIT_DEPTH: "1"
+
+# ---------------------------------------------------------------------------
+# Brand: SMRFORGE must be ALL CAPS in user-visible prose.
+# Mixed-case "SMRForge" is a regression. The marketing site has no Python
+# identifiers, so ANY occurrence of "SMRForge" not followed by an uppercase
+# letter (i.e. not part of e.g. "SMRForgeError") is wrong.
+# Authoritative rule: gitlab.com/smrforge/smrforge .cursor/rules/brand-capitalization.mdc
+# ---------------------------------------------------------------------------
+brand-capitalization:
+  stage: lint
+  image: alpine:3.19
+  script:
+    - |
+      set -e
+      MATCHES=$(grep -rnE 'SMRForge([^A-Z]|$)' \
+                  --include='*.html' --include='*.md' --include='*.css' \
+                  --include='*.js' --include='*.xml' --include='*.txt' \
+                  --include='CNAME' . 2>/dev/null || true)
+      if [ -n "$MATCHES" ]; then
+        echo "ERROR: 'SMRForge' (mixed case) found in website. The brand is"
+        echo "'SMRFORGE' (all caps) in prose. Offending lines:"
+        echo ""
+        echo "$MATCHES"
+        exit 1
+      fi
+      echo "OK: brand capitalization (SMRFORGE all caps)"
+
+# ---------------------------------------------------------------------------
+# W3C Nu HTML5 validator. Catches malformed HTML, duplicate IDs, missing
+# required attributes, etc. Uses the html5validator Python wrapper, which
+# bundles the official W3C JAR.
+# ---------------------------------------------------------------------------
+html-validate:
+  stage: lint
+  image: python:3.11-slim
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y --no-install-recommends default-jre-headless > /dev/null
+    - pip install --no-cache-dir html5validator
+  script:
+    - html5validator --root . --match "*.html"
+
+# ---------------------------------------------------------------------------
+# Link checker. External links can flake (rate limits, transient DNS), so
+# this job is allow_failure - it surfaces broken links without blocking
+# merges. Tighten by removing allow_failure once external flake rate is
+# acceptable.
+# ---------------------------------------------------------------------------
+link-check:
+  stage: lint
+  image: lycheeverse/lychee:latest
+  allow_failure: true
+  script:
+    - lychee
+        --no-progress
+        --max-concurrency 4
+        --exclude-mail
+        --exclude-loopback
+        --exclude-private
+        --base .
+        index.html
+
+# ---------------------------------------------------------------------------
+# Sitemap and robots.txt sanity checks.
+# ---------------------------------------------------------------------------
+sitemap-check:
+  stage: lint
+  image: alpine:3.19
+  before_script:
+    - apk add --no-cache libxml2-utils
+  script:
+    - xmllint --noout sitemap.xml
+    - echo "OK: sitemap.xml is well-formed XML"
+    - test -s robots.txt
+    - echo "OK: robots.txt is non-empty"
+    - grep -q '^Sitemap:' robots.txt
+    - echo "OK: robots.txt declares the Sitemap"

@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SMRFORGE — Verifiable Simulation for Advanced Reactors</title>
-  <meta name="description" content="Reactor simulation software where every run produces a signed evidence bundle. Reproduce or refute any result offline. Open source (MIT). Air-gap-safe. Built for licensing-relevant work.">
+  <meta name="description" content="Reactor simulation software where every run produces a verifiable evidence bundle. Reproduce or refute any result offline. Open source (MIT). Air-gap-safe. Built for licensing-relevant work.">
   <link rel="icon" href="images/smrforge_logo_white_transparent.png" type="image/png">
   <meta property="og:title" content="SMRFORGE — Verifiable Simulation for Advanced Reactors">
-  <meta property="og:description" content="Every k-eff calc, every benchmark, every report ships as a signed evidence bundle. Reproduce or refute offline. Open source. Air-gap-safe.">
+  <meta property="og:description" content="Every k-eff calc, every benchmark, every report ships as a verifiable evidence bundle. Reproduce or refute offline. Open source. Air-gap-safe.">
   <meta property="og:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
   <meta property="og:url" content="https://smrforge.io">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="SMRFORGE — Verifiable Simulation for Advanced Reactors">
-  <meta name="twitter:description" content="Every run produces a signed evidence bundle a third party can reproduce or refute offline. Open source. Air-gap-safe.">
+  <meta name="twitter:description" content="Every run produces a verifiable evidence bundle a third party can reproduce or refute offline. Open source. Air-gap-safe.">
   <meta name="twitter:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
   <link rel="canonical" href="https://smrforge.io">
   <script type="application/ld+json">
@@ -26,7 +26,7 @@
         "name": "SMRFORGE",
         "url": "https://smrforge.io",
         "logo": "https://smrforge.io/images/smrforge_logo_white_transparent.png",
-        "description": "Reactor simulation software where every run produces a signed evidence bundle. Reproduce or refute any result offline. Open source (MIT). Air-gap-safe. Built for licensing-relevant work.",
+        "description": "Reactor simulation software where every run produces a verifiable evidence bundle. Reproduce or refute any result offline. Open source (MIT). Air-gap-safe. Built for licensing-relevant work.",
         "sameAs": [
           "https://www.linkedin.com/company/smrforge/",
           "https://x.com/smrforge"
@@ -43,7 +43,7 @@
         "applicationCategory": "EngineeringApplication",
         "operatingSystem": "Windows|macOS|Linux",
         "softwareVersion": "1.x",
-        "description": "Open-source (MIT) high-performance simulation software for Small Modular Reactor design and analysis. Every run produces a signed evidence bundle (SHA-256 manifest, reproducibility block, schema-versioned audit trail) that any third party can verify offline. Includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and a React-based dashboard.",
+        "description": "Open-source (MIT) high-performance simulation software for Small Modular Reactor design and analysis. Every run produces a verifiable evidence bundle (SHA-256 manifest, reproducibility block, schema-versioned audit trail) that any third party can verify offline. Includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and a React-based dashboard.",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -60,7 +60,7 @@
         "name": "SMRFORGE Pro",
         "applicationCategory": "EngineeringApplication",
         "operatingSystem": "Windows|macOS|Linux",
-        "description": "Commercial extension of SMRFORGE for enterprise and regulated workflows. Turns evidence bundles into submission-ready packages with regulatory-quality V&V workflows, automated requirements-to-evidence traceability, and SRP-aligned ReportGenerator artifacts. Adds Serpent/OpenMC/MCNP deck readers, BenchmarkRunner, surrogate/ML workflows, AI agents that operate against signed bundles, and signed air-gapped deployment bundles.",
+        "description": "Commercial extension of SMRFORGE for enterprise and regulated workflows. Turns evidence bundles into submission-ready packages with regulatory-quality V&V workflows, automated requirements-to-evidence traceability, and SRP-aligned ReportGenerator artifacts. Adds Serpent/OpenMC/MCNP deck readers, BenchmarkRunner, surrogate/ML workflows, AI agents that operate against verifiable bundles, and verifiable air-gapped deployment bundles.",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -91,7 +91,7 @@
             "name": "What's the difference between Community and Pro?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, and the full evidence-bundle plumbing. Pro adds Serpent/OpenMC/MCNP converters, BenchmarkRunner, ReportGenerator, regulatory-quality V&V workflows and traceability, surrogate/ML workflows, AI agents that operate against signed bundles, and air-gapped deployment."
+              "text": "Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, and the full evidence-bundle plumbing. Pro adds Serpent/OpenMC/MCNP converters, BenchmarkRunner, ReportGenerator, regulatory-quality V&V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment."
             }
           },
           {
@@ -107,7 +107,7 @@
             "name": "Is SMRFORGE Pro suitable for licensing-relevant work?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Pro adds regulatory-quality V&V workflows, automated traceability that maps requirements to models to results to evidence, signed air-gapped deployment bundles, and ReportGenerator artifacts that map to standard SRP sections. Community ships the same evidence-bundle plumbing — Pro adds the templates, the workflows, and the support contract."
+              "text": "Pro adds regulatory-quality V&V workflows, automated traceability that maps requirements to models to results to evidence, verifiable air-gapped deployment bundles, and ReportGenerator artifacts that map to standard SRP sections. Community ships the same evidence-bundle plumbing — Pro adds the templates, the workflows, and the support contract."
             }
           },
           {
@@ -115,7 +115,7 @@
             "name": "Is Docker or air-gapped deployment supported?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Yes. Community supports Docker and the dashboard is air-gap-safe (built into the wheel, no CDN fetches at runtime). Pro adds signed air-gapped deployment bundles and K8s manifests for regulated environments without internet access."
+              "text": "Yes. Community supports Docker and the dashboard is air-gap-safe (built into the wheel, no CDN fetches at runtime). Pro adds verifiable air-gapped deployment bundles and K8s manifests for regulated environments without internet access."
             }
           },
           {
@@ -179,7 +179,7 @@
         <p class="hero-problem">Simulation outputs aren't enough. Regulators, reviewers, and partners need evidence.</p>
         <h1 class="hero-title">Reactor simulations you can defend.</h1>
         <p class="hero-desc">
-          Every k-eff calc, every benchmark, every report ships as a signed evidence bundle:
+          Every k-eff calc, every benchmark, every report ships as a verifiable evidence bundle:
           SHA-256 manifest of inputs and outputs, a reproducibility block, and a
           schema-versioned audit trail. Hand the bundle to a colleague, a reviewer, or a
           regulator and they can reproduce or refute your number offline.
@@ -190,7 +190,7 @@
           <a href="#contact" class="btn btn-secondary">Contact for Pro</a>
         </div>
         <p class="hero-status">Currently install-from-source — see <a href="https://github.com/SMRFORGE/smrforge#readme" target="_blank" rel="noopener">setup instructions on GitHub</a>.</p>
-        <p class="hero-meta">Signed evidence bundles · Air-gap-safe · 7,200+ tests · MIT · Python 3.11+</p>
+        <p class="hero-meta">Verifiable evidence bundles · Air-gap-safe · 7,200+ tests · MIT · Python 3.11+</p>
       </div>
       <div class="hero-visual">
         <img src="images/smrforge_logo_white_transparent.png" alt="SMRFORGE" class="hero-logo" fetchpriority="high" decoding="async">
@@ -204,7 +204,7 @@
           Reproducibility is the product, not a feature.
         </p>
         <p class="section-desc">
-          Every k-eff calc, every benchmark, every report ships as a signed evidence bundle.
+          Every k-eff calc, every benchmark, every report ships as a verifiable evidence bundle.
           A SHA-256 manifest of inputs and outputs. A reproducibility block — Python version,
           dependency-lock hash, ENDF library, container digest, build provenance. A
           schema-versioned audit trail of every action that produced the result.
@@ -294,7 +294,7 @@
           <article class="product-card">
             <h3>Community</h3>
             <p class="product-tag">MIT · Open Source</p>
-            <p>Open-source neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and a one-command React dashboard (<code>smrforge serve</code>) — all wired through the same evidence-bundle plumbing. Every run produces a signed bundle you can hand to a reviewer.</p>
+            <p>Open-source neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and a one-command React dashboard (<code>smrforge serve</code>) — all wired through the same evidence-bundle plumbing. Every run produces a verifiable bundle you can hand to a reviewer.</p>
             <a href="https://github.com/SMRFORGE/smrforge" class="btn btn-outline" target="_blank" rel="noopener">GitHub →</a>
           </article>
           <article class="product-card product-card-pro">
@@ -316,7 +316,7 @@
               </li>
               <li>
                 <strong>AI-assisted analysis.</strong>
-                Pro AI Agents are LLM tools that operate against signed evidence bundles, not raw chat — exposed as gateway-served MCP tools, so your agents call the same audited surface as the dashboard. Every agent action is itself recorded as an audited event.
+                Pro AI Agents are LLM tools that operate against verifiable evidence bundles, not raw chat — exposed as gateway-served MCP tools, so your agents call the same audited surface as the dashboard. Every agent action is itself recorded as an audited event.
               </li>
             </ul>
             <a href="#contact" class="btn btn-primary">Contact Sales</a>
@@ -349,13 +349,13 @@
           <dt>What is SMRFORGE?</dt>
           <dd>SMRFORGE is high-performance simulation software for Small Modular Reactor (SMR) design and analysis. It compresses advanced reactor development timelines by accelerating modeling, prototyping, and Monte Carlo simulation workflows. SMRFORGE provides neutronics, thermal-hydraulics, safety analysis, and burnup in one unified platform.</dd>
           <dt>What's the difference between Community and Pro?</dt>
-          <dd>Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, and the full evidence-bundle plumbing. Pro adds Serpent/OpenMC/MCNP converters, BenchmarkRunner, ReportGenerator, regulatory-quality V&amp;V workflows and traceability, surrogate/ML workflows, AI agents that operate against signed bundles, and air-gapped deployment.</dd>
+          <dd>Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, and the full evidence-bundle plumbing. Pro adds Serpent/OpenMC/MCNP converters, BenchmarkRunner, ReportGenerator, regulatory-quality V&amp;V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment.</dd>
           <dt>How does SMRFORGE handle reproducibility?</dt>
           <dd>Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (Python version, dependency-lock hash, ENDF library, container digest, build provenance), and a schema-versioned audit trail. <code>smrforge verify &lt;bundle&gt;</code> reproduces or refutes the claim offline. The dashboard ships its own build-provenance JSON so you can verify the UI bytes match the wheel.</dd>
           <dt>Is SMRFORGE Pro suitable for licensing-relevant work?</dt>
-          <dd>Pro adds regulatory-quality V&amp;V workflows, automated traceability that maps requirements to models to results to evidence, signed air-gapped deployment bundles, and ReportGenerator artifacts that map to standard SRP sections. Community ships the same evidence-bundle plumbing — Pro adds the templates, the workflows, and the support contract.</dd>
+          <dd>Pro adds regulatory-quality V&amp;V workflows, automated traceability that maps requirements to models to results to evidence, verifiable air-gapped deployment bundles, and ReportGenerator artifacts that map to standard SRP sections. Community ships the same evidence-bundle plumbing — Pro adds the templates, the workflows, and the support contract.</dd>
           <dt>Is Docker or air-gapped deployment supported?</dt>
-          <dd>Yes. Community supports Docker and the dashboard itself is air-gap-safe (built into the wheel, no CDN fetches at runtime). Pro adds signed air-gapped deployment bundles and K8s manifests for regulated environments without internet access.</dd>
+          <dd>Yes. Community supports Docker and the dashboard itself is air-gap-safe (built into the wheel, no CDN fetches at runtime). Pro adds verifiable air-gapped deployment bundles and K8s manifests for regulated environments without internet access.</dd>
           <dt>What Python version is required?</dt>
           <dd>Python 3.11 or higher.</dd>
           <dt>How do I install SMRFORGE today?</dt>

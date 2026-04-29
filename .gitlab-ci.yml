@@ -66,13 +66,14 @@ link-check:
   image: lycheeverse/lychee:latest
   allow_failure: true
   script:
-    - lychee
-        --no-progress
-        --max-concurrency 4
-        --exclude-mail
-        --exclude-loopback
-        --exclude-private
-        --base .
+    - |
+      lychee \
+        --no-progress \
+        --max-concurrency 4 \
+        --exclude-mail \
+        --exclude-loopback \
+        --exclude-private \
+        --base . \
         index.html
 
 # ---------------------------------------------------------------------------
@@ -84,34 +85,11 @@ sitemap-check:
   before_script:
     - apk add --no-cache libxml2-utils
   script:
-    - xmllint --noout sitemap.xml
-    - echo "OK: sitemap.xml is well-formed XML"
-    - test -s robots.txt
-    - echo "OK: robots.txt is non-empty"
-    - grep -q '^Sitemap:' robots.txt
-    - echo "OK: robots.txt declares the Sitemap"
-
-# ---------------------------------------------------------------------------
-# GitLab Pages deploy. Copies the static site into public/ (the GitLab Pages
-# convention). Runs only on the default branch (main); MR pipelines lint
-# but do not publish.
-#
-# Custom domain (smrforge.io / www.smrforge.io) is configured separately in
-# the GitLab UI: Deploy > Pages > New domain (Let's Encrypt auto-issued).
-# ---------------------------------------------------------------------------
-pages:
-  stage: deploy
-  image: alpine:3.19
-  needs:
-    - job: brand-capitalization
-    - job: html-validate
-    - job: sitemap-check
-  script:
-    - mkdir -p public
-    - cp -r index.html script.js styles.css sitemap.xml robots.txt images public/
-    - echo "Deployed $(ls public | wc -l) top-level files to GitLab Pages"
-  artifacts:
-    paths:
-      - public
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - |
+      set -e
+      xmllint --noout sitemap.xml
+      echo "OK - sitemap.xml is well-formed XML"
+      test -s robots.txt
+      echo "OK - robots.txt is non-empty"
+      grep -q "^Sitemap:" robots.txt
+      echo "OK - robots.txt declares the Sitemap"

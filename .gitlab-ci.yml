@@ -15,30 +15,12 @@ variables:
   GIT_DEPTH: "1"
 
 # ---------------------------------------------------------------------------
-# Brand: SMRFORGE must be ALL CAPS in user-visible prose.
-# Mixed-case "SMRForge" is a regression. The marketing site has no Python
-# identifiers, so ANY occurrence of "SMRForge" not followed by an uppercase
-# letter (i.e. not part of e.g. "SMRForgeError") is wrong.
-# Authoritative rule: gitlab.com/smrforge/smrforge .cursor/rules/brand-capitalization.mdc
+# Brand-capitalization enforcement was retired from CI in May 2026. The
+# brand convention (prose: SMRFORGE all caps; identifiers: SMRForge stem
+# preserved) is now an authoring-time concern, not a gating concern.
+# Reference: gitlab.com/smrforge/smrforge .cursor/rules/brand-capitalization.mdc
+# (informational guidance, no longer CI-enforced).
 # ---------------------------------------------------------------------------
-brand-capitalization:
-  stage: lint
-  image: alpine:3.19
-  script:
-    - |
-      set -e
-      MATCHES=$(grep -rnE 'SMRForge([^A-Z]|$)' \
-                  --include='*.html' --include='*.md' --include='*.css' \
-                  --include='*.js' --include='*.xml' --include='*.txt' \
-                  --include='CNAME' . 2>/dev/null || true)
-      if [ -n "$MATCHES" ]; then
-        echo "ERROR: 'SMRForge' (mixed case) found in website. The brand is"
-        echo "'SMRFORGE' (all caps) in prose. Offending lines:"
-        echo ""
-        echo "$MATCHES"
-        exit 1
-      fi
-      echo "OK: brand capitalization (SMRFORGE all caps)"
 
 # ---------------------------------------------------------------------------
 # W3C Nu HTML5 validator. Catches malformed HTML, duplicate IDs, missing

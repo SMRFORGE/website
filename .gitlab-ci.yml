@@ -42,11 +42,26 @@ html-validate:
 # this job is allow_failure - it surfaces broken links without blocking
 # merges. Tighten by removing allow_failure once external flake rate is
 # acceptable.
+#
+# We run a PINNED lychee binary inside Alpine rather than the
+# `lycheeverse/lychee` image directly: recent lychee images are shell-less,
+# so GitLab CI's `script:` block cannot start (it needs /bin/sh). Alpine
+# gives us a shell + musl; we drop in the pinned musl binary. Bump
+# LYCHEE_VERSION deliberately instead of tracking a floating `:latest`.
+# (The old `--base .` flag was removed upstream; the site uses relative and
+# absolute links only, so no base is needed.)
 # ---------------------------------------------------------------------------
 link-check:
   stage: lint
-  image: lycheeverse/lychee:latest
+  image: alpine:3.19
   allow_failure: true
+  variables:
+    LYCHEE_VERSION: "0.24.2"
+  before_script:
+    - apk add --no-cache curl ca-certificates tar
+    - curl -sSfL "https://github.com/lycheeverse/lychee/releases/download/lychee-v${LYCHEE_VERSION}/lychee-x86_64-unknown-linux-musl.tar.gz" | tar -xzf - -C /usr/local/bin
+    - chmod +x /usr/local/bin/lychee
+    - lychee --version
   script:
     - |
       lychee \
@@ -55,7 +70,6 @@ link-check:
         --exclude-mail \
         --exclude-loopback \
         --exclude-private \
-        --base . \
         index.html
 
 # ---------------------------------------------------------------------------

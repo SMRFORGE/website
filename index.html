@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SMRFORGE — Verifiable Simulation Platform for Advanced Reactors</title>
-  <meta name="description" content="Verifiable simulation platform for SMR design and analysis. Native solvers for prototyping; OpenMC, Serpent, and MCNP integrations for production. Every run produces a verifiable evidence bundle. Open source (MIT). Air-gap-safe.">
+  <meta name="description" content="SMRFORGE takes a small modular reactor from concept to a full-core design, safety numbers, and cost — in one auditable run. Screen fast in pure Python, escalate the same inputs to OpenMC for reference accuracy, and ship every result as a verifiable evidence bundle. Measurement-anchored (BEAVRS Cycle-1 C/E 0.9994). Community MIT; Pro FSL-1.1-MIT. Air-gap-safe.">
   <link rel="icon" href="images/smrforge_logo_white_transparent.png" type="image/png">
   <meta property="og:title" content="SMRFORGE — Verifiable Simulation Platform for Advanced Reactors">
-  <meta property="og:description" content="Native solvers for prototyping; OpenMC, Serpent, and MCNP for production. Every k-eff calc, every benchmark, every report ships as a verifiable evidence bundle. Air-gap-safe.">
+  <meta property="og:description" content="A full-core SMR design engine: concept → core design → safety → cost, in one auditable run. Screen fast, escalate to OpenMC when it counts, and ship a verifiable evidence bundle. Measurement-anchored to BEAVRS Cycle-1. Air-gap-safe.">
   <meta property="og:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
   <meta property="og:url" content="https://smrforge.io">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="SMRFORGE — Verifiable Simulation Platform for Advanced Reactors">
-  <meta name="twitter:description" content="Native solvers + OpenMC/Serpent/MCNP integrations, every run wrapped in a verifiable evidence bundle a third party can reproduce or refute offline. Air-gap-safe.">
+  <meta name="twitter:description" content="Concept → full-core design → safety → cost in one auditable run. Screen fast in Python, escalate to OpenMC for reference accuracy. Every result is a verifiable, reproducible evidence bundle. Air-gap-safe.">
   <meta name="twitter:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
   <link rel="canonical" href="https://smrforge.io">
   <script type="application/ld+json">
@@ -26,7 +26,7 @@
         "name": "SMRFORGE",
         "url": "https://smrforge.io",
         "logo": "https://smrforge.io/images/smrforge_logo_white_transparent.png",
-        "description": "Verifiable simulation platform for SMR design and analysis. Native solvers (multi-group diffusion, thermal-hydraulics, burnup, simplified Monte Carlo) plus integrations for OpenMC, Serpent, and MCNP. Every run produces a verifiable evidence bundle. Open source (MIT). Air-gap-safe.",
+        "description": "Verifiable platform for SMR design and analysis. Pro adds a full-core design engine (lattice homogenization to 3-D nodal core to reactivity/rod-worth/shutdown-margin outputs), coupled safety and burnup, with one-step escalation to OpenMC for reference accuracy. Every run produces a verifiable evidence bundle. Community MIT; Pro FSL-1.1-MIT. Air-gap-safe runtime.",
         "sameAs": [
           "https://www.linkedin.com/company/smrforge/",
           "https://x.com/smrforge"
@@ -43,7 +43,7 @@
         "applicationCategory": "EngineeringApplication",
         "operatingSystem": "Windows|macOS|Linux",
         "softwareVersion": "1.x",
-        "description": "Open-source (MIT) evaluation-grade integration surface for Small Modular Reactor design and analysis. Bundles native solvers (multi-group diffusion, thermal-hydraulics, burnup, simplified Monte Carlo) with integrations to drive OpenMC, Serpent, and MCNP. Every run produces a verifiable evidence bundle (SHA-256 manifest, reproducibility block, schema-versioned audit trail) any third party can verify offline. Includes the CLI and a React-based dashboard.",
+        "description": "Open-source (MIT) evaluation-grade integration surface for Small Modular Reactor design and analysis. Bundles fast in-tree solvers (multi-group diffusion, thermal-hydraulics, burnup) for screening, plus one-step escalation to OpenMC for reference accuracy. Every run produces a verifiable evidence bundle (SHA-256 manifest, reproducibility block, schema-versioned audit trail) any third party can verify offline. Includes the CLI and a React-based dashboard. The full-core nodal design engine lives in the Pro tier.",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -83,7 +83,7 @@
             "name": "What is SMRFORGE?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "SMRFORGE is a verifiable simulation platform for Small Modular Reactor (SMR) design and analysis. It bundles native solvers (multi-group diffusion, thermal-hydraulics, burnup, simplified Monte Carlo) with integrations that drive production solvers (OpenMC, Serpent, MCNP), and ships every run as a verifiable evidence bundle. Community is an evaluation-grade integration surface; Pro adds assurance bundles, traceability, and the V&V workflows regulators are willing to read."
+              "text": "SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. Its Pro tier is a full-core design engine — lattice to 3-D core to the rod-worth, shutdown-margin, and reactivity-coefficient outputs you design against — plus coupled safety and burnup. Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC) for reference accuracy. Every run ships as a verifiable evidence bundle. Community (MIT) is an evaluation-grade surface; Pro (FSL-1.1-MIT) adds the design engine, assurance bundles, and the V&V workflows regulators are willing to read."
             }
           },
           {
@@ -91,7 +91,7 @@
             "name": "What's the difference between Community and Pro?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, and the full evidence-bundle plumbing. Pro adds Serpent/OpenMC/MCNP converters, BenchmarkRunner, ReportGenerator, regulatory-quality V&V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment."
+              "text": "Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, an OpenMC integration, and the full evidence-bundle plumbing. Pro adds Serpent and MCNP converters (the third leg of the deck-reader story), BenchmarkRunner, ReportGenerator, regulatory-quality V&V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment."
             }
           },
           {
@@ -131,7 +131,7 @@
             "name": "How do I install SMRFORGE today?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "SMRFORGE is in private beta — the GitLab project (gitlab.com/smrforge/smrforge) is request-access while counsel reviews the new MIT / FSL-1.1-MIT licensing ahead of the public release. Email support@smrforge.io for early access. Once it goes public, install will be from-source via clone plus README quickstart, with a package-manager-friendly distribution on the roadmap."
+              "text": "SMRFORGE is in private beta and is not yet on PyPI. The GitLab project (gitlab.com/smrforge/smrforge) is request-access during the beta. Email support@smrforge.io for early access; you install from source (git clone plus pip install -e ., Python 3.11+). A package-manager-friendly pip install distribution is on the roadmap."
             }
           },
           {
@@ -147,10 +147,9 @@
     ]
   }
   </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="images/smrforge_logo_white_transparent.png" fetchpriority="high">
+  <link rel="preload" href="fonts/Inter.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Orbitron.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" as="image" href="images/smrforge_logo_white_transparent.png">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -158,6 +157,8 @@
     <nav class="nav">
       <a href="#" class="logo">SMRFORGE</a>
       <ul class="nav-links">
+        <li><a href="#design-engine">Design Engine</a></li>
+        <li><a href="#validation">Validation</a></li>
         <li><a href="#provenance">Provenance</a></li>
         <li><a href="#gateway">Gateway</a></li>
         <li><a href="#built-for">Built For</a></li>
@@ -179,22 +180,91 @@
         <p class="hero-problem">Simulation outputs aren't enough. Regulators, reviewers, and partners need evidence.</p>
         <h1 class="hero-title">Reactor simulations you can defend.</h1>
         <p class="hero-desc">
-          Native solvers for prototyping; OpenMC, Serpent, and MCNP integrations for
-          production. Every k-eff calc, every benchmark, every report ships as a verifiable
-          evidence bundle: SHA-256 manifest of inputs and outputs, a reproducibility block,
-          and a schema-versioned audit trail. Hand the bundle to a colleague, a reviewer,
-          or a regulator and they can reproduce or refute your number offline.
-          <strong>Reproducibility is the product, not a feature.</strong>
+          Take a small modular reactor from concept to a full-core design, the safety
+          numbers, and a cost estimate — in one auditable run. Screen fast in pure
+          Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC)
+          when a number has to hold up. Every result ships as a verifiable evidence
+          bundle a colleague, reviewer, or regulator can reproduce offline.
+          <strong>Screen fast. Escalate when it counts. Prove every number.</strong>
         </p>
         <div class="hero-ctas">
           <a href="https://gitlab.com/smrforge/smrforge" class="btn btn-primary" target="_blank" rel="noopener">View on GitLab<span class="beta-badge">Private beta</span></a>
           <a href="#contact" class="btn btn-secondary">Contact for Pro</a>
         </div>
-        <p class="hero-status"><strong>Coming soon — currently in private beta.</strong> The GitLab project is request-access while we finish counsel review of the new MIT / FSL-1.1-MIT licensing. <a href="#contact">Email us</a> for early access, or watch this page — public release is imminent.</p>
-        <p class="hero-meta">Verifiable evidence bundles · Air-gap-safe · 6,500+ tests · MIT · Python 3.11+</p>
+        <p class="hero-status"><strong>Currently in private beta.</strong> Access is request-only during the beta, and install is from source (Python 3.11+) — a public package is on the roadmap, not yet on PyPI. <a href="#contact">Email us</a> for early access.</p>
+        <p class="hero-meta">Full-core design engine · Measurement-anchored · 6,500+ tests · MIT / FSL-1.1-MIT · Python 3.11+</p>
       </div>
       <div class="hero-visual">
-        <img src="images/smrforge_logo_white_transparent.png" alt="SMRFORGE" class="hero-logo" fetchpriority="high" decoding="async">
+        <img src="images/smrforge_logo_white_transparent.png" alt="SMRFORGE" class="hero-logo" decoding="async">
+      </div>
+    </section>
+
+    <section id="design-engine" class="section design-engine">
+      <div class="container">
+        <h2 class="section-title">A full-core design engine — not just a slice</h2>
+        <p class="section-desc section-desc-lead">
+          Concept to core design, in one auditable loop.
+        </p>
+        <p class="section-desc">
+          Most fast reactor-physics tools model a single fuel slice and extrapolate.
+          SMRFORGE Pro runs the whole pipeline: it boils a detailed fuel lattice down to
+          fast core-level numbers, solves the entire reactor core in 3-D, and hands you
+          the control and safety numbers you actually design against — rod worth,
+          shutdown margin, and reactivity coefficients — plus coupled thermal-hydraulics,
+          multi-cycle burnup, and a cost estimate.
+        </p>
+        <div class="provenance-grid">
+          <article class="provenance-card">
+            <h3>Whole core, in 3-D</h3>
+            <p>Lattice → few-group homogenization → full-core 3-D nodal diffusion. A real core model with its power shape, not a pin-cell guess — validated against the analytic IAEA-2D benchmark.</p>
+          </article>
+          <article class="provenance-card">
+            <h3>The numbers you design against</h3>
+            <p>Rod worth, shutdown margin, reactivity coefficients, coupled thermal-hydraulics with safety margins, and multi-cycle fuel burnup — the outputs a safety case is built on.</p>
+          </article>
+          <article class="provenance-card">
+            <h3>Screen fast, then escalate</h3>
+            <p>Iterate in seconds in pure Python — no HDF5, MPI, or license server. When a number has to be defensible, hand the same inputs to OpenMC for a high-fidelity Monte Carlo run. Same model, both results, one bundle.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="validation" class="section validation">
+      <div class="container">
+        <h2 class="section-title">Anchored to a real reactor</h2>
+        <p class="section-desc section-desc-lead">
+          The strongest test of a reactor model is a real reactor.
+        </p>
+        <p class="section-desc">
+          SMRFORGE's design pipeline reproduced the critical boron concentration of
+          BEAVRS Cycle-1 — a public benchmark from a commercial PWR — almost exactly,
+          and closes the analytic IAEA-2D nodal benchmark to a fraction of a percent.
+        </p>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <div class="proof-figure">0.9994<span class="unit">C/E</span></div>
+            <div class="proof-label">BEAVRS Cycle-1 critical boron</div>
+            <p class="proof-note">975.0 ppm measured vs 974.4 ppm computed — a 0.6 ppm difference against operating-reactor data.</p>
+          </article>
+          <article class="proof-card">
+            <div class="proof-figure">+19<span class="unit">pcm</span></div>
+            <div class="proof-label">IAEA-2D PWR benchmark</div>
+            <p class="proof-note">Full-core nodal solver vs the published analytic reference — well under a tenth of a percent.</p>
+          </article>
+          <article class="proof-card">
+            <div class="proof-figure">−1.08<span class="unit">pcm</span></div>
+            <div class="proof-label">Lattice → core consistency</div>
+            <p class="proof-note">The homogenization step conserves reactivity from the detailed lattice to the core model on real data.</p>
+          </article>
+        </div>
+        <p class="honest-note">
+          <strong>Straight talk on scope.</strong> The measurement anchor above comes from
+          the full-core design pipeline. The in-tree Monte Carlo is <strong>screening-grade
+          by design</strong> — fast and auditable, not a high-fidelity solver. When you need
+          a licensing-grade number, escalate to OpenMC. We publish where the fast path agrees
+          with reference codes and where it doesn't, rather than hide it.
+        </p>
       </div>
     </section>
 
@@ -222,7 +292,7 @@
           </article>
           <article class="provenance-card">
             <h3>Air-gap by construction</h3>
-            <p>Dashboard built into the wheel. Zero CDN fetches at runtime. K8s manifests included. Works on a laptop with no internet, in a SCIF, or behind an enterprise firewall.</p>
+            <p>Dashboard built into the wheel. Zero CDN fetches at runtime. K8s manifests included. Works on a laptop with no internet, in a SCIF, or behind an enterprise firewall. The first-run demo path (<code>smrforge first-run</code>) ships its cross sections inside the wheel — no nuclear-data download is required to reach a k-effective number. Advanced ENDF-driven workflows stage their data separately; Pro adds verified air-gapped deployment bundles for those.</p>
           </article>
           <article class="provenance-card">
             <h3>Locked surface, gated drift</h3>
@@ -329,14 +399,16 @@
     <section id="features" class="section features">
       <div class="container">
         <h2 class="section-title">What's Inside</h2>
-        <p class="section-desc">Neutronics, transport, thermal-hydraulics, safety, burnup — every capability shipped with the same evidence-bundle plumbing. Native solvers cover prototyping and parity checks; OpenMC, Serpent, and MCNP are external solvers SMRFORGE drives — install separately.</p>
+        <p class="section-desc">From lattice physics to a full-core design, coupled safety, and burnup — every capability shipped with the same evidence-bundle plumbing. The in-tree solvers are fast, auditable, and built for screening and design iteration; when you need reference accuracy, escalate the same model to OpenMC (Serpent and MCNP paths live in Pro).</p>
         <ul class="feature-grid">
-          <li><span class="feature-icon">◇</span> Multi-group diffusion solver</li>
-          <li><span class="feature-icon">◇</span> Monte Carlo transport (native + OpenMC, Serpent, MCNP integrations)</li>
-          <li><span class="feature-icon">◇</span> Thermal-hydraulics & safety</li>
-          <li><span class="feature-icon">◇</span> Burnup & decay heat</li>
-          <li><span class="feature-icon">◇</span> HTGR, LWR SMR presets</li>
-          <li><span class="feature-icon">◇</span> ENDF/B parsing & self-shielding</li>
+          <li><span class="feature-icon">◇</span> Multi-group diffusion + full-core nodal solver</li>
+          <li><span class="feature-icon">◇</span> Lattice homogenization &amp; assembly discontinuity factors</li>
+          <li><span class="feature-icon">◇</span> Thermal-hydraulics &amp; safety (DNBR, feedback)</li>
+          <li><span class="feature-icon">◇</span> Burnup, decay heat &amp; multi-cycle fuel</li>
+          <li><span class="feature-icon">◇</span> LWR/PWR, fast, molten-salt &amp; HTGR presets</li>
+          <li><span class="feature-icon">◇</span> Non-water moderators (graphite, BeO, ZrH, D₂O)</li>
+          <li><span class="feature-icon">◇</span> One-step escalation to OpenMC (Serpent/MCNP in Pro)</li>
+          <li><span class="feature-icon">◇</span> ENDF/B parsing &amp; resonance self-shielding</li>
           <li><span class="feature-icon">◇</span> 3D visualization &amp; React dashboard</li>
           <li><span class="feature-icon">◇</span> Uncertainty quantification</li>
         </ul>
@@ -348,9 +420,9 @@
         <h2 class="section-title">FAQ</h2>
         <dl class="faq-list">
           <dt>What is SMRFORGE?</dt>
-          <dd>SMRFORGE is a verifiable simulation platform for Small Modular Reactor (SMR) design and analysis. It bundles native solvers (multi-group diffusion, thermal-hydraulics, burnup, simplified Monte Carlo) with integrations that drive production solvers (OpenMC, Serpent, MCNP), and ships every run as a verifiable evidence bundle. Community is an evaluation-grade integration surface; Pro adds assurance bundles, traceability, and the V&amp;V workflows regulators are willing to read.</dd>
+          <dd>SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. Its Pro tier is a full-core design engine — lattice to 3-D core to the rod-worth, shutdown-margin, and reactivity-coefficient outputs you design against — plus coupled safety and burnup. Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC) for reference accuracy. Every run ships as a verifiable evidence bundle. Community (MIT) is an evaluation-grade surface; Pro (FSL-1.1-MIT) adds the design engine, assurance bundles, and the V&amp;V workflows regulators are willing to read.</dd>
           <dt>What's the difference between Community and Pro?</dt>
-          <dd>Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, and the full evidence-bundle plumbing. Pro adds Serpent/OpenMC/MCNP converters, BenchmarkRunner, ReportGenerator, regulatory-quality V&amp;V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment.</dd>
+          <dd>Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, an OpenMC integration, and the full evidence-bundle plumbing. Pro adds Serpent and MCNP converters (the third leg of the deck-reader story), BenchmarkRunner, ReportGenerator, regulatory-quality V&amp;V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment.</dd>
           <dt>How does SMRFORGE handle reproducibility?</dt>
           <dd>Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (Python version, dependency-lock hash, ENDF library, container digest, build provenance), and a schema-versioned audit trail. <code>smrforge verify &lt;bundle&gt;</code> reproduces or refutes the claim offline. The dashboard ships its own build-provenance JSON so you can verify the UI bytes match the wheel.</dd>
           <dt>Is SMRFORGE Pro suitable for licensing-relevant work?</dt>
@@ -360,7 +432,7 @@
           <dt>What Python version is required?</dt>
           <dd>Python 3.11 or higher.</dd>
           <dt>How do I install SMRFORGE today?</dt>
-          <dd>SMRFORGE is in <strong>private beta</strong> — the GitLab project (<a href="https://gitlab.com/smrforge/smrforge" target="_blank" rel="noopener">gitlab.com/smrforge/smrforge</a>) is request-access while counsel reviews the new MIT / FSL-1.1-MIT licensing ahead of the public release. <a href="#contact">Email us</a> for early access. Once it goes public, install will be from-source via clone + README quickstart, with a package-manager-friendly distribution on the roadmap.</dd>
+          <dd>SMRFORGE is in <strong>private beta</strong> and is <strong>not yet on PyPI</strong>. The GitLab project (<a href="https://gitlab.com/smrforge/smrforge" target="_blank" rel="noopener">gitlab.com/smrforge/smrforge</a>) is request-access during the beta. <a href="#contact">Email us</a> for early access; you install from source (<code>git clone</code> + <code>pip install -e .</code>, Python 3.11+). A package-manager-friendly <code>pip install</code> distribution is on the roadmap.</dd>
           <dt>How do I launch the SMRFORGE dashboard?</dt>
           <dd>After installing from source, run <code>smrforge serve</code>. The React dashboard opens at <code>http://127.0.0.1:8765</code> in one process — the same FastAPI gateway serves the SPA, the API, and the MCP tool catalog. The dashboard ships inside the package with no CDN runtime fetches, so it works in fully air-gapped environments.</dd>
         </dl>

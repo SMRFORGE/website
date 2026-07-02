@@ -60,7 +60,7 @@
         "name": "SMRFORGE Pro",
         "applicationCategory": "EngineeringApplication",
         "operatingSystem": "Windows|macOS|Linux",
-        "description": "Commercial extension for enterprise and licensing-relevant workflows. Turns evidence bundles into submission-ready packages with assurance bundles, automated requirements-to-evidence traceability, SRP-aligned ReportGenerator artifacts, and the V&V workflows licensed regulators are willing to read. Adds Serpent/OpenMC/MCNP deck readers, BenchmarkRunner, surrogate/ML workflows, AI agents that operate against verifiable bundles, and verifiable air-gapped deployment bundles.",
+        "description": "Commercial extension for enterprise and licensing-relevant workflows. Turns evidence bundles into submission-ready packages with assurance bundles, automated requirements-to-evidence traceability, SRP-aligned ReportGenerator artifacts, and the V&V workflows licensed regulators are willing to read. Adds deck converters for OpenMC and for your own licensed Serpent/MCNP installations (SMRFORGE does not include or distribute those export-controlled codes), BenchmarkRunner, surrogate/ML workflows, AI agents that operate against verifiable bundles, and verifiable air-gapped deployment bundles.",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -91,7 +91,15 @@
             "name": "What's the difference between Community and Pro?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, an OpenMC integration, and the full evidence-bundle plumbing. Pro adds Serpent and MCNP converters (the third leg of the deck-reader story), BenchmarkRunner, ReportGenerator, regulatory-quality V&V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment."
+              "text": "Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, an OpenMC integration, and the full evidence-bundle plumbing. Pro adds converters that generate input decks for and read results from your own licensed Serpent and MCNP installations (SMRFORGE does not include or distribute those export-controlled codes), BenchmarkRunner, ReportGenerator, regulatory-quality V&V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does SMRFORGE include Serpent or MCNP?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Serpent and MCNP are third-party codes with their own licenses — MCNP is export-controlled (distributed via RSICC) and Serpent is license-restricted (via VTT / OECD-NEA). SMRFORGE does not contain, bundle, or distribute them, or their nuclear-data libraries. Pro ships converters that generate input decks for, and read results from, a copy you license and install yourself. OpenMC (open source) is included as the built-in escalation path."
             }
           },
           {
@@ -365,7 +373,7 @@
           <article class="product-card">
             <h3>Community</h3>
             <p class="product-tag">MIT · Open Source</p>
-            <p>Open-source neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and a one-command React dashboard (<code>smrforge serve</code>) — all wired through the same evidence-bundle plumbing. Every run produces a verifiable bundle you can hand to a reviewer. <em>Community is an evaluation-grade integration surface — production work generally pairs it with OpenMC, Serpent, or MCNP.</em></p>
+            <p>Open-source neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and a one-command React dashboard (<code>smrforge serve</code>) — all wired through the same evidence-bundle plumbing. Every run produces a verifiable bundle you can hand to a reviewer. <em>Community is an evaluation-grade integration surface — production work generally pairs it with OpenMC (open source) or your own licensed Serpent or MCNP.</em></p>
             <a href="https://gitlab.com/smrforge/smrforge" class="btn btn-outline" target="_blank" rel="noopener">GitLab →<span class="beta-badge">Private beta</span></a>
           </article>
           <article class="product-card product-card-pro">
@@ -378,8 +386,8 @@
                 Assurance bundles, automated traceability that maps requirements to models to results to evidence, ReportGenerator artifacts that map to standard SRP sections, and the V&amp;V workflows licensed regulators are willing to read.
               </li>
               <li>
-                <strong>Use the decks you already have.</strong>
-                Read existing Serpent, OpenMC, and MCNP input decks directly. Run them through SMRFORGE's solvers, or wrap your existing pipeline in SMRFORGE's evidence layer. No rewrite sprint.
+                <strong>Bridge the tools you already license.</strong>
+                Generate input for — and read decks from — OpenMC and your own licensed Serpent or MCNP installations, then wrap those runs in SMRFORGE's evidence layer. SMRFORGE ships the converters, not the third-party codes: Serpent and MCNP are export-controlled / licensed tools you install yourself, and SMRFORGE contains none of their source or data.
               </li>
               <li>
                 <strong>Design at scale.</strong>
@@ -399,7 +407,7 @@
     <section id="features" class="section features">
       <div class="container">
         <h2 class="section-title">What's Inside</h2>
-        <p class="section-desc">From lattice physics to a full-core design, coupled safety, and burnup — every capability shipped with the same evidence-bundle plumbing. The in-tree solvers are fast, auditable, and built for screening and design iteration; when you need reference accuracy, escalate the same model to OpenMC (Serpent and MCNP paths live in Pro).</p>
+        <p class="section-desc">From lattice physics to a full-core design, coupled safety, and burnup — every capability shipped with the same evidence-bundle plumbing. The in-tree solvers are fast, auditable, and built for screening and design iteration; when you need reference accuracy, escalate the same model to OpenMC (open source), or export input decks for your own licensed Serpent or MCNP (Pro).</p>
         <ul class="feature-grid">
           <li><span class="feature-icon">◇</span> Multi-group diffusion + full-core nodal solver</li>
           <li><span class="feature-icon">◇</span> Lattice homogenization &amp; assembly discontinuity factors</li>
@@ -407,7 +415,7 @@
           <li><span class="feature-icon">◇</span> Burnup, decay heat &amp; multi-cycle fuel</li>
           <li><span class="feature-icon">◇</span> LWR/PWR, fast, molten-salt &amp; HTGR presets</li>
           <li><span class="feature-icon">◇</span> Non-water moderators (graphite, BeO, ZrH, D₂O)</li>
-          <li><span class="feature-icon">◇</span> One-step escalation to OpenMC (Serpent/MCNP in Pro)</li>
+          <li><span class="feature-icon">◇</span> One-step escalation to OpenMC; deck export for your licensed Serpent/MCNP (Pro)</li>
           <li><span class="feature-icon">◇</span> ENDF/B parsing &amp; resonance self-shielding</li>
           <li><span class="feature-icon">◇</span> 3D visualization &amp; React dashboard</li>
           <li><span class="feature-icon">◇</span> Uncertainty quantification</li>
@@ -422,7 +430,9 @@
           <dt>What is SMRFORGE?</dt>
           <dd>SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. Its Pro tier is a full-core design engine — lattice to 3-D core to the rod-worth, shutdown-margin, and reactivity-coefficient outputs you design against — plus coupled safety and burnup. Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC) for reference accuracy. Every run ships as a verifiable evidence bundle. Community (MIT) is an evaluation-grade surface; Pro (FSL-1.1-MIT) adds the design engine, assurance bundles, and the V&amp;V workflows regulators are willing to read.</dd>
           <dt>What's the difference between Community and Pro?</dt>
-          <dd>Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, an OpenMC integration, and the full evidence-bundle plumbing. Pro adds Serpent and MCNP converters (the third leg of the deck-reader story), BenchmarkRunner, ReportGenerator, regulatory-quality V&amp;V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment.</dd>
+          <dd>Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, an OpenMC integration, and the full evidence-bundle plumbing. Pro adds converters that generate input decks for — and read results from — your own licensed Serpent and MCNP installations (SMRFORGE does not include or distribute those export-controlled codes), BenchmarkRunner, ReportGenerator, regulatory-quality V&amp;V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment.</dd>
+          <dt>Does SMRFORGE include Serpent or MCNP?</dt>
+          <dd><strong>No.</strong> Serpent and MCNP are third-party codes with their own licenses — MCNP is export-controlled (distributed via RSICC) and Serpent is license-restricted (via VTT / OECD-NEA). SMRFORGE does not contain, bundle, or distribute them, or their nuclear-data libraries. Pro ships <em>converters</em> that generate input decks for, and read results from, a copy you license and install yourself. OpenMC (open source) is included as the built-in escalation path.</dd>
           <dt>How does SMRFORGE handle reproducibility?</dt>
           <dd>Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (Python version, dependency-lock hash, ENDF library, container digest, build provenance), and a schema-versioned audit trail. <code>smrforge verify &lt;bundle&gt;</code> reproduces or refutes the claim offline. The dashboard ships its own build-provenance JSON so you can verify the UI bytes match the wheel.</dd>
           <dt>Is SMRFORGE Pro suitable for licensing-relevant work?</dt>

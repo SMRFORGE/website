@@ -67,13 +67,15 @@ link-check:
     - install -m 0755 "$(find /tmp/lychee -type f -name lychee | head -1)" /usr/local/bin/lychee
     - lychee --version
   script:
+    # mailto: links are excluded by default in current lychee. Exclude the
+    # social domains that reject bot traffic (LinkedIn/X return 999/403), so
+    # the job reflects real broken links rather than perpetual social flake.
     - |
       lychee \
         --no-progress \
         --max-concurrency 4 \
-        --exclude-mail \
-        --exclude-loopback \
-        --exclude-private \
+        --exclude 'linkedin\.com' \
+        --exclude '//x\.com/' \
         index.html
 
 # ---------------------------------------------------------------------------

@@ -1,6 +1,29 @@
 /* SMRFORGE — Company Website
    Branding Packet v3: Void Black, Plasma Teal, Orbitron/Inter */
 
+/* Self-hosted fonts (no external CDN — air-gap-safe). Variable woff2. */
+@font-face {
+  font-family: "Inter";
+  src: url("fonts/Inter.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("fonts/JetBrainsMono.woff2") format("woff2");
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Orbitron";
+  src: url("fonts/Orbitron.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #05080C;
   --bg-elevated: #141A21;
@@ -735,3 +758,59 @@ body {
 
 
 
+
+/* ── Design-engine + validation additions (2026-07) ─────────────────── */
+.proof-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+.proof-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+}
+.proof-figure {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.proof-figure .unit {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-left: 0.35rem;
+  font-family: var(--font-mono);
+}
+.proof-label {
+  margin-top: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-secondary);
+}
+.proof-note {
+  margin-top: 0.65rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+.honest-note {
+  margin-top: 2rem;
+  padding: 1.1rem 1.35rem;
+  border-left: 3px solid var(--accent-secondary);
+  background: rgba(0, 180, 216, 0.06);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+.honest-note strong { color: var(--text); }
+@media (max-width: 800px) {
+  .proof-grid { grid-template-columns: 1fr; }
+}

@@ -26,7 +26,7 @@
         "name": "SMRFORGE",
         "url": "https://smrforge.io",
         "logo": "https://smrforge.io/images/smrforge_logo_white_transparent.png",
-        "description": "Verifiable platform for SMR design and analysis. Pro adds a full-core design engine (lattice homogenization to 3-D nodal core to reactivity/rod-worth/shutdown-margin outputs), coupled safety and burnup, with one-step escalation to OpenMC for reference accuracy. Every run produces a verifiable evidence bundle. Community MIT; Pro FSL-1.1-MIT. Air-gap-safe runtime.",
+        "description": "Verifiable platform for SMR design and analysis. The free Community tier (MIT) runs a full-core nodal engine (NEM + CMFD) validated to +19 pcm on the IAEA-2D benchmark. Pro adds the production design engine — coupled safety and multi-cycle burnup, rod-worth/shutdown-margin/reactivity-coefficient design outputs, and advanced deterministic transport depth — plus assurance bundles, with one-step escalation to OpenMC for reference accuracy. Every run produces a verifiable evidence bundle. Community MIT; Pro FSL-1.1-MIT. Air-gap-safe runtime.",
         "sameAs": [
           "https://www.linkedin.com/company/smrforge/",
           "https://x.com/smrforge"
@@ -83,7 +83,7 @@
             "name": "What is SMRFORGE?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. Its Pro tier is a full-core design engine — lattice to 3-D core to the rod-worth, shutdown-margin, and reactivity-coefficient outputs you design against — plus coupled safety and burnup. Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC) for reference accuracy. Every run ships as a verifiable evidence bundle. Community (MIT) is an evaluation-grade surface; Pro (FSL-1.1-MIT) adds the design engine, assurance bundles, and the V&V workflows regulators are willing to read."
+              "text": "SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. The free Community tier (MIT) already runs a full-core nodal engine — lattice homogenization to a validated core power shape (+19 pcm on the analytic IAEA-2D benchmark). Its Pro tier (FSL-1.1-MIT) turns that into a production design engine: coupled thermal-hydraulics and multi-cycle burnup, the rod-worth, shutdown-margin, and reactivity-coefficient outputs you design against, and advanced deterministic transport depth — all wrapped in assurance bundles and the V&V workflows regulators are willing to read. Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC) for reference accuracy. Every run ships as a verifiable evidence bundle."
             }
           },
           {
@@ -215,11 +215,14 @@
         </p>
         <p class="section-desc">
           Most fast reactor-physics tools model a single fuel slice and extrapolate.
-          SMRFORGE Pro runs the whole pipeline: it boils a detailed fuel lattice down to
-          fast core-level numbers, solves the entire reactor core in 3-D, and hands you
-          the control and safety numbers you actually design against — rod worth,
-          shutdown margin, and reactivity coefficients — plus coupled thermal-hydraulics,
-          multi-cycle burnup, and a cost estimate.
+          SMRFORGE's nodal engine already gives you the whole core — a real full-core
+          power shape, validated to +19 pcm on the analytic IAEA-2D benchmark, free in
+          the Community tier. Pro turns that core model into a design: it couples
+          thermal-hydraulics and multi-cycle burnup into the loop, escalates to advanced
+          deterministic transport where fidelity has to be defensible, and hands you the
+          control and safety numbers you actually design against — rod worth, shutdown
+          margin, and reactivity coefficients — plus a cost estimate and the assurance
+          bundles regulators read.
         </p>
         <div class="provenance-grid">
           <article class="provenance-card">

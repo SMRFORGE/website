@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SMRFORGE — Verifiable Simulation Platform for Advanced Reactors</title>
-  <meta name="description" content="SMRFORGE takes a small modular reactor from concept to a full-core design, safety numbers, and cost — in one auditable run. Screen fast in pure Python, escalate the same inputs to OpenMC for reference accuracy, and ship every result as a verifiable evidence bundle. Measurement-anchored (BEAVRS Cycle-1 C/E 0.9994). Community MIT; Pro FSL-1.1-MIT. Air-gap-safe.">
+  <meta name="description" content="SMRFORGE takes a small modular reactor from concept to a full-core design, safety numbers, and cost — in one auditable run. Screen fast in pure Python, escalate the same inputs to OpenMC for reference accuracy, and ship every result as a verifiable evidence bundle. Reference-validated: the full-core nodal engine closes the analytic IAEA-2D PWR benchmark to +19 pcm. Community MIT; Pro FSL-1.1-MIT. Air-gap-safe.">
   <link rel="icon" href="images/smrforge_logo_white_transparent.png" type="image/png">
   <meta property="og:title" content="SMRFORGE — Verifiable Simulation Platform for Advanced Reactors">
-  <meta property="og:description" content="A full-core SMR design engine: concept → core design → safety → cost, in one auditable run. Screen fast, escalate to OpenMC when it counts, and ship a verifiable evidence bundle. Measurement-anchored to BEAVRS Cycle-1. Air-gap-safe.">
+  <meta property="og:description" content="A full-core SMR design engine: concept → core design → safety → cost, in one auditable run. Screen fast, escalate to OpenMC when it counts, and ship a verifiable evidence bundle. Reference-validated against the analytic IAEA-2D nodal benchmark. Air-gap-safe.">
   <meta property="og:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
   <meta property="og:url" content="https://smrforge.io">
   <meta property="og:type" content="website">
@@ -43,7 +43,7 @@
         "applicationCategory": "EngineeringApplication",
         "operatingSystem": "Windows|macOS|Linux",
         "softwareVersion": "1.x",
-        "description": "Open-source (MIT) evaluation-grade integration surface for Small Modular Reactor design and analysis. Bundles fast in-tree solvers (multi-group diffusion, thermal-hydraulics, burnup) for screening, plus one-step escalation to OpenMC for reference accuracy. Every run produces a verifiable evidence bundle (SHA-256 manifest, reproducibility block, schema-versioned audit trail) any third party can verify offline. Includes the CLI and a React-based dashboard. The full-core nodal design engine lives in the Pro tier.",
+        "description": "Open-source (MIT) evaluation-grade integration surface for Small Modular Reactor design and analysis. Bundles fast in-tree solvers (multi-group diffusion, thermal-hydraulics, burnup) for screening, plus one-step escalation to OpenMC for reference accuracy. Every run produces a verifiable evidence bundle (SHA-256 manifest, reproducibility block, schema-versioned audit trail) any third party can verify offline. Includes the CLI, a React-based dashboard, and a full-core nodal engine (transverse-integrated NEM with CMFD acceleration) that closes the analytic IAEA-2D benchmark to +19 pcm. Pro adds the production design engine — coupled multi-cycle safety and burnup workflows, advanced transport depth, and assurance / V&V.",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -91,7 +91,7 @@
             "name": "What's the difference between Community and Pro?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Community is MIT-licensed and includes neutronics, Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, an OpenMC integration, and the full evidence-bundle plumbing. Pro adds converters that generate input decks for and read results from your own licensed Serpent and MCNP installations (SMRFORGE does not include or distribute those export-controlled codes), BenchmarkRunner, ReportGenerator, regulatory-quality V&V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment."
+              "text": "Community is MIT-licensed and includes neutronics, a full-core nodal engine (NEM + CMFD, closing the analytic IAEA-2D benchmark to +19 pcm), Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, an OpenMC integration, and the full evidence-bundle plumbing. Pro adds converters that generate input decks for and read results from your own licensed Serpent and MCNP installations (SMRFORGE does not include or distribute those export-controlled codes), BenchmarkRunner, ReportGenerator, regulatory-quality V&V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment."
             }
           },
           {
@@ -200,7 +200,7 @@
           <a href="#contact" class="btn btn-secondary">Contact for Pro</a>
         </div>
         <p class="hero-status"><strong>Currently in private beta.</strong> Access is request-only during the beta, and install is from source (Python 3.11+) — a public package is on the roadmap, not yet on PyPI. <a href="#contact">Email us</a> for early access.</p>
-        <p class="hero-meta">Full-core design engine · Measurement-anchored · 6,500+ tests · MIT / FSL-1.1-MIT · Python 3.11+</p>
+        <p class="hero-meta">Full-core design engine · Reference-validated · 6,500+ tests · MIT / FSL-1.1-MIT · Python 3.11+</p>
       </div>
       <div class="hero-visual">
         <img src="images/smrforge_logo_white_transparent.png" alt="SMRFORGE" class="hero-logo" decoding="async">
@@ -224,7 +224,7 @@
         <div class="provenance-grid">
           <article class="provenance-card">
             <h3>Whole core, in 3-D</h3>
-            <p>Lattice → few-group homogenization → full-core 3-D nodal diffusion. A real core model with its power shape, not a pin-cell guess — validated against the analytic IAEA-2D benchmark.</p>
+            <p>Lattice → few-group homogenization → full-core 3-D nodal diffusion, with transverse-integrated nodal-expansion (NEM) intra-node flux moments and CMFD acceleration. A real core model with its power shape, not a pin-cell guess — closes the analytic IAEA-2D benchmark to +19 pcm.</p>
           </article>
           <article class="provenance-card">
             <h3>The numbers you design against</h3>
@@ -245,25 +245,29 @@
           The strongest test of a reactor model is a real reactor.
         </p>
         <p class="section-desc">
-          SMRFORGE's design pipeline reproduced the critical boron concentration of
-          BEAVRS Cycle-1 — a public benchmark from a commercial PWR — almost exactly,
-          and closes the analytic IAEA-2D nodal benchmark to a fraction of a percent.
+          SMRFORGE's full-core nodal engine closes the analytic IAEA-2D PWR benchmark
+          to +19 pcm and conserves lattice-to-core reactivity to about 1 pcm —
+          code-vs-published-reference results you can reproduce yourself in the free,
+          MIT-licensed Community tier. On a real
+          commercial-PWR benchmark, BEAVRS Cycle-1, the reference-grade OpenMC oracle
+          lands about 102 ppm below the measured critical boron (C/E 0.895); we publish
+          that gap rather than hide it.
         </p>
         <div class="proof-grid">
           <article class="proof-card">
-            <div class="proof-figure">0.9994<span class="unit">C/E</span></div>
-            <div class="proof-label">BEAVRS Cycle-1 critical boron</div>
-            <p class="proof-note">975.0 ppm measured vs 974.4 ppm computed — a 0.6 ppm difference against operating-reactor data.</p>
-          </article>
-          <article class="proof-card">
             <div class="proof-figure">+19<span class="unit">pcm</span></div>
             <div class="proof-label">IAEA-2D PWR benchmark</div>
-            <p class="proof-note">Full-core nodal solver vs the published analytic reference — well under a tenth of a percent.</p>
+            <p class="proof-note">Full-core nodal solver — transverse-integrated NEM intra-node moments with CMFD acceleration — vs the published analytic reference. Well under a tenth of a percent.</p>
           </article>
           <article class="proof-card">
             <div class="proof-figure">−1.08<span class="unit">pcm</span></div>
             <div class="proof-label">Lattice → core consistency</div>
             <p class="proof-note">The homogenization step conserves reactivity from the detailed lattice to the core model on real data.</p>
+          </article>
+          <article class="proof-card">
+            <div class="proof-figure">0.895<span class="unit">C/E</span></div>
+            <div class="proof-label">BEAVRS Cycle-1 critical boron</div>
+            <p class="proof-note">Reference-grade OpenMC oracle: 872.9 ppm computed vs 975.0 ppm measured (−102 ppm). We show where the model doesn't match, not just where it does.</p>
           </article>
         </div>
         <p class="honest-note">
@@ -391,7 +395,7 @@
               </li>
               <li>
                 <strong>Design at scale.</strong>
-                BenchmarkRunner orchestrates large parameter sweeps and UQ campaigns. Surrogate models and ML-accelerated workflows for design exploration that would take weeks of pure Monte Carlo. Air-gapped deployment bundles for regulated environments.
+                BenchmarkRunner orchestrates large parameter sweeps and UQ campaigns. Experimental surrogate and ML-accelerated workflows for design-space exploration. Air-gapped deployment bundles for regulated environments.
               </li>
               <li>
                 <strong>AI-assisted analysis.</strong>

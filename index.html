@@ -189,18 +189,18 @@
         <h1 class="hero-title">Reactor simulations you can defend.</h1>
         <p class="hero-desc">
           Take a small modular reactor from concept to a full-core design, the safety
-          numbers, and a cost estimate — in one auditable run. Screen fast in pure
-          Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC)
-          when a number has to hold up. Every result ships as a verifiable evidence
-          bundle a colleague, reviewer, or regulator can reproduce offline.
-          <strong>Screen fast. Escalate when it counts. Prove every number.</strong>
+          numbers, and a cost estimate — in one auditable run. Every result ships as a
+          verifiable evidence bundle a colleague, reviewer, or regulator can reproduce
+          offline. Screen fast in pure Python, then escalate the same inputs to a
+          lab-grade Monte Carlo code (OpenMC) when a number has to hold up.
+          <strong>Prove every number. Reproduce it offline. Screen fast — escalate when it counts.</strong>
         </p>
         <div class="hero-ctas">
           <a href="https://gitlab.com/smrforge/smrforge" class="btn btn-primary" target="_blank" rel="noopener">View on GitLab<span class="beta-badge">Private beta</span></a>
           <a href="#contact" class="btn btn-secondary">Contact for Pro</a>
         </div>
         <p class="hero-status"><strong>Currently in private beta.</strong> Access is request-only during the beta, and install is from source (Python 3.11+) — a public package is on the roadmap, not yet on PyPI. <a href="#contact">Email us</a> for early access.</p>
-        <p class="hero-meta">Full-core design engine · Reference-validated · 6,500+ tests · MIT / FSL-1.1-MIT · Python 3.11+</p>
+        <p class="hero-meta">Verifiable evidence bundles · Reference-validated · Full-core design engine · 6,500+ tests · MIT / FSL-1.1-MIT · Python 3.11+</p>
       </div>
       <div class="hero-visual">
         <img src="images/smrforge_logo_white_transparent.png" alt="SMRFORGE" class="hero-logo" decoding="async">
@@ -235,7 +235,7 @@
           </article>
           <article class="provenance-card">
             <h3>Screen fast, then escalate</h3>
-            <p>Iterate in seconds in pure Python — no HDF5, MPI, or license server. When a number has to be defensible, hand the same inputs to OpenMC for a high-fidelity Monte Carlo run. Same model, both results, one bundle.</p>
+            <p>Sweep hundreds of core options in seconds to minutes at screening fidelity — no HDF5, MPI, or license server. Then spend the minutes-to-hours of high-fidelity Monte Carlo (OpenMC) only on the few that have to be defensible. Same inputs, both results, one bundle.</p>
           </article>
         </div>
       </div>
@@ -363,7 +363,7 @@
           <div class="built-for-col">
             <h3 class="built-for-subhead">Workflows</h3>
             <ul class="built-for-list">
-              <li>Design and iterate on a new core in days, not weeks</li>
+              <li>Screen and iterate on new core designs in a fast, auditable loop</li>
               <li>Reproduce benchmarks for papers or validation</li>
               <li>Generate regulatory documentation with traceability</li>
               <li>Run parameter sweeps and design exploration overnight</li>
@@ -435,7 +435,7 @@
         <h2 class="section-title">FAQ</h2>
         <dl class="faq-list">
           <dt>What is SMRFORGE?</dt>
-          <dd>SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. Its Pro tier is a full-core design engine — lattice to 3-D core to the rod-worth, shutdown-margin, and reactivity-coefficient outputs you design against — plus coupled safety and burnup. Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC) for reference accuracy. Every run ships as a verifiable evidence bundle. Community (MIT) is an evaluation-grade surface; Pro (FSL-1.1-MIT) adds the design engine, assurance bundles, and the V&amp;V workflows regulators are willing to read.</dd>
+          <dd>SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. The free Community tier (MIT) already runs a full-core nodal engine — lattice homogenization to a validated core power shape (+19 pcm on the analytic IAEA-2D benchmark). Its Pro tier (FSL-1.1-MIT) turns that into a production design engine: coupled thermal-hydraulics and multi-cycle burnup, the rod-worth, shutdown-margin, and reactivity-coefficient outputs you design against, and advanced deterministic transport depth — all wrapped in assurance bundles and the V&amp;V workflows regulators are willing to read. Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC) for reference accuracy. Every run ships as a verifiable evidence bundle.</dd>
           <dt>What's the difference between Community and Pro?</dt>
           <dd>Community is MIT-licensed and includes neutronics, a full-core nodal engine (NEM + CMFD, closing the analytic IAEA-2D benchmark to +19 pcm), Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, an OpenMC integration, and the full evidence-bundle plumbing. Pro adds converters that generate input decks for — and read results from — your own licensed Serpent and MCNP installations (SMRFORGE does not include or distribute those export-controlled codes), BenchmarkRunner, ReportGenerator, regulatory-quality V&amp;V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment.</dd>
           <dt>Does SMRFORGE include Serpent or MCNP?</dt>

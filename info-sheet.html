@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMRFORGE — Information Sheet</title>
+  <meta name="description" content="A one-page overview of SMRFORGE: a verifiable, reproducible multi-physics toolkit for Small Modular Reactor design, analysis, and optimization. Community MIT; Pro FSL-1.1-MIT.">
+  <link rel="icon" href="images/smrforge_logo_white_transparent.png" type="image/png">
+  <link rel="canonical" href="https://smrforge.io/info-sheet.html">
+  <meta property="og:title" content="SMRFORGE — Information Sheet">
+  <meta property="og:description" content="A one-page overview of SMRFORGE: verifiable, reproducible SMR computational engineering. Screen fast, escalate to OpenMC, ship a signed evidence bundle.">
+  <meta property="og:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
+  <meta property="og:url" content="https://smrforge.io/info-sheet.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="fonts/Inter.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Orbitron.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="info-sheet.css">
+</head>
+<body>
+
+
+<div class="sheet">
+
+  <!-- MASTHEAD -->
+  <div class="masthead">
+    <a href="/" class="logo-wrap" aria-label="SMRFORGE home"><img src="images/smrforge-lockup-white.png" alt="SMRFORGE"/></a>
+    <div class="tag">Verifiable SMR computational engineering</div>
+    <div class="site"><a href="/" style="color:var(--accent)"><b>smrforge.io</b></a> · Open-core · Private beta</div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <span class="eyebrow">SMR design · analysis · optimization</span>
+      <h1 style="margin-top:12px">Reactor physics your reviewers can <span class="hl">reproduce</span> — not just believe.</h1>
+      <p>A full multi-physics toolkit for Small Modular Reactors where every result ships as a fingerprinted, independently reproducible evidence bundle — and is labeled, honestly, for how far to trust it.</p>
+      <div class="kbd"><b>pip install -e .</b> → <b>smrforge doctor</b> → a screening k-eff in a minute</div>
+    </div>
+    <div class="evidence" aria-label="Example evidence bundle">
+      <div class="ehead"><span>evidence_envelope · adr-013</span><span class="seal">◆ gpg-signable</span></div>
+      <div class="ebody">
+        <div class="row"><span>analysis</span><b>gt-mhr-350</b></div>
+        <div class="row"><span>k_eff</span><b>0.9051</b></div>
+        <div class="row"><span>fidelity</span><span class="pill screen">screening_estimate</span></div>
+        <div class="row"><span>sha-256</span><span class="hash">a3f1c8…9e0b</span></div>
+        <div class="row"><span>replay</span><b>bit-exact @ epoch</b></div>
+      </div>
+      <div class="verify"><span class="p">$ smrforge verify reviewer-kit ./bundle</span>
+        <span class="ok">✓ reproducible by a third party · exit 0</span></div>
+    </div>
+  </div>
+
+  <!-- PROVENANCE -->
+  <div class="band">
+    <span class="eyebrow">The differentiator — built for the person who doesn't trust you</span>
+    <div class="pillars">
+      <div class="pillar"><div class="n">01 · FINGERPRINT</div><h3>Evidence envelopes</h3><p>Every output is a schema-registered bundle with a SHA-256 fingerprint of its inputs and result — optionally <code>ed25519</code> GPG-signed.</p></div>
+      <div class="pillar"><div class="n">02 · REPLAY</div><h3>Bit-exact reproduction</h3><p>A pinned <code>SOURCE_DATE_EPOCH</code> and the <code>replay_bundle()</code> contract regenerate the same bytes from the same inputs.</p></div>
+      <div class="pillar"><div class="n">03 · VERIFY</div><h3><code>exit 0</code> = it holds</h3><p>The reviewer-kit CLI checks any shipped bundle in seconds — a machine-checkable statement that a third party can reproduce it.</p></div>
+    </div>
+  </div>
+
+  <!-- CAPABILITIES -->
+  <div class="band">
+    <span class="eyebrow">One reproducible model, a full multi-physics stack</span>
+    <div class="caps">
+      <div class="cap"><span class="t">Neutronics</span><span class="d">Diffusion, Monte Carlo &amp; transport <span>· variance reduction</span></span></div>
+      <div class="cap"><span class="t">Thermal-H</span><span class="d">Coupled channel TH <span>· conjugate heat transfer</span></span></div>
+      <div class="cap"><span class="t">Fuel cycle</span><span class="d">Burnup &amp; depletion <span>· Xe/Sm poisoning</span></span></div>
+      <div class="cap"><span class="t">Safety</span><span class="d">Kinetics transients <span>· LOFC / ATWS / RIA / LOCA</span></span></div>
+      <div class="cap"><span class="t">Uncertainty</span><span class="d">MC / LHS / Sobol UQ <span>· sensitivity</span></span></div>
+      <div class="cap"><span class="t">Nuclear data</span><span class="d">In-tree ENDF/B <span>· self-shielding, TSL</span></span></div>
+      <div class="cap"><span class="t">Geometry</span><span class="d">Pin / prismatic / pebble <span>· flux &amp; power maps</span></span></div>
+      <div class="cap"><span class="t">Economics</span><span class="d">LCOE &amp; fuel cycle <span>· SMR factors</span></span></div>
+      <div class="cap"><span class="t">Interop</span><span class="d">OpenMC round-trip <span>· Serpent, MCNP, plugins</span></span></div>
+    </div>
+  </div>
+
+  <!-- HONEST + TIERS -->
+  <div class="band">
+    <span class="eyebrow">Honest by default · open-core</span>
+    <div class="twocol" style="margin-bottom:16px">
+      <div class="card is">
+        <h3>What it gives you</h3>
+        <ul>
+          <li>A <code>physics_fidelity</code> label + plausibility band on every result</li>
+          <li>Machine-readable <code>caveats</code> that travel with the output</li>
+          <li>One-command escalation to OpenMC / Serpent for a validated k-eff</li>
+        </ul>
+      </div>
+      <div class="card isnt">
+        <h3>What it won't pretend</h3>
+        <ul>
+          <li>Screening k-eff is a trend, not a validated absolute</li>
+          <li>The open tier is an evaluation surface, not licensing sign-off</li>
+          <li>Nothing is tuned to hit a benchmark it was measured against</li>
+        </ul>
+      </div>
+    </div>
+    <div class="twocol">
+      <div class="card tier">
+        <div class="tname"><strong>Community</strong><span class="lic">smrforge · MIT</span></div>
+        <p class="role">Evaluation &amp; integration — prove fit in the open.</p>
+        <ul>
+          <li>Full screening stack + evidence envelopes &amp; reviewer-kit</li>
+          <li>OpenMC export/import · Serpent round-trip</li>
+          <li>Governance CLI, benchmarks, stable API, plugin system</li>
+        </ul>
+      </div>
+      <div class="card tier pro">
+        <span class="badge">Commercial</span>
+        <div class="tname"><strong>Pro</strong><span class="lic">smrforge_pro · FSL-1.1-MIT</span></div>
+        <p class="role">Production &amp; commercial depth for deployment.</p>
+        <ul>
+          <li>Production physics kernels (deep S_N/MoC, adjoint, IQS, burnup-in-loop)</li>
+          <li>CAD / DAGMC · interactive 3D · advanced variance reduction</li>
+          <li>Regulatory-oriented reporting · assurance &amp; benchmark evidence</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOT / CTA -->
+  <div class="foot">
+    <div class="start">
+      <div class="code"><span class="c"># Screening k-eff, labeled honestly (private beta — from a checkout)</span>
+<span class="p">import</span> smrforge <span class="p">as</span> smr
+r = smr.analyze_preset(<span class="s">"gt-mhr-350"</span>)
+<span class="p">print</span>(r[<span class="s">"k_eff"</span>], r[<span class="s">"physics_fidelity"</span>])  <span class="c"># 0.9051  screening_estimate</span></div>
+    </div>
+    <div class="cta">
+      <a href="https://gitlab.com/smrforge/smrforge" class="btn">View the repository →</a>
+      <a href="smrforge-info-sheet.pdf" class="btn" download style="background:transparent;border:1px solid var(--accent-line);color:var(--accent)">Download PDF ↓</a>
+      <a href="mailto:support@smrforge.io" class="mono" style="font-size:13.5px;color:var(--accent);font-weight:600">support@smrforge.io</a>
+      <span class="mono" style="font-size:11.5px;color:var(--muted)">smrforge.io · Community MIT · Pro commercial</span>
+    </div>
+  </div>
+
+  <p class="compliance"><b>Export-control note:</b> nuclear-related software may be subject to U.S. federal law (10 CFR Part 810, EAR, ITAR, OFAC) regardless of source-license terms. Community: MIT. Pro: source-available under FSL-1.1-MIT; commercial use under separate agreement. Screening results are labeled estimates, not validated or licensing-grade absolutes.</p>
+
+</div>
+
+</body>
+</html>

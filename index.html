@@ -300,7 +300,9 @@
         <p class="section-desc">
           Hand the bundle to a colleague, a reviewer, or a regulator. They run
           <code>smrforge verify &lt;bundle&gt;</code> offline and either reproduce your
-          number or refute it. No "trust me, it ran on my machine."
+          number or refute it — checked against the open, independently-implementable
+          <b>Evidence Envelope</b> schema (a versioned spec, JSON Schema, and conformance
+          vectors), not a SMRFORGE-proprietary format. No "trust me, it ran on my machine."
         </p>
         <div class="provenance-grid">
           <article class="provenance-card">
@@ -395,6 +397,10 @@
                 Assurance bundles, automated traceability that maps requirements to models to results to evidence, ReportGenerator artifacts that map to standard SRP sections, and the V&amp;V workflows licensed regulators are willing to read.
               </li>
               <li>
+                <strong>Confirmatory Console for reviewers.</strong>
+                Ingest a vendor's evidence bundle, re-run it, and get a per-claim pass/fail with residuals, a provenance-lineage view, and a signed verification report. Offered at subsidized access to regulators and national labs — the reviewer runs the same tool the vendor did.
+              </li>
+              <li>
                 <strong>Bridge the tools you already license.</strong>
                 Generate input for — and read decks from — OpenMC and your own licensed Serpent or MCNP installations, then wrap those runs in SMRFORGE's evidence layer. SMRFORGE ships the converters, not the third-party codes: Serpent and MCNP are export-controlled / licensed tools you install yourself, and SMRFORGE contains none of their source or data.
               </li>
@@ -422,7 +428,7 @@
           <li><span class="feature-icon">◇</span> Lattice homogenization &amp; assembly discontinuity factors</li>
           <li><span class="feature-icon">◇</span> Thermal-hydraulics &amp; safety (DNBR, feedback)</li>
           <li><span class="feature-icon">◇</span> Burnup, decay heat &amp; multi-cycle fuel</li>
-          <li><span class="feature-icon">◇</span> LWR/PWR, fast, molten-salt &amp; HTGR presets</li>
+          <li><span class="feature-icon">◇</span> Archetype presets &amp; one-command starter kits (<code>smrforge new</code>) — LWR-SMR, prismatic/pebble HTGR, MSR, microreactor</li>
           <li><span class="feature-icon">◇</span> Non-water moderators (graphite, BeO, ZrH, D₂O)</li>
           <li><span class="feature-icon">◇</span> One-step escalation to OpenMC; deck export for your licensed Serpent/MCNP (Pro)</li>
           <li><span class="feature-icon">◇</span> ENDF/B parsing &amp; resonance self-shielding</li>

@@ -57,13 +57,13 @@
     <div class="pillars">
       <div class="pillar"><div class="n">01 · FINGERPRINT</div><h3>Evidence envelopes</h3><p>Every output is a schema-registered bundle with a SHA-256 fingerprint of its inputs and result — optionally <code>ed25519</code> GPG-signed.</p></div>
       <div class="pillar"><div class="n">02 · REPLAY</div><h3>Bit-exact reproduction</h3><p>A pinned <code>SOURCE_DATE_EPOCH</code> and the <code>replay_bundle()</code> contract regenerate the same bytes from the same inputs.</p></div>
-      <div class="pillar"><div class="n">03 · VERIFY</div><h3><code>exit 0</code> = it holds</h3><p>The reviewer-kit CLI checks any shipped bundle in seconds — a machine-checkable statement that a third party can reproduce it.</p></div>
+      <div class="pillar"><div class="n">03 · VERIFY</div><h3><code>exit 0</code> = it holds</h3><p>Verification is a standalone, offline check against the open <b>Evidence Envelope</b> schema — a third party reproduces or refutes your number in seconds, without trusting or licensing SMRFORGE.</p></div>
     </div>
   </div>
 
   <!-- CAPABILITIES -->
   <div class="band">
-    <span class="eyebrow">One reproducible model, a full multi-physics stack</span>
+    <span class="eyebrow">One reproducible model, a full multi-physics stack — across LWR-SMR, HTGR (prismatic &amp; pebble), MSR &amp; microreactor archetypes</span>
     <div class="caps">
       <div class="cap"><span class="t">Neutronics</span><span class="d">Diffusion, Monte Carlo &amp; transport <span>· variance reduction</span></span></div>
       <div class="cap"><span class="t">Thermal-H</span><span class="d">Coupled channel TH <span>· conjugate heat transfer</span></span></div>
@@ -104,6 +104,7 @@
         <p class="role">Evaluation &amp; integration — prove fit in the open.</p>
         <ul>
           <li>Full screening stack + evidence envelopes &amp; reviewer-kit</li>
+          <li>One-command archetype starter kits: <code>smrforge new &lt;archetype&gt;</code> → a runnable, baseline-checked project</li>
           <li>OpenMC export/import · Serpent round-trip</li>
           <li>Governance CLI, benchmarks, stable API, plugin system</li>
         </ul>
@@ -115,6 +116,7 @@
         <ul>
           <li>Production physics kernels (deep S_N/MoC, adjoint, IQS, burnup-in-loop)</li>
           <li>CAD / DAGMC · interactive 3D · advanced variance reduction</li>
+          <li>Confirmatory Console — re-run a submission, diff every claim, ship a signed verification report; subsidized for regulators &amp; national labs</li>
           <li>Regulatory-oriented reporting · assurance &amp; benchmark evidence</li>
         </ul>
       </div>

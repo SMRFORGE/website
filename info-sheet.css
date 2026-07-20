@@ -128,3 +128,40 @@ a.logo-wrap{text-decoration:none}a.logo-wrap:hover img{filter:drop-shadow(0 0 40
     border-top:1px solid var(--edge);margin-top:18px;padding-top:14px;max-width:78ch}
   .compliance b{color:var(--muted);font-weight:600}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+  /* ---------- light theme for the printable one-pager (screen stays dark) ---------- */
+  @media print{
+    :root{
+      --bg:#ffffff; --panel:#ffffff; --panel-2:#f3f6f9; --edge:#d5dbe3;
+      --ink:#0d1526; --muted:#44506a; --faint:#6a7686;
+      --accent:#0e7490; --accent-dim:#0b5f77; --accent-2:#0369a1;
+      --accent-glow:transparent; --accent-line:#bfe0e8;
+      --verified:#0f766e; --screen:#b45309;
+    }
+    @page{margin:11mm}
+    html,body{background:#fff}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body::before{display:none!important}                    /* drop ambient teal glow */
+    .logo-wrap img,a.logo-wrap:hover img{filter:brightness(0)}  /* white lockup -> solid dark on white paper */
+    .evidence{box-shadow:none}
+    .btn{color:#fff}                                        /* white label on dark-teal button */
+    .cta a[download]{display:none}                          /* the "Download PDF" button is circular inside the PDF */
+    /* tighten to keep it a clean two-pager */
+    .sheet{max-width:none;padding:0 4px}
+    .logo-wrap img{height:60px}
+    .masthead{padding:0 0 9px}
+    .hero{padding:10px 0}
+    .hero p{margin-top:9px}
+    .kbd{margin-top:11px}
+    .band{padding:9px 0}
+    .band>.eyebrow{margin-bottom:7px}
+    .pillar{padding:11px 13px}
+    .pillar p{font-size:12.5px}
+    .card{padding:12px 15px}
+    .card ul,.tier ul{gap:6px}
+    .caps{gap:6px 22px}
+    .foot{padding-top:11px}
+    .start .code{padding:10px 12px;line-height:1.5}
+    .compliance{margin-top:10px;padding-top:9px;font-size:9px}
+    .band,.pillar,.card,.evidence,.foot{break-inside:avoid}
+  }

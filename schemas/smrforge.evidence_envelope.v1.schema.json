@@ -1,0 +1,148 @@
+{
+  "$defs": {
+    "EnvelopeArtifact": {
+      "description": "Single bundle artifact with SHA-256 digest.",
+      "properties": {
+        "path": {
+          "description": "Bundle-relative POSIX path",
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "description": "Lowercase hex digest",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "title": "Size Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ],
+      "title": "EnvelopeArtifact",
+      "type": "object"
+    },
+    "ProducerBlock": {
+      "description": "Who/when produced the envelope.",
+      "properties": {
+        "created_utc": {
+          "title": "Created Utc",
+          "type": "string"
+        },
+        "smrforge_version": {
+          "title": "Smrforge Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "smrforge_version",
+        "created_utc"
+      ],
+      "title": "ProducerBlock",
+      "type": "object"
+    }
+  },
+  "$id": "https://smrforge.io/schemas/smrforge.evidence_envelope.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "description": "Top-level envelope written as ``evidence_envelope.json``.\n\nThe ``subject`` is a free-form dict carrying the case-specific payload\n(certification verdict, gateway claims, handoff manifest, ...). Subjects\nare themselves schema-tagged via the legacy schema names, so consumers\ncan route on either ``envelope_kind`` (preferred) or\n``subject[\"schema\"]`` (legacy compat).",
+  "properties": {
+    "artifacts": {
+      "items": {
+        "$ref": "#/$defs/EnvelopeArtifact"
+      },
+      "title": "Artifacts",
+      "type": "array"
+    },
+    "envelope_kind": {
+      "description": "Dispatch case: 'certification' (ADR-012), 'gateway_airgap' (gateway air-gap validation), or 'handoff' (operator export pack).",
+      "enum": [
+        "certification",
+        "gateway_airgap",
+        "handoff"
+      ],
+      "title": "Envelope Kind",
+      "type": "string"
+    },
+    "gpg_key_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Gpg Key Id"
+    },
+    "producer": {
+      "$ref": "#/$defs/ProducerBlock"
+    },
+    "reproducibility": {
+      "additionalProperties": true,
+      "description": "Legacy smrforge.reproducibility_block.v1 mirror of ``runtime_identity`` -- kept for one release for backward-compatible readers; will be removed alongside the deprecated schema (ADR-014).",
+      "title": "Reproducibility",
+      "type": "object"
+    },
+    "runtime_identity": {
+      "additionalProperties": true,
+      "description": "Canonical smrforge.runtime_identity.v1 block (ADR-014). Single source of truth for who/what/where/when produced this envelope.",
+      "title": "Runtime Identity",
+      "type": "object"
+    },
+    "schema": {
+      "default": "smrforge.evidence_envelope.v1",
+      "title": "Schema",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "sha256sums_sha256": {
+      "description": "SHA-256 of sha256sums.txt; pins the integrity list.",
+      "title": "Sha256Sums Sha256",
+      "type": "string"
+    },
+    "signature_path": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Signature Path"
+    },
+    "signature_status": {
+      "default": "unsigned",
+      "description": "'unsigned' | 'signed' | 'signature_failed'",
+      "title": "Signature Status",
+      "type": "string"
+    },
+    "subject": {
+      "additionalProperties": true,
+      "description": "Case-specific payload. Carries its own legacy schema header for downstream consumers that still grep on names like 'smrforge.certification_manifest.v1'.",
+      "title": "Subject",
+      "type": "object"
+    }
+  },
+  "required": [
+    "envelope_kind",
+    "producer",
+    "sha256sums_sha256"
+  ],
+  "title": "EvidenceEnvelope",
+  "type": "object",
+  "x-smrforge-schema": "smrforge.evidence_envelope.v1",
+  "x-smrforge-schema-version": 1
+}

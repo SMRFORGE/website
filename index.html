@@ -228,8 +228,8 @@
         </p>
         <div class="provenance-grid">
           <article class="provenance-card">
-            <h3>Whole core, in 3-D</h3>
-            <p>Lattice → few-group homogenization → full-core 3-D nodal diffusion, with transverse-integrated nodal-expansion (NEM) intra-node flux moments and CMFD acceleration. A real core model with its power shape, not a pin-cell guess — closes the analytic IAEA-2D benchmark to +19 pcm.</p>
+            <h3>Whole core — hex, Cartesian &amp; R-Z</h3>
+            <p>Lattice → few-group homogenization → full-core 3-D nodal diffusion, with transverse-integrated nodal-expansion (NEM) intra-node flux moments and CMFD acceleration. The same engine solves <strong>hex</strong> (SFR/LFR, prismatic HTGR, heat-pipe micro), <strong>Cartesian</strong>, and <strong>R-Z cylindrical</strong> cores — a real power shape, not a pin-cell guess. Closes the analytic IAEA-2D benchmark to +19 pcm; the hex engine's leakage is Monte-Carlo-validated against OpenMC.</p>
           </article>
           <article class="provenance-card">
             <h3>The numbers you design against</h3>
@@ -424,8 +424,8 @@
         <h2 class="section-title">What's Inside</h2>
         <p class="section-desc">From lattice physics to a full-core design, coupled safety, and burnup — every capability shipped with the same evidence-bundle plumbing. The in-tree solvers are fast, auditable, and built for screening and design iteration; when you need reference accuracy, escalate the same model to OpenMC (open source), or export input decks for your own licensed Serpent or MCNP (Pro).</p>
         <ul class="feature-grid">
-          <li><span class="feature-icon">◇</span> Multi-group diffusion + full-core nodal solver</li>
-          <li><span class="feature-icon">◇</span> Lattice homogenization &amp; assembly discontinuity factors</li>
+          <li><span class="feature-icon">◇</span> Multi-group diffusion + full-core nodal solver — hex, Cartesian &amp; R-Z geometries</li>
+          <li><span class="feature-icon">◇</span> Lattice homogenization &amp; assembly discontinuity factors (hex / Cartesian / R-Z)</li>
           <li><span class="feature-icon">◇</span> Thermal-hydraulics &amp; safety (DNBR, feedback)</li>
           <li><span class="feature-icon">◇</span> Burnup, decay heat &amp; multi-cycle fuel</li>
           <li><span class="feature-icon">◇</span> Archetype presets &amp; one-command starter kits (LWR-SMR, HTGR, MSR, micro)</li>

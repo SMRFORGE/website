@@ -73,8 +73,8 @@ a.logo-wrap{text-decoration:none}a.logo-wrap:hover img{filter:drop-shadow(0 0 40
   .h2{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
 
   /* provenance pillars */
-  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-  @media (max-width:720px){.pillars{grid-template-columns:1fr}}
+  .pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+  @media (max-width:720px){.pillars{grid-template-columns:1fr 1fr}}
   .pillar{border:1px solid var(--edge);border-radius:10px;padding:15px 16px;background:var(--panel);
     border-top:2px solid var(--accent-line)}
   .pillar .n{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--accent);font-weight:700}

@@ -303,6 +303,9 @@
           number or refute it — checked against the open, independently-implementable
           <b>Evidence Envelope</b> schema (a versioned spec, JSON Schema, and conformance
           vectors), not a SMRFORGE-proprietary format. No "trust me, it ran on my machine."
+          Run <code>smrforge conformance run</code> to certify any verifier — ours or one
+          you wrote yourself — against those vectors, so "independently-implementable" is
+          something you prove, not something we ask you to take on faith.
         </p>
         <div class="provenance-grid">
           <article class="provenance-card">
@@ -316,6 +319,10 @@
           <article class="provenance-card">
             <h3>Locked surface, gated drift</h3>
             <p>OpenAPI spec committed and CI-enforced. 6,500+ tests, golden snapshots, brand and lint gates. Every change to the public surface is reviewed before it ships.</p>
+          </article>
+          <article class="provenance-card">
+            <h3>Append-only transparency log</h3>
+            <p>Bundle digests enter an RFC 6962-style Merkle log that publishes signed tree heads. Anyone can pull an <b>inclusion</b> proof — your record is in the log — or a <b>consistency</b> proof — the log was only appended to, never rewritten — and check it offline, with no trust in whoever runs the log.</p>
           </article>
         </div>
       </div>

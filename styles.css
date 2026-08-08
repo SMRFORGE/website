@@ -383,6 +383,10 @@ body {
   gap: 1.25rem;
   margin-top: 2rem;
 }
+/* provenance now carries four cards — flow responsively instead of a lone wrap */
+.provenance-grid {
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
 
 .provenance-card,
 .gateway-card {

@@ -57,7 +57,7 @@
     <div class="pillars">
       <div class="pillar"><div class="n">01 · FINGERPRINT</div><h3>Evidence envelopes</h3><p>Every output is a schema-registered bundle with a SHA-256 fingerprint of its inputs and result — optionally <code>ed25519</code> GPG-signed.</p></div>
       <div class="pillar"><div class="n">02 · REPLAY</div><h3>Bit-exact reproduction</h3><p>A pinned <code>SOURCE_DATE_EPOCH</code> and the <code>replay_bundle()</code> contract regenerate the same bytes from the same inputs.</p></div>
-      <div class="pillar"><div class="n">03 · VERIFY</div><h3><code>exit 0</code> = it holds</h3><p>Verification is a standalone, offline check against the open <b>Evidence Envelope</b> schema — a third party reproduces or refutes your number in seconds, without trusting or licensing SMRFORGE.</p></div>
+      <div class="pillar"><div class="n">03 · VERIFY</div><h3><code>exit 0</code> = it holds</h3><p>A standalone, offline check against the open <b>Evidence Envelope</b> schema — a third party reproduces or refutes your number in seconds, no SMRFORGE license needed. Digests also enter an append-only Merkle log: inclusion and consistency proofs it was never rewritten.</p></div>
     </div>
   </div>
 

@@ -139,6 +139,7 @@ a.logo-wrap{text-decoration:none}a.logo-wrap:hover img{filter:drop-shadow(0 0 40
       --verified:#0f766e; --screen:#b45309;
     }
     @page{margin:11mm}
+    html{zoom:.93}                                          /* fit the sheet to a clean two-pager (matches the original scale) */
     html,body{background:#fff}
     *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     body::before{display:none!important}                    /* drop ambient teal glow */

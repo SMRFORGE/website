@@ -26,7 +26,7 @@
   <div class="masthead">
     <a href="/" class="logo-wrap" aria-label="SMRFORGE home"><img src="images/smrforge-lockup-white.png" alt="SMRFORGE"/></a>
     <div class="tag">Verifiable SMR computational engineering</div>
-    <div class="site"><a href="/" style="color:var(--accent)"><b>smrforge.io</b></a> · Open-core · Private beta</div>
+    <div class="site"><a href="/" style="color:var(--accent)"><b>smrforge.io</b></a> · Open-core · Community open source · Pro in beta</div>
   </div>
 
   <!-- HERO -->
@@ -35,7 +35,7 @@
       <span class="eyebrow">SMR design · analysis · optimization</span>
       <h1 style="margin-top:12px">Reactor physics your reviewers can <span class="hl">reproduce</span> — not just believe.</h1>
       <p>A full multi-physics toolkit for Small Modular Reactors where every result ships as a fingerprinted, independently reproducible evidence bundle — and is labeled, honestly, for how far to trust it.</p>
-      <div class="kbd"><b>pip install -e .</b> → <b>smrforge doctor</b> → a screening k-eff in a minute</div>
+      <div class="kbd"><b>pip install -e '.[perf]'</b> → <b>smrforge doctor</b> → a screening k-eff in a minute</div>
     </div>
     <div class="evidence" aria-label="Example evidence bundle">
       <div class="ehead"><span>evidence_envelope · adr-013</span><span class="seal">◆ gpg-signable</span></div>
@@ -126,7 +126,7 @@
   <!-- FOOT / CTA -->
   <div class="foot">
     <div class="start">
-      <div class="code"><span class="c"># Screening k-eff, labeled honestly (private beta — from a checkout)</span>
+      <div class="code"><span class="c"># Screening k-eff, labeled honestly (open source, from a checkout)</span>
 <span class="p">import</span> smrforge <span class="p">as</span> smr
 r = smr.analyze_preset(<span class="s">"gt-mhr-350"</span>)
 <span class="p">print</span>(r[<span class="s">"k_eff"</span>], r[<span class="s">"physics_fidelity"</span>])  <span class="c"># 0.9051  screening_estimate</span></div>

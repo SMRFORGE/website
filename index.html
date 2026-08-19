@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SMRFORGE — Verifiable Simulation Platform for Advanced Reactors</title>
-  <meta name="description" content="SMRFORGE takes a small modular reactor from concept to a full-core design, safety numbers, and cost — in one auditable run. Screen fast in pure Python, escalate the same inputs to OpenMC for reference accuracy, and ship every result as a verifiable evidence bundle. Community is evaluation-grade and reproducible; Pro is reference-grade — its nodal engine closes the analytic IAEA-2D PWR benchmark to +19 pcm. Community MIT; Pro FSL-1.1-MIT. Air-gap-safe.">
+  <meta name="description" content="SMRFORGE takes a small modular reactor from concept to a full-core design, safety numbers, and cost — in one auditable run. Screen fast in pure Python, escalate the same inputs to OpenMC — free — when a number has to hold up, and ship every result as a verifiable evidence bundle. The nodal engine closes the analytic IAEA-2D PWR benchmark to +19 pcm. Community is open and reproducible (MIT); Pro adds the assurance layer for regulatory submissions (FSL-1.1-MIT). Air-gap-safe.">
   <link rel="icon" href="images/smrforge_logo_white_transparent.png" type="image/png">
   <meta property="og:title" content="SMRFORGE — Verifiable Simulation Platform for Advanced Reactors">
-  <meta property="og:description" content="A full-core SMR design engine: concept → core design → safety → cost, in one auditable run. Screen fast, escalate to OpenMC when it counts, and ship a verifiable evidence bundle. Community is evaluation-grade; Pro is reference-grade — closing the analytic IAEA-2D nodal benchmark to +19 pcm. Air-gap-safe.">
+  <meta property="og:description" content="A full-core SMR design engine: concept → core design → safety → cost, in one auditable run. Screen fast, escalate to OpenMC (free) when it counts, and ship a verifiable evidence bundle. The nodal engine closes the analytic IAEA-2D benchmark to +19 pcm. Community is open and reproducible; Pro adds the assurance layer for regulatory submissions. Air-gap-safe.">
   <meta property="og:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
   <meta property="og:url" content="https://smrforge.io">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="SMRFORGE — Verifiable Simulation Platform for Advanced Reactors">
-  <meta name="twitter:description" content="Concept → full-core design → safety → cost in one auditable run. Screen fast in Python, escalate to OpenMC for reference accuracy. Every result is a verifiable, reproducible evidence bundle. Air-gap-safe.">
+  <meta name="twitter:description" content="Concept → full-core design → safety → cost in one auditable run. Screen fast in Python, escalate to OpenMC — free — when a number has to hold up. Every result is a verifiable, reproducible evidence bundle. Air-gap-safe.">
   <meta name="twitter:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
   <link rel="canonical" href="https://smrforge.io">
   <script type="application/ld+json">
@@ -26,7 +26,7 @@
         "name": "SMRFORGE",
         "url": "https://smrforge.io",
         "logo": "https://smrforge.io/images/smrforge_logo_white_transparent.png",
-        "description": "Verifiable platform for SMR design and analysis. The free Community tier (MIT) is evaluation-grade: a full-core nodal engine (NEM + CMFD; Cartesian and R-Z), reproducible on every run. Pro is the reference-grade production design engine — closing the IAEA-2D benchmark to +19 pcm, adding hex geometry, coupled safety and multi-cycle burnup, rod-worth/shutdown-margin/reactivity-coefficient design outputs, and advanced deterministic transport depth — plus assurance bundles, with one-step escalation to OpenMC for reference accuracy. Every run produces a verifiable evidence bundle. Community MIT; Pro FSL-1.1-MIT. Air-gap-safe runtime.",
+        "description": "Verifiable platform for SMR design and analysis. The free Community tier (MIT) is evaluation-grade: a full-core nodal engine (NEM + CMFD; Cartesian and R-Z), reproducible on every run. Pro adds the production design workflow and the assurance layer for regulatory submissions — hex geometry, coupled safety and multi-cycle burnup, rod-worth/shutdown-margin/reactivity-coefficient design outputs, assurance bundles, traceability, and support. The nodal engine closes the analytic IAEA-2D benchmark to +19 pcm; escalate the same inputs to OpenMC (free) for a defensible number. Every run produces a verifiable evidence bundle. Community MIT; Pro FSL-1.1-MIT. Air-gap-safe runtime.",
         "sameAs": [
           "https://www.linkedin.com/company/smrforge/",
           "https://x.com/smrforge"
@@ -43,7 +43,7 @@
         "applicationCategory": "EngineeringApplication",
         "operatingSystem": "Windows|macOS|Linux",
         "softwareVersion": "1.x",
-        "description": "Open-source (MIT) evaluation-grade integration surface for Small Modular Reactor design and analysis. Bundles fast in-tree solvers (multi-group diffusion, thermal-hydraulics, burnup) for screening, plus one-step escalation to OpenMC for reference accuracy. Every run produces a verifiable evidence bundle (SHA-256 manifest, reproducibility block, schema-versioned audit trail) any third party can verify offline. Includes the CLI, a React-based dashboard, and a full-core nodal engine (transverse-integrated NEM with CMFD acceleration; Cartesian and R-Z) — evaluation-grade and reproducible. Pro is the reference-grade production design engine — closing the analytic IAEA-2D benchmark to +19 pcm, adding hex geometry, coupled multi-cycle safety and burnup workflows, advanced transport depth, and assurance / V&V.",
+        "description": "Open-source (MIT) evaluation-grade integration surface for Small Modular Reactor design and analysis. Bundles fast in-tree solvers (multi-group diffusion, thermal-hydraulics, burnup) for screening, plus one-step escalation to OpenMC for reference accuracy. Every run produces a verifiable evidence bundle (SHA-256 manifest, reproducibility block, schema-versioned audit trail) any third party can verify offline. Includes the CLI, a React-based dashboard, and a full-core nodal engine (transverse-integrated NEM with CMFD acceleration; Cartesian and R-Z) — evaluation-grade and reproducible. Pro adds the production design workflow and the assurance layer for regulatory submissions — hex geometry, coupled multi-cycle safety and burnup workflows, assurance bundles, and V&V. The nodal engine closes the analytic IAEA-2D benchmark to +19 pcm.",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -83,7 +83,7 @@
             "name": "What is SMRFORGE?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. The free Community tier (MIT) is evaluation-grade: it already runs a full-core nodal engine — lattice homogenization to a full-core power shape (Cartesian and R-Z), with every result a reproducible evidence bundle. Its Pro tier (FSL-1.1-MIT) is reference-grade — it closes the analytic IAEA-2D benchmark to +19 pcm and turns the model into a production design engine: coupled thermal-hydraulics and multi-cycle burnup, the rod-worth, shutdown-margin, and reactivity-coefficient outputs you design against, and advanced deterministic transport depth — all wrapped in assurance bundles and the V&V workflows regulators are willing to read. Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC) for reference accuracy. Every run ships as a verifiable evidence bundle."
+              "text": "SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. The free Community tier (MIT) is evaluation-grade: it already runs a full-core nodal engine — lattice homogenization to a full-core power shape (Cartesian and R-Z), with every result a reproducible evidence bundle. Its Pro tier (FSL-1.1-MIT) adds the production design workflow and the assurance layer regulators read: coupled thermal-hydraulics and multi-cycle burnup, the rod-worth, shutdown-margin, and reactivity-coefficient outputs you design against, assurance bundles, traceability, and the V&V workflows regulators are willing to read. Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC) for reference accuracy. Every run ships as a verifiable evidence bundle."
             }
           },
           {
@@ -202,7 +202,7 @@
           <a href="info-sheet.html" class="btn btn-secondary">Info Sheet</a>
         </div>
         <p class="hero-status"><strong>The Community engine is open source and available now.</strong> Clone it from GitLab and install from source (Python 3.11+); not yet on PyPI. The Pro tier is licensed and in commercial beta. <a href="#contact">Email us</a> to talk Pro or a pilot.</p>
-        <p class="hero-meta">Verifiable evidence bundles · Reference-validated · Full-core design engine · 6,500+ tests · MIT / FSL-1.1-MIT · Python 3.11+</p>
+        <p class="hero-meta">Verifiable evidence bundles · Free OpenMC escalation · Full-core design engine · 6,500+ tests · MIT / FSL-1.1-MIT · Python 3.11+</p>
       </div>
       <div class="hero-visual">
         <img src="images/smrforge_logo_white_transparent.png" alt="SMRFORGE" class="hero-logo" decoding="async">
@@ -219,18 +219,17 @@
           Most fast reactor-physics tools model a single fuel slice and extrapolate.
           SMRFORGE's nodal engine already gives you the whole core — a real full-core
           power shape (Cartesian and R-Z), evaluation-grade and free in the Community
-          tier. Pro turns that core model into a validated, reference-grade design: it
-          closes the analytic IAEA-2D PWR benchmark to +19 pcm, adds hex-geometry nodal,
-          couples thermal-hydraulics and multi-cycle burnup into the loop, escalates to
-          advanced deterministic transport where fidelity has to be defensible, and hands
-          you the control and safety numbers you actually design against — rod worth,
-          shutdown margin, and reactivity coefficients — plus a cost estimate and the
-          assurance bundles regulators read.
+          tier. The engine closes the analytic IAEA-2D PWR benchmark to +19 pcm. Pro turns
+          that core model into a submission-ready design: hex-geometry nodal, coupled
+          thermal-hydraulics and multi-cycle burnup, one-click escalation to OpenMC where a
+          number has to be defensible, and the control and safety numbers you actually design
+          against — rod worth, shutdown margin, and reactivity coefficients — plus a cost
+          estimate and the assurance bundles regulators read.
         </p>
         <div class="provenance-grid">
           <article class="provenance-card">
             <h3>Whole core — Cartesian &amp; R-Z (hex in Pro)</h3>
-            <p>Lattice → few-group homogenization → full-core 3-D nodal diffusion, with transverse-integrated nodal-expansion (NEM) intra-node flux moments and CMFD acceleration. The Community engine solves <strong>Cartesian</strong> and <strong>R-Z cylindrical</strong> cores — a real power shape, not a pin-cell guess. Pro adds <strong>hex</strong> geometry (SFR/LFR, prismatic HTGR, heat-pipe micro) and the reference-grade IAEA-2D +19 pcm closure.</p>
+            <p>Lattice → few-group homogenization → full-core 3-D nodal diffusion, with transverse-integrated nodal-expansion (NEM) intra-node flux moments and CMFD acceleration. The Community engine solves <strong>Cartesian</strong> and <strong>R-Z cylindrical</strong> cores — a real power shape, not a pin-cell guess. Pro adds <strong>hex</strong> geometry (SFR/LFR, prismatic HTGR, heat-pipe micro); the engine closes the analytic IAEA-2D benchmark to +19 pcm.</p>
           </article>
           <article class="provenance-card">
             <h3>The numbers you design against</h3>
@@ -251,15 +250,17 @@
           The strongest test of a reactor model is a real reactor.
         </p>
         <p class="section-desc">
-          SMRFORGE's <strong>Pro</strong> tier is reference-grade: its full-core nodal
-          design engine closes the analytic IAEA-2D PWR benchmark to +19 pcm and conserves
-          lattice-to-core reactivity to about 1 pcm — residual published, not just the
-          headline. On a real commercial-PWR benchmark, BEAVRS Cycle-1, the reference-grade
-          OpenMC oracle matches the measured critical boron to about +18 ppm (C/E 1.019)
-          with the geometry modeled to BEAVRS spec. The free, MIT-licensed
-          <strong>Community</strong> tier is the open, reproducible evaluation surface
-          beneath these — diffusion/nodal-grade, every committed benchmark carrying its
-          citation and tolerance, every result a bundle you re-verify offline.
+          SMRFORGE's full-core nodal engine closes the analytic IAEA-2D PWR two-group
+          benchmark to +19 pcm — a reproducibility-tested code-verification result, well
+          under a tenth of a percent — and conserves lattice-to-core reactivity to about
+          1 pcm, residual published. When a physics number has to hold up, the same inputs
+          escalate to OpenMC continuous-energy Monte Carlo — <strong>free for everyone</strong>.
+          On the TMI-1 HZP pin cell, SMRFORGE's own continuous-energy engine agrees with an
+          OpenMC ENDF/B-VIII.0 reference to −24 ± 121 pcm (within ±200). We state validation
+          <strong>closure-by-closure with published bands</strong> — not as a blanket claim —
+          and every result is a bundle you re-verify offline. Accuracy is the commodity; what
+          <strong>Pro</strong> adds is the assurance layer that turns those numbers into a
+          regulatory submission.
         </p>
         <div class="proof-grid">
           <article class="proof-card">
@@ -273,18 +274,21 @@
             <p class="proof-note">The homogenization step conserves reactivity from the detailed lattice to the core model on real data.</p>
           </article>
           <article class="proof-card">
-            <div class="proof-figure">1.019<span class="unit">C/E</span></div>
-            <div class="proof-label">BEAVRS Cycle-1 critical boron · Pro</div>
-            <p class="proof-note">Reference-grade OpenMC oracle: 993 ppm computed vs 975 ppm measured (+18 ppm), geometry to BEAVRS spec (annular Pyrex, exact BPRA patterns). A strong match on a real commercial-PWR measurement — residual published, not hidden.</p>
+            <div class="proof-figure">−24<span class="unit">pcm</span></div>
+            <div class="proof-label">TMI-1 HZP pin cell · CE vs OpenMC</div>
+            <p class="proof-note">SMRFORGE's own continuous-energy Monte Carlo vs an OpenMC ENDF/B-VIII.0 reference: −24 ± 121 pcm, a strong match within the ±200 pcm band. The escalation path to OpenMC is free for everyone; heterogeneous-lattice benchmarks (BEAVRS, C5G7) are tracked openly and not yet claimed.</p>
           </article>
         </div>
         <p class="honest-note">
-          <strong>Straight talk on scope.</strong> The reference-grade closures above are
-          <strong>Pro</strong> results; the free Community tier is diffusion/nodal-grade —
-          the open, reproducible evaluation surface beneath them. The in-tree Monte Carlo is
-          <strong>screening-grade by design</strong> — fast and auditable, not a high-fidelity
-          solver. When you need a licensing-grade number, escalate to OpenMC. We publish where
-          the fast path agrees with reference codes and where it doesn't, rather than hide it.
+          <strong>Straight talk on scope.</strong> The IAEA-2D figure is an analytic-benchmark
+          code verification; the TMI-1 figure is SMRFORGE's own continuous-energy engine
+          matching an OpenMC reference. The Community tier's in-tree Monte Carlo is multigroup,
+          <strong>screening-grade by design</strong> — fast and auditable. For a licensing-grade
+          lattice number, escalate to OpenMC — <strong>free for everyone</strong>. Heterogeneous
+          full-lattice benchmarks (BEAVRS, C5G7) remain open and are tracked in a public V&amp;V
+          matrix; we publish where the methods agree and where they don't, rather than hide it.
+          What you pay <strong>Pro</strong> for is assurance — the submission workflow,
+          traceability, and support — not the k-eff.
         </p>
       </div>
     </section>
@@ -454,7 +458,7 @@
         <h2 class="section-title">FAQ</h2>
         <dl class="faq-list">
           <dt>What is SMRFORGE?</dt>
-          <dd>SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. The free Community tier (MIT) is evaluation-grade: it already runs a full-core nodal engine — lattice homogenization to a full-core power shape (Cartesian and R-Z), with every result a reproducible evidence bundle. Its Pro tier (FSL-1.1-MIT) is reference-grade — it closes the analytic IAEA-2D benchmark to +19 pcm and turns the model into a production design engine: coupled thermal-hydraulics and multi-cycle burnup, the rod-worth, shutdown-margin, and reactivity-coefficient outputs you design against, and advanced deterministic transport depth — all wrapped in assurance bundles and the V&amp;V workflows regulators are willing to read. Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC) for reference accuracy. Every run ships as a verifiable evidence bundle.</dd>
+          <dd>SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. The free Community tier (MIT) is evaluation-grade: it already runs a full-core nodal engine — lattice homogenization to a full-core power shape (Cartesian and R-Z), with every result a reproducible evidence bundle. Its Pro tier (FSL-1.1-MIT) adds the production design workflow and the assurance layer regulators read: coupled thermal-hydraulics and multi-cycle burnup, the rod-worth, shutdown-margin, and reactivity-coefficient outputs you design against, assurance bundles, traceability, and the V&amp;V workflows regulators are willing to read. Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC) for reference accuracy. Every run ships as a verifiable evidence bundle.</dd>
           <dt>What's the difference between Community and Pro?</dt>
           <dd>Community is MIT-licensed and includes neutronics, a full-core nodal engine (NEM + CMFD; Cartesian and R-Z, evaluation-grade), Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, an OpenMC integration, and the full evidence-bundle plumbing. Pro adds converters that generate input decks for — and read results from — your own licensed Serpent and MCNP installations (SMRFORGE does not include or distribute those export-controlled codes), BenchmarkRunner, ReportGenerator, regulatory-quality V&amp;V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment.</dd>
           <dt>Does SMRFORGE include Serpent or MCNP?</dt>

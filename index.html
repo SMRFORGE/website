@@ -107,7 +107,7 @@
             "name": "How does SMRFORGE handle reproducibility?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (Python version, dependency-lock hash, ENDF library, container digest, build provenance), and a schema-versioned audit trail. `smrforge verify <bundle>` reproduces or refutes the claim offline. The dashboard ships its own build-provenance JSON so you can verify the UI bytes match the wheel."
+              "text": "Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (Python version, dependency-lock hash, ENDF library, container digest, build provenance), and a schema-versioned audit trail. `smrforge verify <bundle>` confirms or refutes a bundle's integrity offline — it checks the record is authentic, complete, and untampered against the open schema, without the tool that produced it; `smrforge reproduce` is the separate step that re-runs the result end-to-end. The dashboard ships its own build-provenance JSON so you can verify the UI bytes match the wheel."
             }
           },
           {
@@ -165,6 +165,7 @@
     <nav class="nav">
       <a href="#" class="logo">SMRFORGE</a>
       <ul class="nav-links">
+        <li><a href="#trust">How Trust Is Built</a></li>
         <li><a href="#design-engine">Design Engine</a></li>
         <li><a href="#validation">Validation</a></li>
         <li><a href="#provenance">Provenance</a></li>
@@ -185,16 +186,17 @@
   <main>
     <section class="hero">
       <div class="hero-content">
-        <p class="hero-badge">Verifiable Simulation Platform for Advanced Reactors</p>
+        <p class="hero-badge">SMRFORGE — How Trust Is Built</p>
         <p class="hero-problem">Simulation outputs aren't enough. Regulators, reviewers, and partners need evidence.</p>
-        <h1 class="hero-title">Reactor simulations you can defend.</h1>
+        <h1 class="hero-title">Not "trust us." Check us.</h1>
         <p class="hero-desc">
-          Take a small modular reactor from concept to a full-core design, the safety
-          numbers, and a cost estimate — in one auditable run. Every result ships as a
-          verifiable evidence bundle a colleague, reviewer, or regulator can reproduce
-          offline. Screen fast in pure Python, then escalate the same inputs to a
-          lab-grade Monte Carlo code (OpenMC) when a number has to hold up.
-          <strong>Prove every number. Reproduce it offline. Screen fast — escalate when it counts.</strong>
+          Take an SMR from concept to a full-core design, the safety numbers, and a cost —
+          in one auditable run. Screen fast in pure Python; escalate the same inputs to
+          OpenMC when a number has to hold up. Every result ships as a
+          <strong>signed, tamper-evident evidence bundle</strong> — labeled with how sure
+          it is, its leftover error published, logged where it can't be quietly changed.
+          Anyone can verify it offline, against an open standard, with a checker they wrote
+          themselves. <strong>Label how sure. Publish the leftover. Seal it. Let anyone check it.</strong>
         </p>
         <div class="hero-ctas">
           <a href="https://gitlab.com/smrforge/smrforge-public" class="btn btn-primary" target="_blank" rel="noopener">View on GitLab<span class="beta-badge">MIT · open source</span></a>
@@ -202,10 +204,40 @@
           <a href="info-sheet.html" class="btn btn-secondary">Info Sheet</a>
         </div>
         <p class="hero-status"><strong>The Community engine is open source and available now.</strong> Clone it from GitLab and install from source (Python 3.11+); not yet on PyPI. The Pro tier is licensed and in commercial beta. <a href="#contact">Email us</a> to talk Pro or a pilot.</p>
-        <p class="hero-meta">Verifiable evidence bundles · Free OpenMC escalation · Full-core design engine · 6,500+ tests · MIT / FSL-1.1-MIT · Python 3.11+</p>
+        <p class="hero-meta">Signed evidence bundles · Offline verify against an open schema · Append-only transparency log · Full-core design engine · Free OpenMC escalation · MIT / FSL-1.1-MIT</p>
       </div>
       <div class="hero-visual">
-        <img src="images/smrforge_logo_white_transparent.png" alt="SMRFORGE" class="hero-logo" decoding="async">
+        <div class="hero-receipt" role="img" aria-label="An example SMRFORGE evidence bundle: a k-effective result carrying a screening-estimate fidelity label and a SHA-256 hash, with an offline verify passing.">
+          <div class="hr-head"><span class="hr-dot"></span><span class="hr-dot"></span><span class="hr-dot"></span><span class="hr-title">evidence-bundle.json</span><span class="hr-eg">example</span></div>
+          <div class="hr-body">
+            <div class="hr-row"><span class="hr-k">result</span> &nbsp;k_eff = 1.29841</div>
+            <div class="hr-row"><span class="hr-pill">fidelity: screening_estimate</span></div>
+            <div class="hr-row"><span class="hr-k">bundle</span> &nbsp;sha256:6a21fc…9cd0</div>
+            <div class="hr-row">signed <span class="hr-ok">✓</span> &nbsp;·&nbsp; in transparency log <span class="hr-ok">✓</span></div>
+            <div class="hr-term">$ smrforge verify evidence-bundle.json<br><span class="hr-ok">✓ authentic · schema ok · exit 0</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="trust" class="section trust-spine">
+      <div class="container">
+        <h2 class="section-title">How trust is built</h2>
+        <p class="section-desc section-desc-lead">
+          Five steps, every one ending in something you can check — not take on faith.
+        </p>
+        <p class="section-desc">
+          Accuracy is the commodity — everyone claims it. What SMRFORGE ships with every result is the
+          <strong>process that would catch a wrong number</strong>, and the record that lets a stranger check it
+          without taking our word for anything.
+        </p>
+        <div class="provenance-grid trust-steps">
+          <article class="provenance-card"><span class="trust-n">1</span><h3>Label it</h3><p>Every result carries how sure it is — a fast screening estimate or a lab-grade number — stated in the output itself, never dressed up as more than it is.</p></article>
+          <article class="provenance-card"><span class="trust-n">2</span><h3>Name the leftover</h3><p>Validation is reported closure-by-closure with <strong>published error bars</strong> (IAEA-2D to +19 pcm; TMI-1 to −24 ± 121 pcm). What isn't proven yet (BEAVRS, C5G7) stays out in the open — tracked, not hidden.</p></article>
+          <article class="provenance-card"><span class="trust-n">3</span><h3>Seal it</h3><p>Each run is locked into a tamper-evident evidence bundle — a SHA-256 fingerprint of every input and output, the exact software and data versions, and a full audit trail. Change anything and the seal breaks.</p></article>
+          <article class="provenance-card"><span class="trust-n">4</span><h3>Log it</h3><p>That record enters an append-only transparency log (an RFC 6962-style Merkle log) that can only be added to, never quietly rewritten. Anyone can prove their result is in it — and that the log was never altered — offline.</p></article>
+          <article class="provenance-card"><span class="trust-n">5</span><h3>Let anyone check it</h3><p><code>smrforge verify &lt;bundle&gt;</code> confirms a record is genuine and untampered — offline, against the open Evidence Envelope schema, with a checker that doesn't have to be ours. Re-running the physics end-to-end is a separate step (<code>smrforge reproduce</code>).</p></article>
+        </div>
       </div>
     </section>
 
@@ -219,7 +251,7 @@
           Most fast reactor-physics tools model a single fuel slice and extrapolate.
           SMRFORGE's nodal engine already gives you the whole core — a real full-core
           power shape (Cartesian and R-Z), evaluation-grade and free in the Community
-          tier. The engine closes the analytic IAEA-2D PWR benchmark to +19 pcm. Pro turns
+          tier. Pro turns
           that core model into a submission-ready design: hex-geometry nodal, coupled
           thermal-hydraulics and multi-cycle burnup, one-click escalation to OpenMC where a
           number has to be defensible, and the control and safety numbers you actually design
@@ -229,7 +261,7 @@
         <div class="provenance-grid">
           <article class="provenance-card">
             <h3>Whole core — Cartesian &amp; R-Z (hex in Pro)</h3>
-            <p>Lattice → few-group homogenization → full-core 3-D nodal diffusion, with transverse-integrated nodal-expansion (NEM) intra-node flux moments and CMFD acceleration. The Community engine solves <strong>Cartesian</strong> and <strong>R-Z cylindrical</strong> cores — a real power shape, not a pin-cell guess. Pro adds <strong>hex</strong> geometry (SFR/LFR, prismatic HTGR, heat-pipe micro); the engine closes the analytic IAEA-2D benchmark to +19 pcm.</p>
+            <p>Lattice → few-group homogenization → full-core 3-D nodal diffusion, with transverse-integrated nodal-expansion (NEM) intra-node flux moments and CMFD acceleration. The Community engine solves <strong>Cartesian</strong> and <strong>R-Z cylindrical</strong> cores — a real power shape, not a pin-cell guess. Pro adds <strong>hex</strong> geometry (SFR/LFR, prismatic HTGR, heat-pipe micro).</p>
           </article>
           <article class="provenance-card">
             <h3>The numbers you design against</h3>
@@ -245,14 +277,14 @@
 
     <section id="validation" class="section validation">
       <div class="container">
-        <h2 class="section-title">Anchored to a real reactor</h2>
+        <h2 class="section-title">Validated closure-by-closure — error bars published</h2>
         <p class="section-desc section-desc-lead">
-          The strongest test of a reactor model is a real reactor.
+          We state validation closure-by-closure, with published bands — and we publish where the methods don't agree, too.
         </p>
         <p class="section-desc">
           SMRFORGE's full-core nodal engine closes the analytic IAEA-2D PWR two-group
-          benchmark to +19 pcm — a reproducibility-tested code-verification result, well
-          under a tenth of a percent — and conserves lattice-to-core reactivity to about
+          benchmark to well under a tenth of a percent — a reproducibility-tested
+          code-verification result (the figure is below) — and conserves lattice-to-core reactivity to about
           1 pcm, residual published. When a physics number has to hold up, the same inputs
           escalate to OpenMC continuous-energy Monte Carlo — <strong>free for everyone</strong>.
           On the TMI-1 HZP pin cell, SMRFORGE's own continuous-energy engine agrees with an
@@ -307,10 +339,11 @@
         </p>
         <p class="section-desc">
           Hand the bundle to a colleague, a reviewer, or a regulator. They run
-          <code>smrforge verify &lt;bundle&gt;</code> offline and either reproduce your
-          number or refute it — checked against the open, independently-implementable
+          <code>smrforge verify &lt;bundle&gt;</code> offline and either confirm the record is
+          authentic and untampered or refute it — checked against the open, independently-implementable
           <b>Evidence Envelope</b> schema (a versioned spec, JSON Schema, and conformance
           vectors), not a SMRFORGE-proprietary format. No "trust me, it ran on my machine."
+          (Re-running the physics end-to-end is a separate, deeper check — <code>smrforge reproduce</code>.)
           Run <code>smrforge conformance run</code> to certify any verifier — ours or one
           you wrote yourself — against those vectors, so "independently-implementable" is
           something you prove, not something we ask you to take on faith.
@@ -464,7 +497,7 @@
           <dt>Does SMRFORGE include Serpent or MCNP?</dt>
           <dd><strong>No.</strong> Serpent and MCNP are third-party codes with their own licenses — MCNP is export-controlled (distributed via RSICC) and Serpent is license-restricted (via VTT / OECD-NEA). SMRFORGE does not contain, bundle, or distribute them, or their nuclear-data libraries. Pro ships <em>converters</em> that generate input decks for, and read results from, a copy you license and install yourself. OpenMC (open source) is included as the built-in escalation path.</dd>
           <dt>How does SMRFORGE handle reproducibility?</dt>
-          <dd>Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (Python version, dependency-lock hash, ENDF library, container digest, build provenance), and a schema-versioned audit trail. <code>smrforge verify &lt;bundle&gt;</code> reproduces or refutes the claim offline. The dashboard ships its own build-provenance JSON so you can verify the UI bytes match the wheel.</dd>
+          <dd>Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (Python version, dependency-lock hash, ENDF library, container digest, build provenance), and a schema-versioned audit trail. <code>smrforge verify &lt;bundle&gt;</code> confirms or refutes a bundle's <strong>integrity</strong> offline — it checks the record is authentic, complete, and untampered against the open schema, <em>without the tool that produced it</em>. Re-running the result end-to-end is a separate step, <code>smrforge reproduce</code>. The dashboard ships its own build-provenance JSON so you can verify the UI bytes match the wheel.</dd>
           <dt>Is SMRFORGE Pro suitable for licensing-relevant work?</dt>
           <dd>Pro adds regulatory-quality V&amp;V workflows, automated traceability that maps requirements to models to results to evidence, verifiable air-gapped deployment bundles, and ReportGenerator artifacts that map to standard SRP sections. Community ships the same evidence-bundle plumbing — Pro adds the templates, the workflows, and the support contract.</dd>
           <dt>Is Docker or air-gapped deployment supported?</dt>

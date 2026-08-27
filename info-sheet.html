@@ -46,8 +46,8 @@
         <div class="row"><span>sha-256</span><span class="hash">a3f1c8…9e0b</span></div>
         <div class="row"><span>replay</span><b>bit-exact @ epoch</b></div>
       </div>
-      <div class="verify"><span class="p">$ smrforge verify reviewer-kit ./bundle</span>
-        <span class="ok">✓ reproducible by a third party · exit 0</span></div>
+      <div class="verify"><span class="p">$ smrforge verify ./bundle</span>
+        <span class="ok">✓ authentic · schema ok · untampered · exit 0</span></div>
     </div>
   </div>
 
@@ -57,7 +57,7 @@
     <div class="pillars">
       <div class="pillar"><div class="n">01 · FINGERPRINT</div><h3>Evidence envelopes</h3><p>Every output is a schema-registered bundle with a SHA-256 fingerprint of its inputs and result — optionally <code>ed25519</code> GPG-signed.</p></div>
       <div class="pillar"><div class="n">02 · REPLAY</div><h3>Bit-exact reproduction</h3><p>A pinned <code>SOURCE_DATE_EPOCH</code> and the <code>replay_bundle()</code> contract regenerate the same bytes from the same inputs.</p></div>
-      <div class="pillar"><div class="n">03 · VERIFY</div><h3><code>exit 0</code> = it holds</h3><p>A standalone, offline check against the open <b>Evidence Envelope</b> schema — a third party reproduces or refutes your number in seconds, no SMRFORGE license needed. Digests also enter an append-only Merkle log: inclusion and consistency proofs it was never rewritten.</p></div>
+      <div class="pillar"><div class="n">03 · VERIFY</div><h3><code>exit 0</code> = it holds</h3><p>A standalone, offline check against the open <b>Evidence Envelope</b> schema — a third party confirms your record is authentic and untampered, or refutes it, in seconds, no SMRFORGE license needed (re-running the number end-to-end is the separate REPLAY step above). Digests also enter an append-only Merkle log: inclusion and consistency proofs it was never rewritten.</p></div>
     </div>
   </div>
 

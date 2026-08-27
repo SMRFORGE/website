@@ -806,15 +806,98 @@ body {
 }
 .honest-note {
   margin-top: 2rem;
-  padding: 1.1rem 1.35rem;
-  border-left: 3px solid var(--accent-secondary);
-  background: rgba(0, 180, 216, 0.06);
+  padding: 1.25rem 1.5rem;
+  border-left: 4px solid var(--accent-secondary);
+  background: rgba(0, 180, 216, 0.11);
   border-radius: 0 var(--radius) var(--radius) 0;
-  color: var(--text-muted);
-  font-size: 0.95rem;
+  color: var(--text);
+  font-size: 1rem;
   line-height: 1.65;
 }
 .honest-note strong { color: var(--text); }
 @media (max-width: 800px) {
   .proof-grid { grid-template-columns: 1fr; }
+}
+
+/* How trust is built — spine */
+.trust-steps .provenance-card { position: relative; }
+.trust-n {
+  display: inline-grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.6rem;
+  background: rgba(0, 245, 212, 0.12);
+  border: 1px solid rgba(0, 245, 212, 0.35);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+.trust-steps .provenance-card code,
+.section-desc code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  color: var(--accent);
+  background: rgba(0, 245, 212, 0.08);
+  padding: 0.05rem 0.35rem;
+  border-radius: 4px;
+}
+
+/* Hero receipt (replaces the logo) */
+.hero-receipt {
+  width: min(460px, 100%);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.6);
+  font-family: var(--font-mono);
+}
+.hr-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.7rem 0.95rem;
+  border-bottom: 1px solid var(--border);
+}
+.hr-dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--border); }
+.hr-title { margin-left: 0.5rem; font-size: 0.78rem; color: var(--text-muted); }
+.hr-eg {
+  margin-left: auto;
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  opacity: 0.75;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.1rem 0.35rem;
+}
+.hr-body {
+  padding: 1.1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.hr-k { color: var(--accent); }
+.hr-pill {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 5px;
+  background: rgba(220, 174, 114, 0.14);
+  color: #dcae72;
+  border: 1px solid rgba(220, 174, 114, 0.32);
+  font-size: 0.74rem;
+}
+.hr-ok { color: var(--accent); font-weight: 600; }
+.hr-term {
+  margin-top: 0.4rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  line-height: 1.7;
 }

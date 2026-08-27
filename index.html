@@ -165,7 +165,7 @@
     <nav class="nav">
       <a href="#" class="logo">SMRFORGE</a>
       <ul class="nav-links">
-        <li><a href="#trust">How Trust Is Built</a></li>
+        <li><a href="#trust">Trust</a></li>
         <li><a href="#design-engine">Design Engine</a></li>
         <li><a href="#validation">Validation</a></li>
         <li><a href="#provenance">Provenance</a></li>
@@ -196,7 +196,7 @@
           <strong>signed, tamper-evident evidence bundle</strong> — labeled with how sure
           it is, its leftover error published, logged where it can't be quietly changed.
           Anyone can verify it offline, against an open standard, with a checker they wrote
-          themselves. <strong>Label how sure. Publish the leftover. Seal it. Let anyone check it.</strong>
+          themselves. <strong>Declare the fidelity. Quantify the residual. Seal the record. Log it. Verify it yourself.</strong>
         </p>
         <div class="hero-ctas">
           <a href="https://gitlab.com/smrforge/smrforge-public" class="btn btn-primary" target="_blank" rel="noopener">View on GitLab<span class="beta-badge">MIT · open source</span></a>
@@ -207,15 +207,20 @@
         <p class="hero-meta">Signed evidence bundles · Offline verify against an open schema · Append-only transparency log · Full-core design engine · Free OpenMC escalation · MIT / FSL-1.1-MIT</p>
       </div>
       <div class="hero-visual">
-        <div class="hero-receipt" role="img" aria-label="An example SMRFORGE evidence bundle: a k-effective result carrying a screening-estimate fidelity label and a SHA-256 hash, with an offline verify passing.">
-          <div class="hr-head"><span class="hr-dot"></span><span class="hr-dot"></span><span class="hr-dot"></span><span class="hr-title">evidence-bundle.json</span><span class="hr-eg">example</span></div>
-          <div class="hr-body">
-            <div class="hr-row"><span class="hr-k">result</span> &nbsp;k_eff = 1.29841</div>
-            <div class="hr-row"><span class="hr-pill">fidelity: screening_estimate</span></div>
-            <div class="hr-row"><span class="hr-k">bundle</span> &nbsp;sha256:6a21fc…9cd0</div>
-            <div class="hr-row">signed <span class="hr-ok">✓</span> &nbsp;·&nbsp; in transparency log <span class="hr-ok">✓</span></div>
-            <div class="hr-term">$ smrforge verify evidence-bundle.json<br><span class="hr-ok">✓ authentic · schema ok · exit 0</span></div>
+        <div class="hero-receipt" role="img" aria-label="An example SMRFORGE evidence bundle with illustrative values: a k-effective result labeled screening_estimate, a SHA-256 bundle hash, signed and transparency-logged attestations, and an offline verify passing.">
+          <div class="hr-head">
+            <span class="hr-dot"></span><span class="hr-dot"></span><span class="hr-dot"></span>
+            <span class="hr-title">evidence-bundle.json</span>
+            <span class="hr-eg">example — illustrative values</span>
           </div>
+          <div class="hr-body">
+            <div class="hr-row"><span class="hr-k">analysis</span><span class="hr-v">smr-core-screening</span></div>
+            <div class="hr-row"><span class="hr-k">result</span><span class="hr-v hr-result">k_eff = 1.29841</span></div>
+            <div class="hr-row"><span class="hr-k">fidelity</span><span class="hr-pill">screening_estimate</span></div>
+            <div class="hr-row"><span class="hr-k">bundle</span><span class="hr-hash">sha256:6a21fc…9cd0</span></div>
+            <div class="hr-row"><span class="hr-k">attestation</span><span class="hr-v"><span class="hr-ok">✓</span> signed&ensp;·&ensp;<span class="hr-ok">✓</span> in transparency log</span></div>
+          </div>
+          <div class="hr-term">$ smrforge verify evidence-bundle.json<br><span class="hr-ok">✓ authentic · schema ok · untampered · exit 0</span></div>
         </div>
       </div>
     </section>
@@ -224,19 +229,18 @@
       <div class="container">
         <h2 class="section-title">How trust is built</h2>
         <p class="section-desc section-desc-lead">
-          Five steps, every one ending in something you can check — not take on faith.
+          Five steps. Each one ends in an artifact you can check.
         </p>
         <p class="section-desc">
-          Accuracy is the commodity — everyone claims it. What SMRFORGE ships with every result is the
-          <strong>process that would catch a wrong number</strong>, and the record that lets a stranger check it
-          without taking our word for anything.
+          Accuracy claims are universal. SMRFORGE ships, with every result, the process that would catch a wrong
+          number — and the record that lets an independent reviewer confirm it without taking our word for anything.
         </p>
         <div class="provenance-grid trust-steps">
-          <article class="provenance-card"><span class="trust-n">1</span><h3>Label it</h3><p>Every result carries how sure it is — a fast screening estimate or a lab-grade number — stated in the output itself, never dressed up as more than it is.</p></article>
-          <article class="provenance-card"><span class="trust-n">2</span><h3>Name the leftover</h3><p>Validation is reported closure-by-closure with <strong>published error bars</strong> (IAEA-2D to +19 pcm; TMI-1 to −24 ± 121 pcm). What isn't proven yet (BEAVRS, C5G7) stays out in the open — tracked, not hidden.</p></article>
-          <article class="provenance-card"><span class="trust-n">3</span><h3>Seal it</h3><p>Each run is locked into a tamper-evident evidence bundle — a SHA-256 fingerprint of every input and output, the exact software and data versions, and a full audit trail. Change anything and the seal breaks.</p></article>
-          <article class="provenance-card"><span class="trust-n">4</span><h3>Log it</h3><p>That record enters an append-only transparency log (an RFC 6962-style Merkle log) that can only be added to, never quietly rewritten. Anyone can prove their result is in it — and that the log was never altered — offline.</p></article>
-          <article class="provenance-card"><span class="trust-n">5</span><h3>Let anyone check it</h3><p><code>smrforge verify &lt;bundle&gt;</code> confirms a record is genuine and untampered — offline, against the open Evidence Envelope schema, with a checker that doesn't have to be ours. Re-running the physics end-to-end is a separate step (<code>smrforge reproduce</code>).</p></article>
+          <article class="provenance-card"><span class="trust-n">1</span><h3>Fidelity declaration</h3><p>Every result carries a machine-readable <code>physics_fidelity</code> label — screening estimate or reference-grade — stated in the output record itself.</p></article>
+          <article class="provenance-card"><span class="trust-n">2</span><h3>Residual quantification</h3><p>Validation is reported per benchmark with published error bands — IAEA-2D +19 pcm; TMI-1 −24 ± 121 pcm — and open items (BEAVRS, C5G7) are tracked in a public V&amp;V matrix.</p></article>
+          <article class="provenance-card"><span class="trust-n">3</span><h3>Cryptographic sealing</h3><p>Each run is committed to a tamper-evident bundle — a SHA-256 manifest of every input, output, and software version; any alteration breaks the seal.</p></article>
+          <article class="provenance-card"><span class="trust-n">4</span><h3>Transparency logging</h3><p>Bundle digests enter an append-only, RFC 6962-style Merkle log; inclusion and consistency proofs are checkable offline.</p></article>
+          <article class="provenance-card"><span class="trust-n">5</span><h3>Independent verification</h3><p><code>smrforge verify</code> confirms a record is authentic and untampered — offline, against the open Evidence Envelope schema, with any conformant verifier, including one you implement yourself.</p></article>
         </div>
       </div>
     </section>

@@ -386,7 +386,7 @@
           API + AI tools — one process you can audit.
         </p>
         <p class="section-desc">
-          The SMRFORGE gateway is a single FastAPI service that fronts everything:
+          The SMRFORGE gateway is a single stdlib HTTP service — no web framework — that fronts
           the public REST API and the MCP tool catalog your AI agents
           call. One process, one port, one OpenAPI spec, one audit log. Launch with
           <code>smrforge serve</code> and you're running the same surface that ships with Pro.
@@ -394,7 +394,7 @@
         <div class="gateway-grid">
           <article class="gateway-card">
             <h3>One process, one port</h3>
-            <p>The REST API and MCP tools served from a single FastAPI process on port 8765. API-key auth out of the box. K8s manifests included for on-prem and air-gapped clusters. Nothing to wire together.</p>
+            <p>The REST API and MCP tools served from a single stdlib HTTP process on port 8765 — no web framework to wire or patch. API-key auth out of the box. K8s manifests included for on-prem and air-gapped clusters. Nothing to wire together.</p>
           </article>
           <article class="gateway-card">
             <h3>MCP tool catalog</h3>

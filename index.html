@@ -26,7 +26,7 @@
         "name": "SMRFORGE",
         "url": "https://smrforge.io",
         "logo": "https://smrforge.io/images/smrforge_logo_white_transparent.png",
-        "description": "Verifiable platform for SMR design and analysis. The free Community tier (MIT) is evaluation-grade: a full-core nodal engine (NEM + CMFD; Cartesian and R-Z), reproducible on every run. Pro adds the production design workflow and the assurance layer for regulatory submissions — hex geometry, coupled safety and multi-cycle burnup, rod-worth/shutdown-margin/reactivity-coefficient design outputs, assurance bundles, traceability, and support. The nodal engine closes the analytic IAEA-2D benchmark to +19 pcm; escalate the same inputs to OpenMC (free) for a defensible number. Every run produces a verifiable evidence bundle. Community MIT; Pro FSL-1.1-MIT. Air-gap-safe runtime.",
+        "description": "Verifiable platform for SMR design and analysis. The free Community tier (MIT) is evaluation-grade: a full-core nodal engine (Cartesian nodal + CMFD), reproducible on every run. Pro adds the production design workflow and the assurance layer for regulatory submissions — hex geometry, coupled safety and multi-cycle burnup, rod-worth/shutdown-margin/reactivity-coefficient design outputs, assurance bundles, traceability, and support. The nodal engine closes the analytic IAEA-2D benchmark to +19 pcm; escalate the same inputs to OpenMC (free) for a defensible number. Every run produces a verifiable evidence bundle. Community MIT; Pro FSL-1.1-MIT. Air-gap-safe runtime.",
         "sameAs": [
           "https://www.linkedin.com/company/smrforge/",
           "https://x.com/smrforge"
@@ -43,7 +43,7 @@
         "applicationCategory": "EngineeringApplication",
         "operatingSystem": "Windows|macOS|Linux",
         "softwareVersion": "1.x",
-        "description": "Open-source (MIT) evaluation-grade integration surface for Small Modular Reactor design and analysis. Bundles fast in-tree solvers (multi-group diffusion, thermal-hydraulics, burnup) for screening, plus one-step escalation to OpenMC for reference accuracy. Every run produces a verifiable evidence bundle (SHA-256 manifest, reproducibility block, schema-versioned audit trail) any third party can verify offline. Includes the CLI, a React-based dashboard, and a full-core nodal engine (transverse-integrated NEM with CMFD acceleration; Cartesian and R-Z) — evaluation-grade and reproducible. Pro adds the production design workflow and the assurance layer for regulatory submissions — hex geometry, coupled multi-cycle safety and burnup workflows, assurance bundles, and V&V. The nodal engine closes the analytic IAEA-2D benchmark to +19 pcm.",
+        "description": "Open-source (MIT) evaluation-grade integration surface for Small Modular Reactor design and analysis. Bundles fast in-tree solvers (multi-group diffusion, thermal-hydraulics, burnup) for screening, plus one-step escalation to OpenMC for reference accuracy. Every run produces a verifiable evidence bundle (SHA-256 manifest, reproducibility block, schema-versioned audit trail) any third party can verify offline. Includes the CLI, a React-based dashboard, and a full-core Cartesian nodal engine with CMFD acceleration — evaluation-grade and reproducible (NEM and R-Z geometry are in Pro). Pro adds the production design workflow and the assurance layer for regulatory submissions — hex geometry, coupled multi-cycle safety and burnup workflows, assurance bundles, and V&V. The nodal engine closes the analytic IAEA-2D benchmark to +19 pcm.",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -83,7 +83,7 @@
             "name": "What is SMRFORGE?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. The free Community tier (MIT) is evaluation-grade: it already runs a full-core nodal engine — lattice homogenization to a full-core power shape (Cartesian and R-Z), with every result a reproducible evidence bundle. Its Pro tier (FSL-1.1-MIT) adds the production design workflow and the assurance layer regulators read: coupled thermal-hydraulics and multi-cycle burnup, the rod-worth, shutdown-margin, and reactivity-coefficient outputs you design against, assurance bundles, traceability, and the V&V workflows regulators are willing to read. Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC) for reference accuracy. Every run ships as a verifiable evidence bundle."
+              "text": "SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. The free Community tier (MIT) is evaluation-grade: it already runs a full-core nodal engine — lattice homogenization to a full-core Cartesian power shape, with every result a reproducible evidence bundle. Its Pro tier (FSL-1.1-MIT) adds the production design workflow and the assurance layer regulators read: NEM and R-Z geometry, coupled thermal-hydraulics and multi-cycle burnup, the rod-worth, shutdown-margin, and reactivity-coefficient outputs you design against, assurance bundles, traceability, and the V&V workflows regulators are willing to read. Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC) for reference accuracy. Every run ships as a verifiable evidence bundle."
             }
           },
           {
@@ -91,7 +91,7 @@
             "name": "What's the difference between Community and Pro?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Community is MIT-licensed and includes neutronics, a full-core nodal engine (NEM + CMFD; Cartesian and R-Z, evaluation-grade), Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, an OpenMC integration, and the full evidence-bundle plumbing. Pro adds converters that generate input decks for and read results from your own licensed Serpent and MCNP installations (SMRFORGE does not include or distribute those export-controlled codes), BenchmarkRunner, ReportGenerator, regulatory-quality V&V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment."
+              "text": "Community is MIT-licensed and includes neutronics, a full-core nodal engine (Cartesian nodal + CMFD, evaluation-grade), Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, an OpenMC integration, and the full evidence-bundle plumbing. Pro adds converters that generate input decks for and read results from your own licensed Serpent and MCNP installations (SMRFORGE does not include or distribute those export-controlled codes), BenchmarkRunner, ReportGenerator, regulatory-quality V&V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment."
             }
           },
           {
@@ -107,7 +107,7 @@
             "name": "How does SMRFORGE handle reproducibility?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (Python version, dependency-lock hash, ENDF library, container digest, build provenance), and a schema-versioned audit trail. `smrforge verify <bundle>` confirms or refutes a bundle's integrity offline — it checks the record is authentic, complete, and untampered against the open schema, without the tool that produced it; `smrforge reproduce` is the separate step that re-runs the result end-to-end. The dashboard ships its own build-provenance JSON so you can verify the UI bytes match the wheel."
+              "text": "Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (Python version, dependency-lock hash, ENDF library, container digest, build provenance), and a schema-versioned audit trail. `smrforge verify <bundle>` confirms or refutes a bundle's integrity offline — it checks the record is intact, complete, and untampered against the open schema (integrity), without the tool that produced it; `smrforge reproduce` is the separate step that re-runs the result end-to-end. The dashboard ships its own build-provenance JSON so you can verify the UI bytes match the wheel."
             }
           },
           {
@@ -193,8 +193,8 @@
           Take an SMR from concept to a full-core design, the safety numbers, and a cost —
           in one auditable run. Screen fast in pure Python; escalate the same inputs to
           OpenMC when a number has to hold up. Every result ships as a
-          <strong>signed, tamper-evident evidence bundle</strong> — labeled with how sure
-          it is, its leftover error published, logged where it can't be quietly changed.
+          <strong>sealed, tamper-evident evidence bundle</strong> — labeled with how sure
+          it is, its leftover error published, and committable to an append-only log.
           Anyone can verify it offline, against an open standard, with a checker they wrote
           themselves. <strong>Declare the fidelity. Quantify the residual. Seal the record. Log it. Verify it yourself.</strong>
         </p>
@@ -204,10 +204,10 @@
           <a href="info-sheet.html" class="btn btn-secondary">Info Sheet</a>
         </div>
         <p class="hero-status"><strong>The Community engine is open source and available now.</strong> Clone it from GitLab and install from source (Python 3.11+); not yet on PyPI. The Pro tier is licensed and in commercial beta. <a href="#contact">Email us</a> to talk Pro or a pilot.</p>
-        <p class="hero-meta">Signed evidence bundles · Offline verify against an open schema · Append-only transparency log · Full-core design engine · Free OpenMC escalation · MIT / FSL-1.1-MIT</p>
+        <p class="hero-meta">Sealed evidence bundles · Offline verify against an open schema · Append-only Merkle log (proofs check offline) · Full-core design engine · Free OpenMC escalation · MIT / FSL-1.1-MIT</p>
       </div>
       <div class="hero-visual">
-        <div class="hero-receipt" role="img" aria-label="An example SMRFORGE evidence bundle with illustrative values: a k-effective result labeled screening_estimate, a SHA-256 bundle hash, signed and transparency-logged attestations, and an offline verify passing.">
+        <div class="hero-receipt" role="img" aria-label="An example SMRFORGE evidence bundle with illustrative values: a k-effective result labeled screening, a SHA-256 bundle hash, a sealed attestation, and an offline integrity check passing.">
           <div class="hr-head">
             <span class="hr-dot"></span><span class="hr-dot"></span><span class="hr-dot"></span>
             <span class="hr-title">evidence-bundle.json</span>
@@ -216,11 +216,11 @@
           <div class="hr-body">
             <div class="hr-row"><span class="hr-k">analysis</span><span class="hr-v">smr-core-screening</span></div>
             <div class="hr-row"><span class="hr-k">result</span><span class="hr-v hr-result">k_eff = 1.29841</span></div>
-            <div class="hr-row"><span class="hr-k">fidelity</span><span class="hr-pill">screening_estimate</span></div>
+            <div class="hr-row"><span class="hr-k">fidelity</span><span class="hr-pill">screening</span></div>
             <div class="hr-row"><span class="hr-k">bundle</span><span class="hr-hash">sha256:6a21fc…9cd0</span></div>
-            <div class="hr-row"><span class="hr-k">attestation</span><span class="hr-v"><span class="hr-ok">✓</span> signed&ensp;·&ensp;<span class="hr-ok">✓</span> in transparency log</span></div>
+            <div class="hr-row"><span class="hr-k">attestation</span><span class="hr-v"><span class="hr-ok">✓</span> sealed&ensp;·&ensp;<span class="hr-ok">✓</span> log-ready</span></div>
           </div>
-          <div class="hr-term">$ smrforge verify evidence-bundle.json<br><span class="hr-ok">✓ authentic · schema ok · untampered · exit 0</span></div>
+          <div class="hr-term">$ smrforge verify evidence-bundle.json<br><span class="hr-ok">✓ sealed · schema ok · unedited · exit 0</span></div>
         </div>
       </div>
     </section>
@@ -236,11 +236,11 @@
           number — and the record that lets an independent reviewer confirm it without taking our word for anything.
         </p>
         <div class="provenance-grid trust-steps">
-          <article class="provenance-card"><span class="trust-n">1</span><h3>Fidelity declaration</h3><p>Every result carries a machine-readable <code>physics_fidelity</code> label — screening estimate or reference-grade — stated in the output record itself.</p></article>
+          <article class="provenance-card"><span class="trust-n">1</span><h3>Fidelity declaration</h3><p>Every result carries a machine-readable <code>fidelity</code> label — <code>screening</code>, <code>reference</code>, or <code>lab-escalation</code> — stated in the output record itself.</p></article>
           <article class="provenance-card"><span class="trust-n">2</span><h3>Residual quantification</h3><p>Validation is reported per benchmark with published error bands — IAEA-2D +19 pcm; TMI-1 −24 ± 121 pcm — and open items (BEAVRS, C5G7) are tracked in a public V&amp;V matrix.</p></article>
           <article class="provenance-card"><span class="trust-n">3</span><h3>Cryptographic sealing</h3><p>Each run is committed to a tamper-evident bundle — a SHA-256 manifest of every input, output, and software version; any alteration breaks the seal.</p></article>
-          <article class="provenance-card"><span class="trust-n">4</span><h3>Transparency logging</h3><p>Bundle digests enter an append-only, RFC 6962-style Merkle log; inclusion and consistency proofs are checkable offline.</p></article>
-          <article class="provenance-card"><span class="trust-n">5</span><h3>Independent verification</h3><p><code>smrforge verify</code> confirms a record is authentic and untampered — offline, against the open Evidence Envelope schema, with any conformant verifier, including one you implement yourself.</p></article>
+          <article class="provenance-card"><span class="trust-n">4</span><h3>Transparency logging</h3><p>Bundle digests can be committed to an append-only, RFC 6962-style Merkle log; inclusion and consistency proofs check offline. (A hosted public log is on the roadmap.)</p></article>
+          <article class="provenance-card"><span class="trust-n">5</span><h3>Independent verification</h3><p>A standalone verifier confirms a record's integrity — unedited, and consistent with the open Evidence Envelope schema — offline, with any conformant verifier, including one you implement yourself.</p></article>
         </div>
       </div>
     </section>
@@ -254,9 +254,9 @@
         <p class="section-desc">
           Most fast reactor-physics tools model a single fuel slice and extrapolate.
           SMRFORGE's nodal engine already gives you the whole core — a real full-core
-          power shape (Cartesian and R-Z), evaluation-grade and free in the Community
+          Cartesian power shape, evaluation-grade and free in the Community
           tier. Pro turns
-          that core model into a submission-ready design: hex-geometry nodal, coupled
+          that core model into a submission-ready design: NEM and R-Z geometry, hex-geometry nodal, coupled
           thermal-hydraulics and multi-cycle burnup, one-click escalation to OpenMC where a
           number has to be defensible, and the control and safety numbers you actually design
           against — rod worth, shutdown margin, and reactivity coefficients — plus a cost
@@ -264,8 +264,8 @@
         </p>
         <div class="provenance-grid">
           <article class="provenance-card">
-            <h3>Whole core — Cartesian &amp; R-Z (hex in Pro)</h3>
-            <p>Lattice → few-group homogenization → full-core 3-D nodal diffusion, with transverse-integrated nodal-expansion (NEM) intra-node flux moments and CMFD acceleration. The Community engine solves <strong>Cartesian</strong> and <strong>R-Z cylindrical</strong> cores — a real power shape, not a pin-cell guess. Pro adds <strong>hex</strong> geometry (SFR/LFR, prismatic HTGR, heat-pipe micro).</p>
+            <h3>Whole core — Cartesian (R-Z &amp; hex in Pro)</h3>
+            <p>Lattice → few-group homogenization → full-core 3-D nodal diffusion with CMFD acceleration. The Community engine solves <strong>Cartesian</strong> cores — a real power shape, not a pin-cell guess. Pro adds <strong>R-Z cylindrical</strong> and <strong>hex</strong> geometry (SFR/LFR, prismatic HTGR, heat-pipe micro) and the higher-order NEM intra-node flux moments.</p>
           </article>
           <article class="provenance-card">
             <h3>The numbers you design against</h3>
@@ -323,8 +323,11 @@
           lattice number, escalate to OpenMC — <strong>free for everyone</strong>. Heterogeneous
           full-lattice benchmarks (BEAVRS, C5G7) remain open and are tracked in a public V&amp;V
           matrix; we publish where the methods agree and where they don't, rather than hide it.
-          What you pay <strong>Pro</strong> for is assurance — the submission workflow,
-          traceability, and support — not the k-eff.
+          On the signing itself: bundles are sealed under a <strong>published demo identity</strong>
+          today, so a check proves a record is intact and unedited, not yet that it came uniquely
+          from us — the production key is a known next step, and every record is labeled
+          <code>demo</code> until it ships. What you pay <strong>Pro</strong> for is assurance —
+          the submission workflow, traceability, and support — not the k-eff.
         </p>
       </div>
     </section>
@@ -343,8 +346,8 @@
         </p>
         <p class="section-desc">
           Hand the bundle to a colleague, a reviewer, or a regulator. They run
-          <code>smrforge verify &lt;bundle&gt;</code> offline and either confirm the record is
-          authentic and untampered or refute it — checked against the open, independently-implementable
+          a standalone verifier offline and either confirm the record's integrity — unedited
+          and schema-valid — or refute it, checked against the open, independently-implementable
           <b>Evidence Envelope</b> schema (a versioned spec, JSON Schema, and conformance
           vectors), not a SMRFORGE-proprietary format. No "trust me, it ran on my machine."
           (Re-running the physics end-to-end is a separate, deeper check — <code>smrforge reproduce</code>.)
@@ -367,7 +370,7 @@
           </article>
           <article class="provenance-card">
             <h3>Append-only transparency log</h3>
-            <p>Bundle digests enter an RFC 6962-style Merkle log that publishes signed tree heads. Anyone can pull an <b>inclusion</b> proof — your record is in the log — or a <b>consistency</b> proof — the log was only appended to, never rewritten — and check it offline, with no trust in whoever runs the log.</p>
+            <p>Bundle digests can be committed to an RFC 6962-style Merkle log. From a tree head, anyone pulls an <b>inclusion</b> proof — your record is in the log — or a <b>consistency</b> proof — the log was only appended to, never rewritten — and checks it offline with a stdlib verifier, no trust in whoever runs the log. A hosted public log that publishes signed tree heads is on the roadmap.</p>
           </article>
         </div>
       </div>
@@ -436,7 +439,7 @@
           <article class="product-card">
             <h3>Community</h3>
             <p class="product-tag">MIT · Open Source · Evaluation-grade</p>
-            <p>Open-source neutronics, a full-core nodal engine (transverse-integrated NEM + CMFD; Cartesian and R-Z), Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and a one-command React dashboard (<code>smrforge serve</code>) — all wired through the same evidence-bundle plumbing. Every run produces a verifiable bundle you can hand to a reviewer. <em>Community is an evaluation-grade integration surface — diffusion/nodal-grade, with published V&amp;V and every result reproducible offline; production work escalates to OpenMC (open source) or your own licensed Serpent or MCNP.</em></p>
+            <p>Open-source neutronics, a full-core nodal engine (transverse-integrated Cartesian nodal + CMFD), Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and a one-command React dashboard (<code>smrforge serve</code>) — all wired through the same evidence-bundle plumbing. Every run produces a verifiable bundle you can hand to a reviewer. <em>Community is an evaluation-grade integration surface — diffusion/nodal-grade, with published V&amp;V and every result reproducible offline; production work escalates to OpenMC (open source) or your own licensed Serpent or MCNP.</em></p>
             <a href="https://gitlab.com/smrforge/smrforge-public" class="btn btn-outline" target="_blank" rel="noopener">GitLab →<span class="beta-badge">Open source</span></a>
           </article>
           <article class="product-card product-card-pro">
@@ -450,7 +453,7 @@
               </li>
               <li>
                 <strong>Confirmatory Console for reviewers.</strong>
-                Ingest a vendor's evidence bundle, re-run it, and get a per-claim pass/fail with residuals, a provenance-lineage view, and a signed verification report. Offered at subsidized access to regulators and national labs — the reviewer runs the same tool the vendor did.
+                Ingest a vendor's evidence bundle, re-run it, and get a per-claim pass/fail with residuals, a provenance-lineage view, and a sealed verification report. Offered at subsidized access to regulators and national labs — the reviewer runs the same tool the vendor did.
               </li>
               <li>
                 <strong>Bridge the tools you already license.</strong>
@@ -476,8 +479,8 @@
         <h2 class="section-title">What's Inside</h2>
         <p class="section-desc">From lattice physics to a full-core design, coupled safety, and burnup — every capability shipped with the same evidence-bundle plumbing. The in-tree solvers are fast, auditable, and built for screening and design iteration; when you need reference accuracy, escalate the same model to OpenMC (open source), or export input decks for your own licensed Serpent or MCNP (Pro).</p>
         <ul class="feature-grid">
-          <li><span class="feature-icon">◇</span> Multi-group diffusion + full-core nodal solver — Cartesian &amp; R-Z (hex in Pro)</li>
-          <li><span class="feature-icon">◇</span> Lattice homogenization &amp; assembly discontinuity factors (Cartesian / R-Z)</li>
+          <li><span class="feature-icon">◇</span> Multi-group diffusion + full-core nodal solver — Cartesian (R-Z &amp; hex in Pro)</li>
+          <li><span class="feature-icon">◇</span> Lattice homogenization &amp; assembly discontinuity factors (Cartesian; R-Z in Pro)</li>
           <li><span class="feature-icon">◇</span> Thermal-hydraulics &amp; safety (DNBR, feedback)</li>
           <li><span class="feature-icon">◇</span> Burnup, decay heat &amp; multi-cycle fuel</li>
           <li><span class="feature-icon">◇</span> Archetype presets &amp; one-command starter kits (LWR-SMR, HTGR, MSR, micro)</li>
@@ -495,13 +498,13 @@
         <h2 class="section-title">FAQ</h2>
         <dl class="faq-list">
           <dt>What is SMRFORGE?</dt>
-          <dd>SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. The free Community tier (MIT) is evaluation-grade: it already runs a full-core nodal engine — lattice homogenization to a full-core power shape (Cartesian and R-Z), with every result a reproducible evidence bundle. Its Pro tier (FSL-1.1-MIT) adds the production design workflow and the assurance layer regulators read: coupled thermal-hydraulics and multi-cycle burnup, the rod-worth, shutdown-margin, and reactivity-coefficient outputs you design against, assurance bundles, traceability, and the V&amp;V workflows regulators are willing to read. Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC) for reference accuracy. Every run ships as a verifiable evidence bundle.</dd>
+          <dd>SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. The free Community tier (MIT) is evaluation-grade: it already runs a full-core nodal engine — lattice homogenization to a full-core Cartesian power shape, with every result a reproducible evidence bundle. Its Pro tier (FSL-1.1-MIT) adds the production design workflow and the assurance layer regulators read: NEM and R-Z geometry, coupled thermal-hydraulics and multi-cycle burnup, the rod-worth, shutdown-margin, and reactivity-coefficient outputs you design against, assurance bundles, traceability, and the V&amp;V workflows regulators are willing to read. Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC) for reference accuracy. Every run ships as a verifiable evidence bundle.</dd>
           <dt>What's the difference between Community and Pro?</dt>
-          <dd>Community is MIT-licensed and includes neutronics, a full-core nodal engine (NEM + CMFD; Cartesian and R-Z, evaluation-grade), Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, an OpenMC integration, and the full evidence-bundle plumbing. Pro adds converters that generate input decks for — and read results from — your own licensed Serpent and MCNP installations (SMRFORGE does not include or distribute those export-controlled codes), BenchmarkRunner, ReportGenerator, regulatory-quality V&amp;V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment.</dd>
+          <dd>Community is MIT-licensed and includes neutronics, a full-core nodal engine (Cartesian nodal + CMFD, evaluation-grade), Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, a one-command React dashboard, an OpenMC integration, and the full evidence-bundle plumbing. Pro adds converters that generate input decks for — and read results from — your own licensed Serpent and MCNP installations (SMRFORGE does not include or distribute those export-controlled codes), BenchmarkRunner, ReportGenerator, regulatory-quality V&amp;V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment.</dd>
           <dt>Does SMRFORGE include Serpent or MCNP?</dt>
           <dd><strong>No.</strong> Serpent and MCNP are third-party codes with their own licenses — MCNP is export-controlled (distributed via RSICC) and Serpent is license-restricted (via VTT / OECD-NEA). SMRFORGE does not contain, bundle, or distribute them, or their nuclear-data libraries. Pro ships <em>converters</em> that generate input decks for, and read results from, a copy you license and install yourself. OpenMC (open source) is included as the built-in escalation path.</dd>
           <dt>How does SMRFORGE handle reproducibility?</dt>
-          <dd>Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (Python version, dependency-lock hash, ENDF library, container digest, build provenance), and a schema-versioned audit trail. <code>smrforge verify &lt;bundle&gt;</code> confirms or refutes a bundle's <strong>integrity</strong> offline — it checks the record is authentic, complete, and untampered against the open schema, <em>without the tool that produced it</em>. Re-running the result end-to-end is a separate step, <code>smrforge reproduce</code>. The dashboard ships its own build-provenance JSON so you can verify the UI bytes match the wheel.</dd>
+          <dd>Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (Python version, dependency-lock hash, ENDF library, container digest, build provenance), and a schema-versioned audit trail. <code>smrforge verify &lt;bundle&gt;</code> confirms or refutes a bundle's <strong>integrity</strong> offline — it checks the record is intact, complete, and untampered against the open schema (integrity), <em>without the tool that produced it</em>. Re-running the result end-to-end is a separate step, <code>smrforge reproduce</code>. The dashboard ships its own build-provenance JSON so you can verify the UI bytes match the wheel.</dd>
           <dt>Is SMRFORGE Pro suitable for licensing-relevant work?</dt>
           <dd>Pro adds regulatory-quality V&amp;V workflows, automated traceability that maps requirements to models to results to evidence, verifiable air-gapped deployment bundles, and ReportGenerator artifacts that map to standard SRP sections. Community ships the same evidence-bundle plumbing — Pro adds the templates, the workflows, and the support contract.</dd>
           <dt>Is Docker or air-gapped deployment supported?</dt>

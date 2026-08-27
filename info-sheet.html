@@ -8,7 +8,7 @@
   <link rel="icon" href="images/smrforge_logo_white_transparent.png" type="image/png">
   <link rel="canonical" href="https://smrforge.io/info-sheet.html">
   <meta property="og:title" content="SMRFORGE — Information Sheet">
-  <meta property="og:description" content="A one-page overview of SMRFORGE: verifiable, reproducible SMR computational engineering. Screen fast, escalate to OpenMC, ship a signed evidence bundle.">
+  <meta property="og:description" content="A one-page overview of SMRFORGE: verifiable, reproducible SMR computational engineering. Screen fast, escalate to OpenMC, ship a sealed evidence bundle.">
   <meta property="og:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
   <meta property="og:url" content="https://smrforge.io/info-sheet.html">
   <meta property="og:type" content="website">
@@ -38,16 +38,16 @@
       <div class="kbd"><b>pip install -e '.[perf]'</b> → <b>smrforge doctor</b> → a screening k-eff in a minute</div>
     </div>
     <div class="evidence" aria-label="Example evidence bundle">
-      <div class="ehead"><span>evidence_envelope · adr-013</span><span class="seal">◆ gpg-signable</span></div>
+      <div class="ehead"><span>evidence_envelope · adr-013</span><span class="seal">◆ sealed</span></div>
       <div class="ebody">
         <div class="row"><span>analysis</span><b>gt-mhr-350</b></div>
         <div class="row"><span>k_eff</span><b>0.9051</b></div>
-        <div class="row"><span>fidelity</span><span class="pill screen">screening_estimate</span></div>
+        <div class="row"><span>fidelity</span><span class="pill screen">screening</span></div>
         <div class="row"><span>sha-256</span><span class="hash">a3f1c8…9e0b</span></div>
         <div class="row"><span>replay</span><b>bit-exact @ epoch</b></div>
       </div>
       <div class="verify"><span class="p">$ smrforge verify ./bundle</span>
-        <span class="ok">✓ authentic · schema ok · untampered · exit 0</span></div>
+        <span class="ok">✓ sealed · schema ok · unedited · exit 0</span></div>
     </div>
   </div>
 
@@ -55,9 +55,9 @@
   <div class="band">
     <span class="eyebrow">The differentiator — built for the person who doesn't trust you</span>
     <div class="pillars">
-      <div class="pillar"><div class="n">01 · FINGERPRINT</div><h3>Evidence envelopes</h3><p>Every output is a schema-registered bundle with a SHA-256 fingerprint of its inputs and result — optionally <code>ed25519</code> GPG-signed.</p></div>
+      <div class="pillar"><div class="n">01 · FINGERPRINT</div><h3>Evidence envelopes</h3><p>Every output is a schema-registered bundle sealed by a SHA-256 manifest of its inputs and result — any edit breaks the seal, and it is <code>ed25519</code>-signable (a demo identity today, production key on the roadmap).</p></div>
       <div class="pillar"><div class="n">02 · REPLAY</div><h3>Bit-exact reproduction</h3><p>A pinned <code>SOURCE_DATE_EPOCH</code> and the <code>replay_bundle()</code> contract regenerate the same bytes from the same inputs.</p></div>
-      <div class="pillar"><div class="n">03 · VERIFY</div><h3><code>exit 0</code> = it holds</h3><p>A standalone, offline check against the open <b>Evidence Envelope</b> schema — a third party confirms your record is authentic and untampered, or refutes it, in seconds, no SMRFORGE license needed (re-running the number end-to-end is the separate REPLAY step above). Digests also enter an append-only Merkle log: inclusion and consistency proofs it was never rewritten.</p></div>
+      <div class="pillar"><div class="n">03 · VERIFY</div><h3><code>exit 0</code> = it holds</h3><p>A standalone, offline check against the open <b>Evidence Envelope</b> schema — a third party confirms your record's integrity (unedited and schema-valid) or refutes it, in seconds, no SMRFORGE license needed (re-running the number end-to-end is the separate REPLAY step above). Digests also enter an append-only Merkle log: inclusion and consistency proofs it was never rewritten.</p></div>
     </div>
   </div>
 
@@ -73,7 +73,7 @@
       <div class="cap"><span class="t">Nuclear data</span><span class="d">In-tree ENDF/B <span>· self-shielding, TSL</span></span></div>
       <div class="cap"><span class="t">Geometry</span><span class="d">Hex / Cartesian / R-Z cores <span>· power maps</span></span></div>
       <div class="cap"><span class="t">Economics</span><span class="d">LCOE &amp; fuel cycle <span>· SMR factors</span></span></div>
-      <div class="cap"><span class="t">Interop</span><span class="d">OpenMC round-trip <span>· Serpent, MCNP, plugins</span></span></div>
+      <div class="cap"><span class="t">Interop</span><span class="d">OpenMC round-trip <span>· Serpent/MCNP converters (Pro) · plugins</span></span></div>
     </div>
   </div>
 
@@ -84,9 +84,9 @@
       <div class="card is">
         <h3>What it gives you</h3>
         <ul>
-          <li>A <code>physics_fidelity</code> label + plausibility band on every result</li>
+          <li>A <code>fidelity</code> label + plausibility band on every result</li>
           <li>Machine-readable <code>caveats</code> that travel with the output</li>
-          <li>One-command escalation to OpenMC / Serpent for a validated k-eff</li>
+          <li>One-command escalation to OpenMC (free) for a reference-grade k-eff</li>
         </ul>
       </div>
       <div class="card isnt">
@@ -105,7 +105,7 @@
         <ul>
           <li>Full screening stack + evidence envelopes &amp; reviewer-kit</li>
           <li>One-command archetype starter kits: <code>smrforge new &lt;archetype&gt;</code> → a runnable, baseline-checked project</li>
-          <li>OpenMC export/import · Serpent round-trip</li>
+          <li>OpenMC export/import (Serpent/MCNP converters are Pro)</li>
           <li>Governance CLI, benchmarks, stable API, plugin system</li>
         </ul>
       </div>
@@ -116,7 +116,7 @@
         <ul>
           <li>Production physics kernels (deep S_N/MoC, adjoint, IQS, burnup-in-loop)</li>
           <li>CAD / DAGMC · interactive 3D · advanced variance reduction</li>
-          <li>Confirmatory Console — re-run a submission, diff every claim, ship a signed verification report; subsidized for regulators &amp; national labs</li>
+          <li>Confirmatory Console — re-run a submission, diff every claim, ship a sealed verification report; subsidized for regulators &amp; national labs</li>
           <li>Regulatory-oriented reporting · assurance &amp; benchmark evidence</li>
         </ul>
       </div>
@@ -129,7 +129,7 @@
       <div class="code"><span class="c"># Screening k-eff, labeled honestly (open source, from a checkout)</span>
 <span class="p">import</span> smrforge <span class="p">as</span> smr
 r = smr.analyze_preset(<span class="s">"gt-mhr-350"</span>)
-<span class="p">print</span>(r[<span class="s">"k_eff"</span>], r[<span class="s">"physics_fidelity"</span>])  <span class="c"># 0.9051  screening_estimate</span></div>
+<span class="p">print</span>(r[<span class="s">"k_eff"</span>], r[<span class="s">"fidelity"</span>])  <span class="c"># 0.9051  screening</span></div>
     </div>
     <div class="cta">
       <a href="https://gitlab.com/smrforge" class="btn">Open standard &amp; verifier →</a>

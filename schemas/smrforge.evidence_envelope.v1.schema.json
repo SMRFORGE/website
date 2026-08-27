@@ -1,148 +1,106 @@
 {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smrforge.io/schemas/smrforge.evidence_envelope.v1.schema.json",
+  "title": "SMRFORGE evidence envelope v1",
+  "description": "A signed, independently-verifiable evidence bundle. The signature covers `bundle_sha256`, which is the SHA-256 of the canonical `sha256sums` digest-list -- NOT the section values -- so a section's `value` may be withheld (redacted) while its digest keeps the commitment and the signature stays valid. Semantic rules the SCHEMA cannot express (a withheld section's `value` and its top-level readable copy must both be absent and declared in `redaction.withheld`; each `manifest[s].sha256` must equal `sha256sums[s]` and, when present, `sha256(canon(value))`; `bundle_sha256 == sha256(canon(sha256sums))`) are enforced by the verifier, not this document.",
+  "type": "object",
+  "required": ["schema", "manifest", "sha256sums", "bundle_sha256", "signature"],
+  "additionalProperties": true,
   "$defs": {
-    "EnvelopeArtifact": {
-      "description": "Single bundle artifact with SHA-256 digest.",
-      "properties": {
-        "path": {
-          "description": "Bundle-relative POSIX path",
-          "title": "Path",
-          "type": "string"
-        },
-        "sha256": {
-          "description": "Lowercase hex digest",
-          "title": "Sha256",
-          "type": "string"
-        },
-        "size_bytes": {
-          "minimum": 0,
-          "title": "Size Bytes",
-          "type": "integer"
-        }
-      },
-      "required": [
-        "path",
-        "sha256",
-        "size_bytes"
-      ],
-      "title": "EnvelopeArtifact",
-      "type": "object"
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "Lowercase hex SHA-256 with a `sha256:` prefix."
     },
-    "ProducerBlock": {
-      "description": "Who/when produced the envelope.",
+    "manifest_section": {
+      "type": "object",
+      "required": ["sha256"],
+      "additionalProperties": false,
       "properties": {
-        "created_utc": {
-          "title": "Created Utc",
-          "type": "string"
-        },
-        "smrforge_version": {
-          "title": "Smrforge Version",
-          "type": "string"
+        "sha256": { "$ref": "#/$defs/digest" },
+        "value": {
+          "description": "The section contents. ABSENT when the section is redacted; still pinned by `sha256`."
         }
-      },
-      "required": [
-        "smrforge_version",
-        "created_utc"
-      ],
-      "title": "ProducerBlock",
-      "type": "object"
+      }
+    },
+    "result_core": {
+      "type": "object",
+      "description": "The embedded smrforge.result.v1 core (ADR-036), unchanged.",
+      "required": ["schema", "schema_version", "result", "fidelity", "verdict"],
+      "properties": {
+        "schema": { "const": "smrforge.result.v1" },
+        "schema_version": { "type": "integer" },
+        "result": { "type": "object", "description": "Payload keyed by capability name." },
+        "fidelity": { "enum": ["screening", "reference", "lab-escalation"] },
+        "verdict": { "enum": ["pass", "advisory", "fail"] },
+        "caveats": { "type": "array", "items": { "type": "string" } },
+        "provenance": { "type": "object" }
+      }
     }
   },
-  "$id": "https://smrforge.io/schemas/smrforge.evidence_envelope.v1.schema.json",
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "additionalProperties": true,
-  "description": "Top-level envelope written as ``evidence_envelope.json``.\n\nThe ``subject`` is a free-form dict carrying the case-specific payload\n(certification verdict, gateway claims, handoff manifest, ...). Subjects\nare themselves schema-tagged via the legacy schema names, so consumers\ncan route on either ``envelope_kind`` (preferred) or\n``subject[\"schema\"]`` (legacy compat).",
   "properties": {
-    "artifacts": {
-      "items": {
-        "$ref": "#/$defs/EnvelopeArtifact"
-      },
-      "title": "Artifacts",
-      "type": "array"
-    },
-    "envelope_kind": {
-      "description": "Dispatch case: 'certification' (ADR-012), 'gateway_airgap' (gateway air-gap validation), or 'handoff' (operator export pack).",
-      "enum": [
-        "certification",
-        "gateway_airgap",
-        "handoff"
-      ],
-      "title": "Envelope Kind",
-      "type": "string"
-    },
-    "gpg_key_id": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "title": "Gpg Key Id"
-    },
-    "producer": {
-      "$ref": "#/$defs/ProducerBlock"
+    "schema": { "const": "smrforge.evidence_envelope.v1" },
+    "result": {
+      "$ref": "#/$defs/result_core",
+      "description": "Readable copy of the result section. Absent when `result` is withheld."
     },
     "reproducibility": {
+      "type": "object",
+      "description": "Readable copy of the provenance section (code_version, data_library, rng_seed, ...). Absent when `provenance` is withheld."
+    },
+    "manifest": {
+      "type": "object",
+      "description": "Per-section digest + value. Value is absent for a redacted section.",
+      "required": ["inputs", "result", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "inputs": { "$ref": "#/$defs/manifest_section" },
+        "result": { "$ref": "#/$defs/manifest_section" },
+        "provenance": { "$ref": "#/$defs/manifest_section" }
+      }
+    },
+    "sha256sums": {
+      "type": "object",
+      "description": "The SEALED digest-list -- the sole subject of the signature.",
+      "required": ["inputs", "result", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "inputs": { "$ref": "#/$defs/digest" },
+        "result": { "$ref": "#/$defs/digest" },
+        "provenance": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "bundle_sha256": { "$ref": "#/$defs/digest" },
+    "signature": {
+      "type": "object",
+      "required": ["alg", "public_key", "signature"],
       "additionalProperties": true,
-      "description": "Legacy smrforge.reproducibility_block.v1 mirror of ``runtime_identity`` -- kept for one release for backward-compatible readers; will be removed alongside the deprecated schema (ADR-014).",
-      "title": "Reproducibility",
-      "type": "object"
+      "properties": {
+        "alg": { "const": "ed25519" },
+        "public_key": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "message": { "type": "string" },
+        "signature": { "type": "string", "pattern": "^[0-9a-f]{128}$" },
+        "identity": { "enum": ["demo", "production"] }
+      }
     },
-    "runtime_identity": {
-      "additionalProperties": true,
-      "description": "Canonical smrforge.runtime_identity.v1 block (ADR-014). Single source of truth for who/what/where/when produced this envelope.",
-      "title": "Runtime Identity",
-      "type": "object"
+    "host": {
+      "type": "object",
+      "description": "Diagnostic only -- OUTSIDE the seal, never checked by the verifier."
     },
-    "schema": {
-      "default": "smrforge.evidence_envelope.v1",
-      "title": "Schema",
-      "type": "string"
-    },
-    "schema_version": {
-      "default": 1,
-      "title": "Schema Version",
-      "type": "integer"
-    },
-    "sha256sums_sha256": {
-      "description": "SHA-256 of sha256sums.txt; pins the integrity list.",
-      "title": "Sha256Sums Sha256",
-      "type": "string"
-    },
-    "signature_path": {
-      "anyOf": [
-        {
-          "type": "string"
+    "redaction": {
+      "type": "object",
+      "description": "Present on a docket-safe redacted derivative.",
+      "required": ["schema", "withheld"],
+      "properties": {
+        "schema": { "const": "smrforge.evidence_envelope.redaction.v1" },
+        "withheld": {
+          "type": "array",
+          "items": { "enum": ["inputs", "result", "provenance"] }
         },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "title": "Signature Path"
-    },
-    "signature_status": {
-      "default": "unsigned",
-      "description": "'unsigned' | 'signed' | 'signature_failed'",
-      "title": "Signature Status",
-      "type": "string"
-    },
-    "subject": {
-      "additionalProperties": true,
-      "description": "Case-specific payload. Carries its own legacy schema header for downstream consumers that still grep on names like 'smrforge.certification_manifest.v1'.",
-      "title": "Subject",
-      "type": "object"
+        "reason": { "type": "string" },
+        "parent_bundle_sha256": { "$ref": "#/$defs/digest" },
+        "caveats": { "type": "array", "items": { "type": "string" } }
+      }
     }
-  },
-  "required": [
-    "envelope_kind",
-    "producer",
-    "sha256sums_sha256"
-  ],
-  "title": "EvidenceEnvelope",
-  "type": "object",
-  "x-smrforge-schema": "smrforge.evidence_envelope.v1",
-  "x-smrforge-schema-version": 1
+  }
 }

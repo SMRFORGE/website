@@ -26,7 +26,7 @@
         "name": "SMRFORGE",
         "url": "https://smrforge.io",
         "logo": "https://smrforge.io/images/smrforge_logo_white_transparent.png",
-        "description": "Verifiable platform for SMR design and analysis. The free Community tier (MIT) is evaluation-grade: a full-core nodal engine (Cartesian nodal + CMFD), reproducible on every run. Pro adds the production design workflow and the assurance layer for regulatory submissions — hex geometry, coupled safety and multi-cycle burnup, rod-worth/shutdown-margin/reactivity-coefficient design outputs, assurance bundles, traceability, and support. Screen fast, then escalate the same inputs to OpenMC (free) for a defensible number; every run produces a sealed evidence bundle any third party can verify offline. Community MIT; Pro FSL-1.1-MIT. Air-gap-safe runtime.",
+        "description": "Verifiable platform for SMR design and analysis. The free open core (MIT) is the full screening reactor-physics engine — full-core Cartesian nodal diffusion, higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence, few-group homogenization, an in-tree continuous-energy Monte Carlo, Sn transport, SP3, burnup/depletion, kinetics and reactivity coefficients, rod-worth, shutdown-margin, pin-power, xenon/samarium, and one-step escalation to OpenMC — plus the evidence spine (sealed bundles, a standalone verifier, an RFC-6962 transparency log). Honestly screening-grade, reproducible on every run. Pro adds the assurance / regulatory layer for submissions — the signed assess deliverable with a PASS/FAIL verdict against the safety floor, traceability, report artifacts, a reviewer console, and support; advanced geometry (R-Z, hex), full-core CMFD, and Serpent/MCNP converters are available on engagement. Screen fast, then escalate the same inputs to OpenMC (free) for a defensible number; every run produces a sealed evidence bundle any third party can verify offline. Community MIT; Pro FSL-1.1-MIT. Air-gap-safe runtime.",
         "sameAs": [
           "https://www.linkedin.com/company/smrforge/",
           "https://x.com/smrforge"
@@ -42,8 +42,8 @@
         "name": "SMRFORGE Community",
         "applicationCategory": "EngineeringApplication",
         "operatingSystem": "Windows|macOS|Linux",
-        "softwareVersion": "1.x",
-        "description": "Open-source (MIT) evaluation-grade integration surface for Small Modular Reactor design and analysis. Bundles fast in-tree solvers (multi-group diffusion, thermal-hydraulics, burnup) for screening, plus one-step escalation to OpenMC for reference accuracy. Every run produces a verifiable evidence bundle (SHA-256 manifest, reproducibility block, schema-versioned audit trail) any third party can verify offline. Includes the CLI and a full-core Cartesian nodal engine with CMFD acceleration — evaluation-grade and reproducible (NEM and R-Z geometry are in Pro). Pro adds the production design workflow and the assurance layer for regulatory submissions — hex geometry, coupled multi-cycle safety and burnup workflows, assurance bundles, and V&V. Screen fast, then escalate the same inputs to OpenMC (free) for a reference-grade number every third party can verify offline.",
+        "softwareVersion": "0.2.0",
+        "description": "Open-source (MIT) full screening reactor-physics engine for Small Modular Reactor design and analysis. In-tree pure-Python solvers — full-core Cartesian nodal diffusion, higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence, few-group homogenization, continuous-energy Monte Carlo, Sn transport, SP3, burnup/depletion, kinetics and reactivity coefficients — for fast screening, plus one-step escalation to OpenMC (free) for reference accuracy. Every run produces a verifiable evidence bundle (SHA-256 manifest, reproducibility block, schema-versioned audit trail) any third party can verify offline. Ships the CLI (smrforge verify, smrforge --version today) and the full evidence spine — sealed bundles, standalone verifier, RFC-6962 transparency log. Honestly screening-grade and reproducible. Pro adds the assurance / regulatory layer for submissions — the signed assess deliverable with a PASS/FAIL verdict against the safety floor, traceability, report artifacts, and support; advanced geometry (R-Z, hex), full-core CMFD, and Serpent/MCNP converters are available on engagement. Pure Python standard library, zero dependencies; install from source (not on PyPI).",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -60,7 +60,7 @@
         "name": "SMRFORGE Pro",
         "applicationCategory": "EngineeringApplication",
         "operatingSystem": "Windows|macOS|Linux",
-        "description": "Commercial extension for enterprise and licensing-relevant workflows. Turns evidence bundles into submission-ready packages with assurance bundles, automated requirements-to-evidence traceability, SRP-aligned ReportGenerator artifacts, and the V&V workflows licensed regulators are willing to read. Adds deck converters for OpenMC and for your own licensed Serpent/MCNP installations (SMRFORGE does not include or distribute those export-controlled codes), BenchmarkRunner, surrogate/ML workflows, AI agents that operate against verifiable bundles, and verifiable air-gapped deployment bundles.",
+        "description": "Commercial assurance / regulatory layer for licensing-relevant workflows. Turns evidence bundles into a submission-ready assurance package: the signed 'assess' deliverable — a genuine reference-grade assessment (a real reference solve plus a tech-spec shutdown-margin gate) collapsed into one signed, independently-verifiable bundle with a PASS/FAIL verdict against the safety floor — automated requirements-to-evidence traceability, SRP-aligned report artifacts, a reviewer console, and support. Advanced geometry (R-Z cylindrical, hex), full-core CMFD, and converters for your own licensed Serpent/MCNP installations (SMRFORGE does not include or distribute those export-controlled codes) are available to design partners / on the roadmap.",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -83,7 +83,7 @@
             "name": "What is SMRFORGE?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. The free Community tier (MIT) is evaluation-grade: it already runs a full-core nodal engine — lattice homogenization to a full-core Cartesian power shape, with every result a reproducible evidence bundle. Its Pro tier (FSL-1.1-MIT) adds the production design workflow and the assurance layer regulators read: NEM and R-Z geometry, coupled thermal-hydraulics and multi-cycle burnup, the rod-worth, shutdown-margin, and reactivity-coefficient outputs you design against, assurance bundles, traceability, and the V&V workflows regulators are willing to read. Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC) for reference accuracy. Every run ships as a verifiable evidence bundle."
+              "text": "SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. The free open core (MIT) is the full screening reactor-physics engine: full-core Cartesian nodal diffusion, higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence, few-group homogenization, an in-tree continuous-energy Monte Carlo, Sn transport, SP3, burnup/depletion, kinetics and reactivity coefficients, rod-worth, shutdown-margin, pin-power, and xenon/samarium — every result a reproducible evidence bundle, honestly labeled for fidelity. Its Pro tier (FSL-1.1-MIT) adds the assurance layer regulators read: the signed 'assess' deliverable with a PASS/FAIL verdict against the safety floor, traceability, report artifacts, a reviewer console, and support (advanced geometry and integrations are available on engagement). Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC, free) for reference accuracy. Every run ships as a verifiable evidence bundle."
             }
           },
           {
@@ -91,7 +91,7 @@
             "name": "What's the difference between Community and Pro?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Community is MIT-licensed and includes neutronics, a full-core nodal engine (Cartesian nodal + CMFD, evaluation-grade), Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, an OpenMC integration, and the full evidence-bundle plumbing. Pro adds converters that generate input decks for and read results from your own licensed Serpent and MCNP installations (SMRFORGE does not include or distribute those export-controlled codes), BenchmarkRunner, ReportGenerator, regulatory-quality V&V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment."
+              "text": "The free open core is MIT-licensed and is the whole screening engine: full-core Cartesian nodal diffusion, higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence, continuous-energy Monte Carlo, Sn transport, SP3, burnup/depletion, kinetics and reactivity coefficients, rod-worth, shutdown-margin, pin-power, an OpenMC escalation path, and the full evidence spine (sealed bundles, standalone verifier, RFC-6962 transparency log). Pro adds the assurance / regulatory layer: the signed 'assess' deliverable with a PASS/FAIL verdict against the safety floor, requirements-to-evidence traceability, SRP-aligned report artifacts, a reviewer console, and support. Advanced geometry (R-Z, hex), full-core CMFD, and converters that generate input decks for and read results from your own licensed Serpent and MCNP installations (SMRFORGE does not include or distribute those export-controlled codes) are available to design partners / on the roadmap."
             }
           },
           {
@@ -107,7 +107,7 @@
             "name": "How does SMRFORGE handle reproducibility?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (Python version, dependency-lock hash, ENDF library, container digest, build provenance), and a schema-versioned audit trail. `smrforge verify <bundle>` confirms or refutes a bundle's integrity offline — it checks the record is intact, complete, and untampered against the open schema (integrity), without the tool that produced it; `smrforge reproduce` is the separate step that re-runs the result end-to-end."
+              "text": "Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (engine and code version, the ENDF library and its SHA-256, the RNG seed, a determinism statement, and the host Python version), and a schema-versioned audit trail. `smrforge verify <bundle>` confirms or refutes a bundle's integrity offline — it checks the record is intact, complete, and untampered against the open schema (integrity), without the tool that produced it. Re-running the result end-to-end is a separate, deeper step available through the Python API today (certify_bundle / reproduce_bundle); a CLI verb for it is on the roadmap."
             }
           },
           {
@@ -115,15 +115,15 @@
             "name": "Is SMRFORGE Pro suitable for licensing-relevant work?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Pro adds regulatory-quality V&V workflows, automated traceability that maps requirements to models to results to evidence, verifiable air-gapped deployment bundles, and ReportGenerator artifacts that map to standard SRP sections. Community ships the same evidence-bundle plumbing — Pro adds the templates, the workflows, and the support contract."
+              "text": "Pro adds the assurance / regulatory layer: the signed 'assess' deliverable — a real reference solve plus a tech-spec shutdown-margin gate in one bundle, with a PASS/FAIL verdict against the safety floor — automated requirements-to-evidence traceability, report artifacts that map to standard SRP sections, a reviewer console, and support. The open core ships the same evidence-bundle plumbing — Pro adds the assessment, the templates, the workflows, and the support contract."
             }
           },
           {
             "@type": "Question",
-            "name": "Is Docker or air-gapped deployment supported?",
+            "name": "Does SMRFORGE run air-gapped?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Yes. Community supports Docker and runs fully offline (no CDN fetches at runtime). Pro adds verifiable air-gapped deployment bundles and K8s manifests for regulated environments without internet access."
+              "text": "Yes. The open core is pure Python standard library with zero dependencies and no CDN fetches at runtime, so it runs fully offline — on a laptop with no internet, in a SCIF, or behind an enterprise firewall. Pro adds verifiable air-gapped deployment bundles for regulated environments without internet access."
             }
           },
           {
@@ -139,15 +139,15 @@
             "name": "How do I install SMRFORGE today?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "The Community engine is open source (MIT) and public now at gitlab.com/smrforge/smrforge. It is not yet on PyPI, so you install from source: git clone the repo, then pip install -e '.[perf]' (Python 3.11+). Also public: the Evidence Envelope standard, its reference verifier, and the reviewer kit. The Pro tier is source-available (FSL-1.1) and licensed, in commercial beta. A package-manager-friendly pip install distribution is on the roadmap."
+              "text": "The open core is open source (MIT) and public now at gitlab.com/smrforge/smrforge. It is not yet on PyPI, so you install from source: git clone the repo, then pip install -e . (Python 3.11+, pure Python standard library, zero dependencies). Today the CLI ships exactly two console commands — smrforge verify <bundle> and smrforge --version; the rest of the engine is used as a Python API. Also public: the Evidence Envelope standard, its reference verifier, and the reviewer kit. The Pro tier is source-available (FSL-1.1) and licensed, in commercial beta. A package-manager-friendly pip install distribution is on the roadmap."
             }
           },
           {
             "@type": "Question",
-            "name": "How do I run the SMRFORGE server?",
+            "name": "Is there a REST / MCP server?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "After installing from source, run `smrforge serve`. One process serves the REST API and the MCP tool catalog at http://127.0.0.1:8765, with no CDN runtime fetches, so it works in fully air-gapped environments."
+              "text": "A single stdlib HTTP surface (smrf_serve) fronts the REST API and MCP tool catalog as a Python API today — no web framework, no CDN runtime fetches, so it works in fully air-gapped environments. There is no console command for it yet; a `serve` command is on the roadmap."
             }
           }
         ]
@@ -253,23 +253,25 @@
         </p>
         <p class="section-desc">
           Most fast reactor-physics tools model a single fuel slice and extrapolate.
-          SMRFORGE's nodal engine already gives you the whole core — a real full-core
-          Cartesian power shape, evaluation-grade and free in the Community
-          tier. Pro turns
-          that core model into a submission-ready design: NEM and R-Z geometry, hex-geometry nodal, coupled
-          thermal-hydraulics and multi-cycle burnup, one-click escalation to OpenMC where a
-          number has to be defensible, and the control and safety numbers you actually design
-          against — rod worth, shutdown margin, and reactivity coefficients — plus a cost
-          estimate and the assurance bundles regulators read.
+          SMRFORGE's open-core nodal engine already gives you the whole core — a real full-core
+          Cartesian power shape, honestly screening-grade and free. That free engine also carries
+          higher-order <strong>NEM (1-D/2-D/3-D) with ADF/SPH equivalence</strong>, a
+          continuous-energy Monte Carlo, S<sub>n</sub> transport, burnup, and the control and safety
+          numbers you actually design against — rod worth, shutdown margin, and reactivity
+          coefficients — plus one-step escalation to OpenMC where a number has to be defensible.
+          <strong>Pro</strong> turns those numbers into a submission-ready assessment: the signed
+          <em>assess</em> deliverable with a PASS/FAIL verdict against the safety floor, the
+          traceability and report artifacts regulators read, and — on engagement — advanced
+          geometry (R-Z, hex) and full-core CMFD.
         </p>
         <div class="provenance-grid">
           <article class="provenance-card">
-            <h3>Whole core — Cartesian (R-Z &amp; hex in Pro)</h3>
-            <p>Lattice → few-group homogenization → full-core 3-D nodal diffusion with CMFD acceleration. The Community engine solves <strong>Cartesian</strong> cores — a real power shape, not a pin-cell guess. Pro adds <strong>R-Z cylindrical</strong> and <strong>hex</strong> geometry (SFR/LFR, prismatic HTGR, heat-pipe micro) and the higher-order NEM intra-node flux moments.</p>
+            <h3>Whole core — Cartesian, NEM included</h3>
+            <p>Lattice → few-group homogenization → full-core 3-D nodal diffusion. The free open-core engine solves <strong>Cartesian</strong> cores — a real power shape, not a pin-cell guess — and carries the higher-order <strong>NEM (1-D/2-D/3-D) with ADF/SPH equivalence</strong> intra-node flux moments as reference-grade code-verification. <strong>R-Z cylindrical</strong> and <strong>hex</strong> geometry (SFR/LFR, prismatic HTGR, heat-pipe micro) and full-core CMFD are available on engagement.</p>
           </article>
           <article class="provenance-card">
             <h3>The numbers you design against</h3>
-            <p>Rod worth, shutdown margin, reactivity coefficients, coupled thermal-hydraulics with safety margins, and multi-cycle fuel burnup — the outputs a safety case is built on.</p>
+            <p>Rod worth, shutdown margin, reactivity coefficients, kinetics and point-kinetics, xenon/samarium, pin-power, and multi-cycle fuel burnup — the outputs a safety case is built on, all in the free open core.</p>
           </article>
           <article class="provenance-card">
             <h3>Screen fast, then escalate</h3>
@@ -316,6 +318,11 @@
             <div class="proof-label">TMI-1 HZP pin cell · CE vs OpenMC (LWR anchor)</div>
             <p class="proof-note">SMRFORGE's own continuous-energy Monte Carlo vs an OpenMC ENDF/B-VIII.0 reference: −24 ± 121 pcm, a strong match within the ±200 pcm band. A measured-LWR anchor; the free OpenMC escalation path is the same for every archetype. Open items are tracked in a public V&amp;V matrix.</p>
           </article>
+          <article class="proof-card">
+            <div class="proof-figure">25<span class="unit">benchmarks</span></div>
+            <div class="proof-label">Measured criticality set · external-OpenMC-anchored</div>
+            <p class="proof-note">25 measured ICSBEP/BEAVRS criticality benchmarks, each externally OpenMC-anchored with published C−E and split uncertainty budgets, honestly labeled advisory. These are LWR and method anchors, not SMR-specific validation — and we say so.</p>
+          </article>
         </div>
         <p class="honest-note">
           <strong>Straight talk on scope.</strong> Two caveats we'd rather say first. These are
@@ -343,8 +350,8 @@
         </p>
         <p class="section-desc">
           Every k-eff calc, every benchmark, every report ships as a verifiable evidence bundle.
-          A SHA-256 manifest of inputs and outputs. A reproducibility block — Python version,
-          dependency-lock hash, ENDF library, container digest, build provenance. A
+          A SHA-256 manifest of inputs and outputs. A reproducibility block — engine and code version, the ENDF
+          library and its SHA-256, the RNG seed, a determinism statement, and the host Python version. A
           schema-versioned audit trail of every action that produced the result.
         </p>
         <p class="section-desc">
@@ -353,10 +360,11 @@
           and schema-valid — or refute it, checked against the open, independently-implementable
           <b>Evidence Envelope</b> schema (a versioned spec, JSON Schema, and conformance
           vectors), not a SMRFORGE-proprietary format. No "trust me, it ran on my machine."
-          (Re-running the physics end-to-end is a separate, deeper check — <code>smrforge reproduce</code>.)
-          Run <code>smrforge conformance run</code> to certify any verifier — ours or one
-          you wrote yourself — against those vectors, so "independently-implementable" is
-          something you prove, not something we ask you to take on faith.
+          (Re-running the physics end-to-end is a separate, deeper check, available through the
+          Python API today — <code>certify_bundle</code> / <code>reproduce_bundle</code> — with a
+          CLI verb on the roadmap.) The published conformance vectors let you certify any verifier —
+          ours or one you wrote yourself — so "independently-implementable" is something you prove,
+          not something we ask you to take on faith.
         </p>
         <div class="provenance-grid">
           <article class="provenance-card">
@@ -365,11 +373,11 @@
           </article>
           <article class="provenance-card">
             <h3>Air-gap by construction</h3>
-            <p>Ships inside the wheel. Zero CDN fetches at runtime. K8s manifests included. Works on a laptop with no internet, in a SCIF, or behind an enterprise firewall. The first-run demo path (<code>smrforge first-run</code>) ships its cross sections inside the wheel — no nuclear-data download is required to reach a k-effective number. Advanced ENDF-driven workflows stage their data separately; Pro adds verified air-gapped deployment bundles for those.</p>
+            <p>Pure Python standard library, zero dependencies, zero CDN fetches at runtime. Works on a laptop with no internet, in a SCIF, or behind an enterprise firewall. The archetype presets ship a screening cross-section set in-tree — no nuclear-data download is required to reach a k-effective number. Advanced ENDF-driven workflows stage their data separately; Pro adds verified air-gapped deployment bundles for those.</p>
           </article>
           <article class="provenance-card">
             <h3>Locked surface, gated drift</h3>
-            <p>OpenAPI spec committed and CI-enforced. 6,500+ tests, golden snapshots, brand and lint gates. Every change to the public surface is reviewed before it ships.</p>
+            <p>300+ tests, golden snapshots, and published conformance vectors — run them yourself against any build. A determinism check guards bit-reproducibility. (A hosted CI gate is on the roadmap; today the checks are yours to run.)</p>
           </article>
           <article class="provenance-card">
             <h3>Append-only transparency log</h3>
@@ -386,23 +394,24 @@
           API + AI tools — one process you can audit.
         </p>
         <p class="section-desc">
-          The SMRFORGE gateway is a single stdlib HTTP service — no web framework — that fronts
-          the public REST API and the MCP tool catalog your AI agents
-          call. One process, one port, one OpenAPI spec, one audit log. Launch with
-          <code>smrforge serve</code> and you're running the same surface that ships with Pro.
+          The SMRFORGE gateway is a single stdlib HTTP surface — no web framework — that fronts
+          the REST API and the MCP tool catalog your AI agents can call. One process, one port,
+          one OpenAPI spec, one audit log. Today it is a <strong>Python API</strong>
+          (<code>smrf_serve</code>) you start in-process; a <code>serve</code> console command is on
+          the roadmap.
         </p>
         <div class="gateway-grid">
           <article class="gateway-card">
             <h3>One process, one port</h3>
-            <p>The REST API and MCP tools served from a single stdlib HTTP process on port 8765 — no web framework to wire or patch. API-key auth out of the box. K8s manifests included for on-prem and air-gapped clusters. Nothing to wire together.</p>
+            <p>The REST API and MCP tools served from a single stdlib HTTP process on port 8765 — no web framework to wire or patch. API-key auth built in. Pure Python standard library, so nothing to install and nothing to wire together.</p>
           </article>
           <article class="gateway-card">
             <h3>MCP tool catalog</h3>
-            <p>Every public capability is exposed as an MCP tool. Browse the catalog over HTTP, or call the same tools from your own agent or notebook. Pro AI Agents are clients of this catalog — your agents can be too.</p>
+            <p>Public capabilities are exposed as MCP tools. Browse the catalog over HTTP, or call the same tools from your own agent or notebook. Your agents can be clients of this catalog.</p>
           </article>
           <article class="gateway-card">
             <h3>Audit log + air-gap by design</h3>
-            <p>Every gateway action emits a schema-versioned event into the audit trail. No CDN runtime fetches. No telemetry. The whole surface ships inside the wheel, so it runs behind any firewall — or no network at all.</p>
+            <p>Every gateway action emits a schema-versioned event into the audit trail. No CDN runtime fetches. No telemetry. Pure Python standard library, so it runs behind any firewall — or no network at all.</p>
           </article>
         </div>
       </div>
@@ -441,8 +450,8 @@
         <div class="product-cards">
           <article class="product-card">
             <h3>Community</h3>
-            <p class="product-tag">MIT · Open Source · Evaluation-grade</p>
-            <p>Open-source neutronics, a full-core nodal engine (transverse-integrated Cartesian nodal + CMFD), Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, CLI, and a one-command API + tools server (<code>smrforge serve</code>) — all wired through the same evidence-bundle plumbing. Every run produces a verifiable bundle you can hand to a reviewer. <em>Community is an evaluation-grade integration surface — diffusion/nodal-grade, with published V&amp;V and every result reproducible offline; production work escalates to OpenMC (open source) or your own licensed Serpent or MCNP.</em></p>
+            <p class="product-tag">MIT · Open Source · Screening-grade</p>
+            <p>The whole screening engine, open source: full-core Cartesian nodal diffusion, higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence, a continuous-energy Monte Carlo, S<sub>n</sub> transport, SP3, burnup/depletion, kinetics and reactivity coefficients, rod-worth, shutdown-margin, pin-power, xenon/samarium — plus one-step OpenMC escalation and the full evidence spine (sealed bundles, standalone verifier, RFC-6962 transparency log). Pure Python standard library, zero dependencies. Every run produces a verifiable bundle you can hand to a reviewer. <em>Honestly screening-grade, with published V&amp;V and every result reproducible offline; production work escalates to OpenMC (open source) or your own licensed Serpent or MCNP.</em></p>
             <a href="https://gitlab.com/smrforge/smrforge" class="btn btn-outline" target="_blank" rel="noopener">GitLab →<span class="beta-badge">Open source</span></a>
           </article>
           <article class="product-card product-card-pro">
@@ -451,24 +460,24 @@
             <p class="pro-lede">Built on the same evidence-bundle plumbing as Community. Pro adds the templates, the workflows, and the support to take that evidence into a regulatory submission.</p>
             <ul class="pro-pillars">
               <li>
-                <strong>Regulatory submission acceleration.</strong>
-                Assurance bundles, automated traceability that maps requirements to models to results to evidence, ReportGenerator artifacts that map to standard SRP sections, and the V&amp;V workflows licensed regulators are willing to read.
+                <strong>The assess deliverable — the submission-ready verdict.</strong>
+                A genuine reference-grade assessment — a real reference solve plus a tech-spec shutdown-margin gate — collapsed into one signed, independently-verifiable assurance bundle with a PASS/FAIL verdict against the safety floor. This is what you pay for: the submission-ready assurance, not the k-eff.
+              </li>
+              <li>
+                <strong>Traceability &amp; report artifacts.</strong>
+                Automated traceability that maps requirements to models to results to evidence, and report artifacts that map to standard SRP sections — the paperwork a licensed reviewer is willing to read.
               </li>
               <li>
                 <strong>Confirmatory Console for reviewers.</strong>
                 Ingest a vendor's evidence bundle, re-run it, and get a per-claim pass/fail with residuals, a provenance-lineage view, and a sealed verification report. Offered at subsidized access to regulators and national labs — the reviewer runs the same tool the vendor did.
               </li>
               <li>
-                <strong>Bridge the tools you already license.</strong>
-                Generate input for — and read decks from — OpenMC and your own licensed Serpent or MCNP installations, then wrap those runs in SMRFORGE's evidence layer. SMRFORGE ships the converters, not the third-party codes: Serpent and MCNP are export-controlled / licensed tools you install yourself, and SMRFORGE contains none of their source or data.
+                <strong>Advanced geometry &amp; integrations, on engagement.</strong>
+                Advanced geometry (R-Z cylindrical, hex) and full-core CMFD, plus converters that generate input for — and read decks from — your own licensed Serpent or MCNP installations, available to design partners / on the roadmap. SMRFORGE would ship the converters, not the third-party codes: Serpent and MCNP are export-controlled / licensed tools you install yourself, and SMRFORGE contains none of their source or data.
               </li>
               <li>
-                <strong>Design at scale.</strong>
-                BenchmarkRunner orchestrates large parameter sweeps and UQ campaigns. Experimental surrogate and ML-accelerated workflows for design-space exploration. Air-gapped deployment bundles for regulated environments.
-              </li>
-              <li>
-                <strong>AI-assisted analysis.</strong>
-                Pro AI Agents are LLM tools that operate against verifiable evidence bundles, not raw chat — exposed as gateway-served MCP tools, so your agents call the same audited surface as your own tools. Every agent action is itself recorded as an audited event.
+                <strong>On the roadmap.</strong>
+                A production signing key that proves origin (bundles seal under a published demo identity today — integrity, not origin). Air-gapped deployment bundles for regulated environments. Large-sweep and UQ orchestration, and LLM-assisted analysis that operates against verifiable evidence bundles rather than raw chat.
               </li>
             </ul>
             <a href="#contact" class="btn btn-primary">Contact Sales</a>
@@ -480,18 +489,20 @@
     <section id="features" class="section features">
       <div class="container">
         <h2 class="section-title">What's Inside</h2>
-        <p class="section-desc">From lattice physics to a full-core design, coupled safety, and burnup — every capability shipped with the same evidence-bundle plumbing. The in-tree solvers are fast, auditable, and built for screening and design iteration; when you need reference accuracy, escalate the same model to OpenMC (open source), or export input decks for your own licensed Serpent or MCNP (Pro).</p>
+        <p class="section-desc">From lattice physics to a full-core power shape, kinetics, and burnup — every capability in the free open core, shipped with the same evidence-bundle plumbing. The in-tree solvers are pure Python standard library, fast, auditable, and built for screening and design iteration; when you need reference accuracy, escalate the same model to OpenMC (open source). Deck converters for your own licensed Serpent or MCNP are available on engagement.</p>
         <ul class="feature-grid">
-          <li><span class="feature-icon">◇</span> Multi-group diffusion + full-core nodal solver — Cartesian (R-Z &amp; hex in Pro)</li>
-          <li><span class="feature-icon">◇</span> Lattice homogenization &amp; assembly discontinuity factors (Cartesian; R-Z in Pro)</li>
-          <li><span class="feature-icon">◇</span> Thermal-hydraulics &amp; safety (DNBR, feedback)</li>
+          <li><span class="feature-icon">◇</span> Multi-group diffusion + full-core Cartesian nodal solver (R-Z &amp; hex on engagement)</li>
+          <li><span class="feature-icon">◇</span> Higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence</li>
+          <li><span class="feature-icon">◇</span> Continuous-energy Monte Carlo · S<sub>n</sub> transport · SP3</li>
+          <li><span class="feature-icon">◇</span> Lattice homogenization &amp; assembly discontinuity factors</li>
+          <li><span class="feature-icon">◇</span> Kinetics, point-kinetics &amp; reactivity coefficients</li>
+          <li><span class="feature-icon">◇</span> Rod-worth, shutdown-margin, pin-power &amp; xenon/samarium</li>
           <li><span class="feature-icon">◇</span> Burnup, decay heat &amp; multi-cycle fuel</li>
-          <li><span class="feature-icon">◇</span> Archetype presets &amp; one-command starter kits (LWR-SMR, HTGR, MSR, micro)</li>
+          <li><span class="feature-icon">◇</span> Archetype presets (LWR-SMR, HTGR, MSR, micro)</li>
           <li><span class="feature-icon">◇</span> Non-water moderators (graphite, BeO, ZrH, D₂O)</li>
-          <li><span class="feature-icon">◇</span> One-step escalation to OpenMC; deck export for your licensed Serpent/MCNP (Pro)</li>
+          <li><span class="feature-icon">◇</span> One-step escalation to OpenMC (free); deck converters for your licensed Serpent/MCNP on engagement</li>
           <li><span class="feature-icon">◇</span> ENDF/B parsing &amp; resonance self-shielding</li>
-          <li><span class="feature-icon">◇</span> 3D visualization &amp; power maps</li>
-          <li><span class="feature-icon">◇</span> Uncertainty quantification</li>
+          <li><span class="feature-icon">◇</span> Data-uncertainty quantification</li>
         </ul>
       </div>
     </section>
@@ -501,23 +512,23 @@
         <h2 class="section-title">FAQ</h2>
         <dl class="faq-list">
           <dt>What is SMRFORGE?</dt>
-          <dd>SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. The free Community tier (MIT) is evaluation-grade: it already runs a full-core nodal engine — lattice homogenization to a full-core Cartesian power shape, with every result a reproducible evidence bundle. Its Pro tier (FSL-1.1-MIT) adds the production design workflow and the assurance layer regulators read: NEM and R-Z geometry, coupled thermal-hydraulics and multi-cycle burnup, the rod-worth, shutdown-margin, and reactivity-coefficient outputs you design against, assurance bundles, traceability, and the V&amp;V workflows regulators are willing to read. Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC) for reference accuracy. Every run ships as a verifiable evidence bundle.</dd>
+          <dd>SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. The free open core (MIT) is the full screening reactor-physics engine: full-core Cartesian nodal diffusion, higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence, few-group homogenization, an in-tree continuous-energy Monte Carlo, S<sub>n</sub> transport, SP3, burnup/depletion, kinetics and reactivity coefficients, rod-worth, shutdown-margin, pin-power, and xenon/samarium — every result a reproducible evidence bundle, honestly labeled for fidelity. Its Pro tier (FSL-1.1-MIT) adds the assurance layer regulators read: the signed <em>assess</em> deliverable with a PASS/FAIL verdict against the safety floor, traceability, report artifacts, a reviewer console, and support (advanced geometry and integrations available on engagement). Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC, free) for reference accuracy. Every run ships as a verifiable evidence bundle.</dd>
           <dt>What's the difference between Community and Pro?</dt>
-          <dd>Community is MIT-licensed and includes neutronics, a full-core nodal engine (Cartesian nodal + CMFD, evaluation-grade), Monte Carlo transport, thermal-hydraulics, safety, burnup, visualization, the CLI, an OpenMC integration, and the full evidence-bundle plumbing. Pro adds converters that generate input decks for — and read results from — your own licensed Serpent and MCNP installations (SMRFORGE does not include or distribute those export-controlled codes), BenchmarkRunner, ReportGenerator, regulatory-quality V&amp;V workflows and traceability, surrogate/ML workflows, AI agents that operate against verifiable bundles, and air-gapped deployment.</dd>
+          <dd>The free open core is MIT-licensed and is the whole screening engine: full-core Cartesian nodal diffusion, higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence, continuous-energy Monte Carlo, S<sub>n</sub> transport, SP3, burnup/depletion, kinetics and reactivity coefficients, rod-worth, shutdown-margin, pin-power, an OpenMC escalation path, and the full evidence spine (sealed bundles, standalone verifier, RFC-6962 transparency log). Pro adds the assurance / regulatory layer: the signed <em>assess</em> deliverable with a PASS/FAIL verdict against the safety floor, requirements-to-evidence traceability, SRP-aligned report artifacts, a reviewer console, and support. Advanced geometry (R-Z, hex), full-core CMFD, and converters that generate input decks for — and read results from — your own licensed Serpent and MCNP installations (SMRFORGE does not include or distribute those export-controlled codes) are available to design partners / on the roadmap.</dd>
           <dt>Does SMRFORGE include Serpent or MCNP?</dt>
           <dd><strong>No.</strong> Serpent and MCNP are third-party codes with their own licenses — MCNP is export-controlled (distributed via RSICC) and Serpent is license-restricted (via VTT / OECD-NEA). SMRFORGE does not contain, bundle, or distribute them, or their nuclear-data libraries. Pro ships <em>converters</em> that generate input decks for, and read results from, a copy you license and install yourself. OpenMC (open source) is included as the built-in escalation path.</dd>
           <dt>How does SMRFORGE handle reproducibility?</dt>
-          <dd>Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (Python version, dependency-lock hash, ENDF library, container digest, build provenance), and a schema-versioned audit trail. <code>smrforge verify &lt;bundle&gt;</code> confirms or refutes a bundle's <strong>integrity</strong> offline — it checks the record is intact, complete, and untampered against the open schema (integrity), <em>without the tool that produced it</em>. Re-running the result end-to-end is a separate step, <code>smrforge reproduce</code>.</dd>
+          <dd>Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (engine and code version, the ENDF library and its SHA-256, the RNG seed, a determinism statement, and the host Python version), and a schema-versioned audit trail. <code>smrforge verify &lt;bundle&gt;</code> confirms or refutes a bundle's <strong>integrity</strong> offline — it checks the record is intact, complete, and untampered against the open schema (integrity), <em>without the tool that produced it</em>. Re-running the result end-to-end is a separate, deeper step, available through the Python API today (<code>certify_bundle</code> / <code>reproduce_bundle</code>) with a CLI verb on the roadmap.</dd>
           <dt>Is SMRFORGE Pro suitable for licensing-relevant work?</dt>
-          <dd>Pro adds regulatory-quality V&amp;V workflows, automated traceability that maps requirements to models to results to evidence, verifiable air-gapped deployment bundles, and ReportGenerator artifacts that map to standard SRP sections. Community ships the same evidence-bundle plumbing — Pro adds the templates, the workflows, and the support contract.</dd>
-          <dt>Is Docker or air-gapped deployment supported?</dt>
-          <dd>Yes. Community supports Docker and runs fully offline (no CDN fetches at runtime). Pro adds verifiable air-gapped deployment bundles and K8s manifests for regulated environments without internet access.</dd>
+          <dd>Pro adds the assurance / regulatory layer: the signed <em>assess</em> deliverable — a real reference solve plus a tech-spec shutdown-margin gate in one bundle, with a PASS/FAIL verdict against the safety floor — automated requirements-to-evidence traceability, report artifacts that map to standard SRP sections, a reviewer console, and support. The open core ships the same evidence-bundle plumbing — Pro adds the assessment, the templates, the workflows, and the support contract.</dd>
+          <dt>Does SMRFORGE run air-gapped?</dt>
+          <dd>Yes. The open core is pure Python standard library with zero dependencies and no CDN fetches at runtime, so it runs fully offline — on a laptop with no internet, in a SCIF, or behind an enterprise firewall. Pro adds verifiable air-gapped deployment bundles for regulated environments without internet access.</dd>
           <dt>What Python version is required?</dt>
           <dd>Python 3.11 or higher.</dd>
           <dt>How do I install SMRFORGE today?</dt>
-          <dd>The <strong>Community engine is open source (MIT)</strong> and public now at <a href="https://gitlab.com/smrforge/smrforge" target="_blank" rel="noopener">gitlab.com/smrforge/smrforge</a>. It is <strong>not yet on PyPI</strong>, so you install from source: <code>git clone</code> the repo, then <code>pip install -e '.[perf]'</code> (Python 3.11+). Also public: the Evidence Envelope standard, its reference verifier, and the reviewer kit. The <strong>Pro tier</strong> is source-available (FSL-1.1) and licensed, in commercial beta; <a href="#contact">email us</a> for Pro or a pilot. A package-manager-friendly <code>pip install</code> distribution is on the roadmap.</dd>
-          <dt>How do I run the SMRFORGE server?</dt>
-          <dd>After installing from source, run <code>smrforge serve</code>. One process serves the REST API and the MCP tool catalog at <code>http://127.0.0.1:8765</code>, with no CDN runtime fetches, so it works in fully air-gapped environments.</dd>
+          <dd>The <strong>open core is open source (MIT)</strong> and public now at <a href="https://gitlab.com/smrforge/smrforge" target="_blank" rel="noopener">gitlab.com/smrforge/smrforge</a>. It is <strong>not yet on PyPI</strong>, so you install from source: <code>git clone</code> the repo, then <code>pip install -e .</code> (Python 3.11+, pure Python standard library, zero dependencies). Today the CLI ships exactly two console commands — <code>smrforge verify &lt;bundle&gt;</code> and <code>smrforge --version</code>; the rest of the engine is used as a Python API. Also public: the Evidence Envelope standard, its reference verifier, and the reviewer kit. The <strong>Pro tier</strong> is source-available (FSL-1.1) and licensed, in commercial beta; <a href="#contact">email us</a> for Pro or a pilot. A package-manager-friendly <code>pip install</code> distribution is on the roadmap.</dd>
+          <dt>Is there a REST / MCP server?</dt>
+          <dd>A single stdlib HTTP surface (<code>smrf_serve</code>) fronts the REST API and the MCP tool catalog as a <strong>Python API today</strong> — no web framework, no CDN runtime fetches, so it works in fully air-gapped environments. There is no console command for it yet; a <code>serve</code> command is on the roadmap.</dd>
         </dl>
       </div>
     </section>

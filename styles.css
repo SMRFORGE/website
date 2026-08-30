@@ -656,6 +656,10 @@ body {
 }
 
 /* Contact */
+.contact {
+  text-align: center;   /* centers the inline-block email button (title/desc are already centered) */
+}
+
 .contact .section-desc {
   margin-bottom: 1.5rem;
 }

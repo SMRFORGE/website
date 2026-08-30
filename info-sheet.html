@@ -44,7 +44,7 @@
         <div class="row"><span>k_eff</span><b>1.29841</b></div>
         <div class="row"><span>fidelity</span><span class="pill screen">screening</span></div>
         <div class="row"><span>sha-256</span><span class="hash">a3f1c8…9e0b</span></div>
-        <div class="row"><span>replay</span><b>bit-exact @ epoch</b></div>
+        <div class="row"><span>replay</span><b>reproduce · bit-exact</b></div>
       </div>
       <div class="verify"><span class="p">$ smrforge verify ./bundle</span>
         <span class="ok">✓ sealed · schema ok · unedited · exit 0</span></div>
@@ -56,14 +56,14 @@
     <span class="eyebrow">The differentiator — built for the person who doesn't trust you</span>
     <div class="pillars">
       <div class="pillar"><div class="n">01 · FINGERPRINT</div><h3>Evidence envelopes</h3><p>Every output is a schema-registered bundle sealed by a SHA-256 manifest of its inputs and result — any edit breaks the seal, and it is <code>ed25519</code>-signable (a demo identity today, production key on the roadmap).</p></div>
-      <div class="pillar"><div class="n">02 · REPLAY</div><h3>Bit-exact reproduction</h3><p>A pinned <code>SOURCE_DATE_EPOCH</code> and the <code>reproduce_bundle()</code> Python API regenerate the same bytes from the same inputs.</p></div>
+      <div class="pillar"><div class="n">02 · REPLAY</div><h3>Bit-exact reproduction</h3><p><code>smrforge reproduce &lt;bundle&gt;</code> re-runs the open engine on the bundle's own recorded inputs and re-derives the same result core, bit-for-bit — deterministic given the pinned data library, seed, and code version.</p></div>
       <div class="pillar"><div class="n">03 · VERIFY</div><h3><code>exit 0</code> = it holds</h3><p>A standalone, offline check against the open <b>Evidence Envelope</b> schema — a third party confirms your record's integrity (unedited and schema-valid) or refutes it, in seconds, no SMRFORGE license needed (re-running the number end-to-end is the separate REPLAY step above). Digests also enter an append-only Merkle log: inclusion and consistency proofs it was never rewritten.</p></div>
     </div>
   </div>
 
   <!-- CAPABILITIES -->
   <div class="band">
-    <span class="eyebrow">One reproducible model, a full screening reactor-physics stack — across LWR-SMR, HTGR (prismatic &amp; pebble), MSR &amp; microreactor archetypes</span>
+    <span class="eyebrow">One reproducible model, a full screening reactor-physics stack — an LWR-SMR screening preset today; HTGR, MSR &amp; microreactor archetypes on the roadmap</span>
     <div class="caps">
       <div class="cap"><span class="t">Neutronics</span><span class="d">Full-core nodal &amp; NEM <span>· CE Monte Carlo &amp; S<sub>n</sub> transport</span></span></div>
       <div class="cap"><span class="t">Kinetics</span><span class="d">Point-kinetics <span>· reactivity coefficients</span></span></div>
@@ -71,7 +71,7 @@
       <div class="cap"><span class="t">Safety</span><span class="d">Rod-worth &amp; shutdown-margin <span>· pin-power</span></span></div>
       <div class="cap"><span class="t">Uncertainty</span><span class="d">Data-uncertainty <span>· sensitivity</span></span></div>
       <div class="cap"><span class="t">Nuclear data</span><span class="d">In-tree ENDF/B <span>· self-shielding, TSL</span></span></div>
-      <div class="cap"><span class="t">Geometry</span><span class="d">Cartesian cores <span>· R-Z / hex on engagement</span></span></div>
+      <div class="cap"><span class="t">Geometry</span><span class="d">Cartesian cores, full-core CMFD &amp; R-Z — free <span>· hex on the open-core roadmap</span></span></div>
       <div class="cap"><span class="t">Evidence</span><span class="d">Sealed bundles <span>· offline verify · transparency log</span></span></div>
       <div class="cap"><span class="t">Interop</span><span class="d">OpenMC round-trip <span>· Serpent/MCNP converters on engagement</span></span></div>
     </div>
@@ -105,9 +105,9 @@
         <p class="role">The full screening engine — prove fit in the open.</p>
         <ul>
           <li>Full screening stack (nodal + NEM, CE-MC, S<sub>n</sub>, burnup, kinetics) + evidence spine &amp; reviewer-kit</li>
-          <li>Archetype presets (LWR-SMR, HTGR, MSR, micro) → a runnable, baseline-checked model via the Python API</li>
+          <li>An LWR-SMR screening preset → a runnable, baseline-checked model via the Python API (HTGR/MSR/micro archetypes on the roadmap)</li>
           <li>One-step OpenMC escalation, free (Serpent/MCNP converters on engagement)</li>
-          <li>Benchmarks, stable Python API; CLI ships <code>verify</code> and <code>--version</code> today</li>
+          <li>Benchmarks, stable Python API; CLI ships <code>verify</code>, <code>reproduce</code>, <code>license</code> &amp; <code>--version</code></li>
         </ul>
       </div>
       <div class="card tier pro">
@@ -116,9 +116,9 @@
         <p class="role">The assurance / regulatory layer for submissions.</p>
         <ul>
           <li>The signed <code>assess</code> deliverable — a real reference solve + a tech-spec shutdown-margin gate in one bundle, with a PASS/FAIL verdict against the safety floor</li>
-          <li>Requirements-to-evidence traceability · SRP-aligned report artifacts</li>
-          <li>Confirmatory Console — re-run a submission, diff every claim, ship a sealed verification report; subsidized for regulators &amp; national labs</li>
-          <li>Advanced geometry (R-Z, hex) &amp; full-core CMFD available on engagement</li>
+          <li>Coverage (USL / c<sub>k</sub> trending) · freshness watch · signed, shareable evidence reports</li>
+          <li>Independent review is <b>free &amp; open</b> today — the reviewer kit re-runs the pinned engine and verifies with the separate <code>evidence-verifier</code>; a hosted reviewer console + requirements-to-evidence traceability &amp; SRP mapping are on the roadmap</li>
+          <li>Deck converters for your own licensed Serpent/MCNP, on engagement <em>(physics fidelity is free open-core — CMFD &amp; R-Z ship free; hex is on the open-core roadmap)</em></li>
         </ul>
       </div>
     </div>

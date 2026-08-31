@@ -57,7 +57,7 @@
     <div class="pillars">
       <div class="pillar"><div class="n">01 · FINGERPRINT</div><h3>Evidence envelopes</h3><p>Every output is a schema-registered bundle sealed by a SHA-256 manifest of its inputs and result — any edit breaks the seal, and it is <code>ed25519</code>-signable (a demo identity today, production key on the roadmap).</p></div>
       <div class="pillar"><div class="n">02 · REPLAY</div><h3>Bit-exact reproduction</h3><p><code>smrforge reproduce &lt;bundle&gt;</code> re-runs the open engine on the bundle's own recorded inputs and re-derives the same result core, bit-for-bit — deterministic given the pinned data library, seed, and code version.</p></div>
-      <div class="pillar"><div class="n">03 · VERIFY</div><h3><code>exit 0</code> = it holds</h3><p>A standalone, offline check against the open <b>Evidence Envelope</b> schema — a third party confirms your record's integrity (unedited and schema-valid) or refutes it, in seconds, no SMRFORGE license needed (re-running the number end-to-end is the separate REPLAY step above). Digests also enter an append-only Merkle log: inclusion and consistency proofs it was never rewritten.</p></div>
+      <div class="pillar"><div class="n">03 · VERIFY</div><h3><code>exit 0</code> = it holds</h3><p>A standalone, offline check against the open <b>Evidence Envelope</b> schema — a third party confirms your record's integrity (unedited and schema-valid) or refutes it, in seconds, no SMRFORGE license needed (re-running the number end-to-end is the separate REPLAY step above). Each result also pins a content fingerprint of the nuclear data it read, so a reviewer confirms <b>which</b> data produced a number.</p></div>
     </div>
   </div>
 
@@ -72,7 +72,7 @@
       <div class="cap"><span class="t">Uncertainty</span><span class="d">Data-uncertainty <span>· sensitivity</span></span></div>
       <div class="cap"><span class="t">Nuclear data</span><span class="d">In-tree ENDF/B <span>· self-shielding, TSL</span></span></div>
       <div class="cap"><span class="t">Geometry</span><span class="d">Cartesian cores, full-core CMFD &amp; R-Z — free <span>· hex on the open-core roadmap</span></span></div>
-      <div class="cap"><span class="t">Evidence</span><span class="d">Sealed bundles <span>· offline verify · transparency log</span></span></div>
+      <div class="cap"><span class="t">Evidence</span><span class="d">Sealed bundles <span>· offline verify · data &amp; derivation provenance</span></span></div>
       <div class="cap"><span class="t">Interop</span><span class="d">OpenMC round-trip <span>· Serpent/MCNP converters on engagement</span></span></div>
     </div>
   </div>

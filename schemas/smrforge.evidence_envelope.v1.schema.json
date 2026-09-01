@@ -1,106 +1,381 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://smrforge.io/schemas/smrforge.evidence_envelope.v1.schema.json",
-  "title": "SMRFORGE evidence envelope v1",
-  "description": "A signed, independently-verifiable evidence bundle. The signature covers `bundle_sha256`, which is the SHA-256 of the canonical `sha256sums` digest-list -- NOT the section values -- so a section's `value` may be withheld (redacted) while its digest keeps the commitment and the signature stays valid. Semantic rules the SCHEMA cannot express (a withheld section's `value` and its top-level readable copy must both be absent and declared in `redaction.withheld`; each `manifest[s].sha256` must equal `sha256sums[s]` and, when present, `sha256(canon(value))`; `bundle_sha256 == sha256(canon(sha256sums))`) are enforced by the verifier, not this document.",
-  "type": "object",
-  "required": ["schema", "manifest", "sha256sums", "bundle_sha256", "signature"],
-  "additionalProperties": true,
   "$defs": {
-    "digest": {
-      "type": "string",
-      "pattern": "^sha256:[0-9a-f]{64}$",
-      "description": "Lowercase hex SHA-256 with a `sha256:` prefix."
-    },
-    "manifest_section": {
-      "type": "object",
-      "required": ["sha256"],
-      "additionalProperties": false,
+    "DirectoryEnvelope": {
+      "additionalProperties": true,
+      "description": "Directory-envelope binding: the top-level object written as ``evidence_envelope.json`` at the root of a bundle directory.\n\nThe ``subject`` is a free-form dict carrying the case-specific payload\n(certification verdict, gateway claims, handoff manifest, ...). Subjects\nare themselves schema-tagged via the legacy schema names, so consumers\ncan route on either ``envelope_kind`` (preferred) or\n``subject[\"schema\"]`` (legacy compat).",
       "properties": {
-        "sha256": { "$ref": "#/$defs/digest" },
-        "value": {
-          "description": "The section contents. ABSENT when the section is redacted; still pinned by `sha256`."
+        "artifacts": {
+          "items": {
+            "$ref": "#/$defs/EnvelopeArtifact"
+          },
+          "title": "Artifacts",
+          "type": "array"
+        },
+        "envelope_kind": {
+          "description": "Dispatch case: 'certification' (ADR-012), 'gateway_airgap' (gateway air-gap validation), or 'handoff' (operator export pack).",
+          "enum": [
+            "certification",
+            "gateway_airgap",
+            "handoff"
+          ],
+          "title": "Envelope Kind",
+          "type": "string"
+        },
+        "gpg_key_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Gpg Key Id"
+        },
+        "producer": {
+          "$ref": "#/$defs/ProducerBlock"
+        },
+        "reproducibility": {
+          "additionalProperties": true,
+          "description": "Legacy smrforge.reproducibility_block.v1 mirror of ``runtime_identity`` -- kept for one release for backward-compatible readers; will be removed alongside the deprecated schema (ADR-014).",
+          "title": "Reproducibility",
+          "type": "object"
+        },
+        "runtime_identity": {
+          "additionalProperties": true,
+          "description": "Canonical smrforge.runtime_identity.v1 block (ADR-014). Single source of truth for who/what/where/when produced this envelope.",
+          "title": "Runtime Identity",
+          "type": "object"
+        },
+        "schema": {
+          "default": "smrforge.evidence_envelope.v1",
+          "title": "Schema",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "sha256sums_sha256": {
+          "description": "SHA-256 of sha256sums.txt; pins the integrity list.",
+          "title": "Sha256Sums Sha256",
+          "type": "string"
+        },
+        "signature_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Signature Path"
+        },
+        "signature_status": {
+          "default": "unsigned",
+          "description": "'unsigned' | 'signed' | 'signature_failed'",
+          "title": "Signature Status",
+          "type": "string"
+        },
+        "subject": {
+          "additionalProperties": true,
+          "description": "Case-specific payload. Carries its own legacy schema header for downstream consumers that still grep on names like 'smrforge.certification_manifest.v1'.",
+          "title": "Subject",
+          "type": "object"
         }
-      }
+      },
+      "required": [
+        "envelope_kind",
+        "producer",
+        "sha256sums_sha256"
+      ],
+      "title": "DirectoryEnvelope",
+      "type": "object"
     },
-    "result_core": {
-      "type": "object",
-      "description": "The embedded smrforge.result.v1 core (ADR-036), unchanged.",
-      "required": ["schema", "schema_version", "result", "fidelity", "verdict"],
+    "EnvelopeArtifact": {
+      "description": "Single bundle artifact with SHA-256 digest.",
       "properties": {
-        "schema": { "const": "smrforge.result.v1" },
-        "schema_version": { "type": "integer" },
-        "result": { "type": "object", "description": "Payload keyed by capability name." },
-        "fidelity": { "enum": ["screening", "reference", "lab-escalation"] },
-        "verdict": { "enum": ["pass", "advisory", "fail"] },
-        "caveats": { "type": "array", "items": { "type": "string" } },
-        "provenance": { "type": "object" }
-      }
+        "path": {
+          "description": "Bundle-relative POSIX path",
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "description": "Lowercase hex digest",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "title": "Size Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ],
+      "title": "EnvelopeArtifact",
+      "type": "object"
+    },
+    "LeanBundle": {
+      "additionalProperties": true,
+      "description": "Lean single-JSON binding: the whole envelope in one ``*.bundle.json`` document (the form SMRForge ships from ``smrforge reproduce``). The seal is carried in-line: a per-section ``manifest`` (inputs/result/provenance, each a SHA-256 digest plus its value), a ``sha256sums`` roll-up, and a ``bundle_sha256`` over the sealed digest-list. Redaction withholds a section's ``value`` (keeping its digest) and drops the corresponding readable top-level copy -- ``result`` for a withheld result, ``reproducibility`` for a withheld provenance -- while KEEPING the signature, which still verifies over the unchanged seal. So ``result`` and ``reproducibility`` are required only when the bundle is not redacted (no ``redaction`` block). ``additionalProperties: true`` keeps the form forward-compatible: the diagnostic ``host`` block (outside the signed manifest), the ``redaction`` marker, and future keys are permitted.",
+      "if": {
+        "not": {
+          "required": [
+            "redaction"
+          ]
+        }
+      },
+      "then": {
+        "required": [
+          "result",
+          "reproducibility"
+        ]
+      },
+      "properties": {
+        "bundle_sha256": {
+          "$ref": "#/$defs/Sha256Digest",
+          "description": "SHA-256 over the sealed digest-list; the value the signature covers."
+        },
+        "manifest": {
+          "$ref": "#/$defs/LeanManifest"
+        },
+        "redaction": {
+          "description": "Present on a docket-safe redacted derivative (smrforge.evidence_envelope.redaction.v1): names the withheld sections and pins the parent's bundle_sha256. Its presence relaxes the result/reproducibility requirement, since a withheld section's readable copy is dropped.",
+          "type": "object"
+        },
+        "reproducibility": {
+          "$ref": "#/$defs/LeanReproducibility",
+          "description": "Readable copy of the reproducibility block; MUST agree with manifest.provenance.value. Dropped when provenance is withheld (redaction)."
+        },
+        "result": {
+          "type": "object",
+          "description": "The result core (smrforge.result.v1 or equivalent). Opaque to this binding beyond being an object. Dropped when the result is withheld (redaction)."
+        },
+        "schema": {
+          "const": "smrforge.evidence_envelope.v1",
+          "title": "Schema",
+          "type": "string"
+        },
+        "sha256sums": {
+          "$ref": "#/$defs/LeanSha256Sums"
+        },
+        "signature": {
+          "$ref": "#/$defs/LeanSignature"
+        }
+      },
+      "required": [
+        "schema",
+        "manifest",
+        "sha256sums",
+        "bundle_sha256"
+      ],
+      "title": "LeanBundle",
+      "type": "object"
+    },
+    "LeanManifest": {
+      "description": "Per-section seal: each of inputs/result/provenance carries a SHA-256 digest plus (unless redacted) its value.",
+      "properties": {
+        "inputs": {
+          "$ref": "#/$defs/LeanSection"
+        },
+        "provenance": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/LeanSection"
+            },
+            {
+              "properties": {
+                "value": {
+                  "$ref": "#/$defs/LeanReproducibility"
+                }
+              }
+            }
+          ],
+          "description": "The signed copy of the reproducibility block; its value (when present) MUST be a LeanReproducibility."
+        },
+        "result": {
+          "$ref": "#/$defs/LeanSection"
+        }
+      },
+      "required": [
+        "inputs",
+        "result",
+        "provenance"
+      ],
+      "title": "LeanManifest",
+      "type": "object"
+    },
+    "LeanReproducibility": {
+      "additionalProperties": true,
+      "description": "The reproducibility contract for a lean bundle. Appears both as the top-level ``reproducibility`` (readable) and as ``manifest.provenance.value`` (signed); the two MUST agree.",
+      "properties": {
+        "code_version": {
+          "type": "string"
+        },
+        "data_library": {
+          "description": "The data-library identity actually used, or the literal marker 'unpinned' when none is externally pinned.",
+          "minLength": 1,
+          "type": "string"
+        },
+        "data": {
+          "description": "Residual run-scoped signed facts that are neither the standard reproducibility keys nor lineage (e.g. pack_id, temperature). Present only when a card recorded such facts.",
+          "type": "object"
+        },
+        "data_library_sha256": {
+          "$ref": "#/$defs/Sha256Digest",
+          "description": "NORMATIVE DIGEST RULE: MUST be a lowercase 'sha256:<64 hex>' digest binding the data actually used; a conforming verifier MUST reject any other value."
+        },
+        "deterministic": {},
+        "engine": {
+          "type": "string"
+        },
+        "engine_version": {
+          "type": "string"
+        },
+        "lineage": {
+          "description": "Present only on composed results: the ordered chain of capability steps that produced this bundle.",
+          "properties": {
+            "count": {
+              "type": "integer"
+            },
+            "steps": {
+              "type": "array"
+            }
+          },
+          "required": [
+            "count",
+            "steps"
+          ],
+          "type": "object"
+        },
+        "reproduce": {},
+        "rng_seed": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "engine_version",
+        "code_version",
+        "data_library",
+        "data_library_sha256",
+        "rng_seed",
+        "deterministic",
+        "reproduce"
+      ],
+      "title": "LeanReproducibility",
+      "type": "object"
+    },
+    "LeanSection": {
+      "description": "One sealed manifest section: a SHA-256 digest plus (unless redacted) the value it seals.",
+      "properties": {
+        "sha256": {
+          "$ref": "#/$defs/Sha256Digest"
+        },
+        "value": {}
+      },
+      "required": [
+        "sha256"
+      ],
+      "title": "LeanSection",
+      "type": "object"
+    },
+    "LeanSha256Sums": {
+      "description": "Roll-up of the three section digests.",
+      "properties": {
+        "inputs": {
+          "$ref": "#/$defs/Sha256Digest"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Sha256Digest"
+        },
+        "result": {
+          "$ref": "#/$defs/Sha256Digest"
+        }
+      },
+      "required": [
+        "inputs",
+        "result",
+        "provenance"
+      ],
+      "title": "LeanSha256Sums",
+      "type": "object"
+    },
+    "LeanSignature": {
+      "additionalProperties": true,
+      "description": "Ed25519 signature over bundle_sha256. Optional at the bundle level as a schema matter, but redaction KEEPS it (the seal is unchanged, so the original signature still verifies over a redacted copy); the schema validates its structure, not the signature's cryptographic validity.",
+      "properties": {
+        "alg": {
+          "const": "ed25519"
+        },
+        "identity": {
+          "enum": [
+            "demo",
+            "production"
+          ]
+        },
+        "public_key": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "signature": {
+          "pattern": "^[0-9a-f]{128}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "alg",
+        "public_key",
+        "signature"
+      ],
+      "title": "LeanSignature",
+      "type": "object"
+    },
+    "ProducerBlock": {
+      "description": "Who/when produced the envelope.",
+      "properties": {
+        "created_utc": {
+          "title": "Created Utc",
+          "type": "string"
+        },
+        "smrforge_version": {
+          "title": "Smrforge Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "smrforge_version",
+        "created_utc"
+      ],
+      "title": "ProducerBlock",
+      "type": "object"
+    },
+    "Sha256Digest": {
+      "description": "A lowercase 'sha256:<64 hex>' digest.",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Sha256Digest",
+      "type": "string"
     }
   },
-  "properties": {
-    "schema": { "const": "smrforge.evidence_envelope.v1" },
-    "result": {
-      "$ref": "#/$defs/result_core",
-      "description": "Readable copy of the result section. Absent when `result` is withheld."
+  "$id": "https://smrforge.io/schemas/smrforge.evidence_envelope.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "The 'smrforge.evidence_envelope.v1' format has two serializations under this one schema identity: the directory envelope (a bundle directory whose root holds ``evidence_envelope.json``) and the lean single-JSON bundle (the whole envelope in one ``*.bundle.json`` document, as shipped by ``smrforge reproduce``). A document conforms if it matches exactly one binding; the two are disjoint by their required-field sets (a directory envelope has ``envelope_kind``/``producer``/``sha256sums_sha256``; a lean bundle has ``manifest``/``sha256sums``/``bundle_sha256``).",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/DirectoryEnvelope"
     },
-    "reproducibility": {
-      "type": "object",
-      "description": "Readable copy of the provenance section (code_version, data_library, rng_seed, ...). Absent when `provenance` is withheld."
-    },
-    "manifest": {
-      "type": "object",
-      "description": "Per-section digest + value. Value is absent for a redacted section.",
-      "required": ["inputs", "result", "provenance"],
-      "additionalProperties": false,
-      "properties": {
-        "inputs": { "$ref": "#/$defs/manifest_section" },
-        "result": { "$ref": "#/$defs/manifest_section" },
-        "provenance": { "$ref": "#/$defs/manifest_section" }
-      }
-    },
-    "sha256sums": {
-      "type": "object",
-      "description": "The SEALED digest-list -- the sole subject of the signature.",
-      "required": ["inputs", "result", "provenance"],
-      "additionalProperties": false,
-      "properties": {
-        "inputs": { "$ref": "#/$defs/digest" },
-        "result": { "$ref": "#/$defs/digest" },
-        "provenance": { "$ref": "#/$defs/digest" }
-      }
-    },
-    "bundle_sha256": { "$ref": "#/$defs/digest" },
-    "signature": {
-      "type": "object",
-      "required": ["alg", "public_key", "signature"],
-      "additionalProperties": true,
-      "properties": {
-        "alg": { "const": "ed25519" },
-        "public_key": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
-        "message": { "type": "string" },
-        "signature": { "type": "string", "pattern": "^[0-9a-f]{128}$" },
-        "identity": { "enum": ["demo", "production"] }
-      }
-    },
-    "host": {
-      "type": "object",
-      "description": "Diagnostic only -- OUTSIDE the seal, never checked by the verifier."
-    },
-    "redaction": {
-      "type": "object",
-      "description": "Present on a docket-safe redacted derivative.",
-      "required": ["schema", "withheld"],
-      "properties": {
-        "schema": { "const": "smrforge.evidence_envelope.redaction.v1" },
-        "withheld": {
-          "type": "array",
-          "items": { "enum": ["inputs", "result", "provenance"] }
-        },
-        "reason": { "type": "string" },
-        "parent_bundle_sha256": { "$ref": "#/$defs/digest" },
-        "caveats": { "type": "array", "items": { "type": "string" } }
-      }
+    {
+      "$ref": "#/$defs/LeanBundle"
     }
-  }
+  ],
+  "title": "EvidenceEnvelope",
+  "x-smrforge-schema": "smrforge.evidence_envelope.v1",
+  "x-smrforge-schema-version": 1
 }

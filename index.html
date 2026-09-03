@@ -96,7 +96,7 @@
             "name": "Does SMRFORGE include Serpent or MCNP?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "No. Serpent and MCNP are third-party codes with their own licenses — MCNP is export-controlled (distributed via RSICC) and Serpent is license-restricted (via VTT / OECD-NEA). SMRFORGE does not contain, bundle, or distribute them, or their nuclear-data libraries. Pro can provide, on engagement,converters that generate input decks for, and read results from, a copy you license and install yourself. OpenMC (open source) is included as the built-in escalation path."
+              "text": "No. Serpent and MCNP are third-party codes with their own licenses — MCNP is export-controlled (distributed via RSICC) and Serpent is license-restricted (via VTT / OECD-NEA). SMRFORGE does not contain, bundle, or distribute them, or their nuclear-data libraries. Pro can provide, on engagement, converters that generate input decks for, and read results from, a copy you license and install yourself. OpenMC (open source) is included as the built-in escalation path."
             }
           },
           {
@@ -348,8 +348,9 @@
         </p>
         <p class="section-desc">
           Every k-eff calc, every benchmark, every report ships as a verifiable evidence bundle.
-          A SHA-256 manifest of inputs and outputs. A reproducibility block — engine and code version, the ENDF
-          library and its SHA-256, the RNG seed, and a determinism statement, plus an unsigned host diagnostic (Python version, platform) outside the seal. And,
+          A SHA-256 manifest of inputs and outputs. A reproducibility block — engine and code version, the
+          data library it read and its content digest (the bundled few-group set for a screening k-eff, an
+          ENDF-derived pack for the continuous-energy path), the RNG seed, and a determinism statement, plus an unsigned host diagnostic (Python version, platform) outside the seal. And,
           for a composed result, its derivation lineage — the ordered sub-calculations it was built from,
           each with input/output digests — all inside the signed record.
         </p>

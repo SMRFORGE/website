@@ -42,7 +42,7 @@
         "name": "SMRFORGE Community",
         "applicationCategory": "EngineeringApplication",
         "operatingSystem": "Windows|macOS|Linux",
-        "softwareVersion": "0.7.0",
+        "softwareVersion": "0.7.1",
         "description": "Open-source (MIT) full screening reactor-physics engine for Small Modular Reactor design and analysis. In-tree pure-Python solvers — full-core Cartesian nodal diffusion, higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence, few-group homogenization, continuous-energy Monte Carlo, Sn transport, SP3, burnup/depletion, kinetics and reactivity coefficients — for fast screening, plus one-step escalation to OpenMC (free) for reference accuracy. Every run produces a verifiable evidence bundle (SHA-256 manifest, reproducibility block, derivation lineage for composed results) any third party can verify offline. Ships the CLI (smrforge verify, smrforge reproduce, smrforge license, smrforge --version) and the full evidence spine — sealed bundles, standalone verifier, verifiable redaction, and data-library provenance. Full-core CMFD, R-Z (cylindrical, screening-grade) diffusion, and the IAEA-2D full-core closure ship free in the open core; hex geometry is on the open-core roadmap. Honestly screening-grade and reproducible. Pro adds the assurance / regulatory layer for submissions — the signed assess deliverable with a PASS/FAIL verdict against the safety floor, report artifacts, and support; Serpent/MCNP converters are available on engagement. Pure Python standard library, zero dependencies; install from source (not on PyPI).",
         "offers": {
           "@type": "Offer",
@@ -63,13 +63,10 @@
         "description": "Commercial assurance / regulatory layer for licensing-relevant workflows. Turns evidence bundles into a submission-ready assurance package: the signed 'assess' deliverable — a genuine reference-grade assessment (a real reference solve plus a tech-spec shutdown-margin gate) collapsed into one signed, independently-verifiable bundle with a PASS/FAIL verdict against the safety floor — plus coverage (USL / c_k trending against the measured Tier-3 anchor suite), a freshness monitor, signed shareable evidence reports, and support; requirements-to-evidence traceability, SRP-section mapping, and a hosted reviewer console are on the roadmap. Physics fidelity is never a Pro feature — all of it, including advanced geometry and full-core CMFD, ships free in the open core. Converters for your own licensed Serpent/MCNP installations (SMRFORGE does not include or distribute those export-controlled codes) are available on engagement.",
         "offers": {
           "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD",
           "priceSpecification": {
             "@type": "PriceSpecification",
             "description": "Commercial license. Contact support@smrforge.io for pricing."
-          },
-          "availability": "https://schema.org/InStock"
+          }
         },
         "author": {
           "@id": "https://smrforge.io/#organization"
@@ -99,7 +96,7 @@
             "name": "Does SMRFORGE include Serpent or MCNP?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "No. Serpent and MCNP are third-party codes with their own licenses — MCNP is export-controlled (distributed via RSICC) and Serpent is license-restricted (via VTT / OECD-NEA). SMRFORGE does not contain, bundle, or distribute them, or their nuclear-data libraries. Pro ships converters that generate input decks for, and read results from, a copy you license and install yourself. OpenMC (open source) is included as the built-in escalation path."
+              "text": "No. Serpent and MCNP are third-party codes with their own licenses — MCNP is export-controlled (distributed via RSICC) and Serpent is license-restricted (via VTT / OECD-NEA). SMRFORGE does not contain, bundle, or distribute them, or their nuclear-data libraries. Pro can provide, on engagement,converters that generate input decks for, and read results from, a copy you license and install yourself. OpenMC (open source) is included as the built-in escalation path."
             }
           },
           {
@@ -107,7 +104,7 @@
             "name": "How does SMRFORGE handle reproducibility?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (engine and code version, the nuclear-data library it read and its SHA-256, the RNG seed, and a determinism statement, plus an unsigned host diagnostic (Python version, platform) outside the seal), and a derivation lineage for composed results. `smrforge verify <bundle>` confirms or refutes a bundle's integrity offline — it checks the record is intact, complete, and untampered against the open schema (integrity), without the tool that produced it. Re-running the result end-to-end is a separate, deeper step: `smrforge reproduce <bundle>` re-runs the open engine on the bundle's own recorded inputs and checks the numbers re-derive (the certify_bundle / reproduce_bundle Python API is the same path)."
+              "text": "Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (engine and code version, the nuclear-data library it read and its SHA-256, the RNG seed, and a determinism statement, plus an unsigned host diagnostic (Python version, platform) outside the seal), and a derivation lineage for composed results. `smrforge verify <bundle>` confirms or refutes a bundle's integrity offline — it checks the record is intact, complete, and untampered against the open schema (integrity), with a checker that imports none of our physics. Re-running the result end-to-end is a separate, deeper step: `smrforge reproduce <bundle>` re-runs the open engine on the bundle's own recorded inputs and checks the numbers re-derive (the certify_bundle / reproduce_bundle Python API is the same path)."
             }
           },
           {
@@ -123,7 +120,7 @@
             "name": "Does SMRFORGE run air-gapped?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Yes. The open core is pure Python standard library with zero dependencies and no CDN fetches at runtime, so it runs fully offline — on a laptop with no internet, in a SCIF, or behind an enterprise firewall. Pro adds verifiable air-gapped deployment bundles for regulated environments without internet access."
+              "text": "Yes. The open core is pure Python standard library with zero dependencies and no CDN fetches at runtime, so it runs fully offline — on a laptop with no internet, in a SCIF, or behind an enterprise firewall. Air-gapped deployment bundles for regulated environments are on the Pro roadmap."
             }
           },
           {
@@ -167,7 +164,7 @@
       <ul class="nav-links">
         <li><a href="#trust">Trust</a></li>
         <li><a href="#design-engine">Design Engine</a></li>
-        <li><a href="#validation">Validation</a></li>
+        <li><a href="#validation">V&amp;V</a></li>
         <li><a href="#provenance">Provenance</a></li>
         <li><a href="#gateway">Gateway</a></li>
         <li><a href="#built-for">Built For</a></li>
@@ -285,17 +282,17 @@
 
     <section id="validation" class="section validation">
       <div class="container">
-        <h2 class="section-title">Validated closure-by-closure — error bars published</h2>
+        <h2 class="section-title">Verified and characterized, closure-by-closure — error bars published</h2>
         <p class="section-desc section-desc-lead">
-          We state validation closure-by-closure, with published bands — and we publish where the methods don't agree, too.
+          We state each closure with its published band — and we publish where the methods don't agree, too.
         </p>
         <p class="section-desc">
           An honest starting point: there are almost no <em>measured</em> SMR benchmarks yet — most
-          SMRs aren't operating — so, like the whole field, we validate the <strong>method</strong>
-          against the best-characterized data that exists, and we characterize the engine against a
-          reference code. On real ENDF/B-VIII.0 data our continuous-energy Monte Carlo reproduces
+          SMRs aren't operating — so, like the whole field, we anchor the <strong>method</strong>
+          to the best-characterized data that exists, and we characterize the engine against a
+          reference code (OpenMC). On real ENDF/B-VIII.0 data our continuous-energy Monte Carlo reproduces
           OpenMC to a small, positive, <strong>bounded ≈ +320 pcm</strong> residual (band +205…+429),
-          and — the decisive evidence it's a correct engine, not a tuned one — that residual is
+          and — the decisive evidence it's a consistent engine, not a tuned one — that residual is
           <strong>flat with temperature</strong> and tracks U-238 content. Code-verification anchors
           hold tightly too: the IAEA-2D full-core closure lands at <strong>≈ −3 pcm</strong> vs the
           published 2-D reference, cross-checked FD-vs-NEM. Then — the part that
@@ -310,7 +307,7 @@
           <article class="proof-card">
             <div class="proof-figure">+320<span class="unit">pcm</span></div>
             <div class="proof-label">CE Monte Carlo vs OpenMC · characterized residual</div>
-            <p class="proof-note">Our continuous-energy Monte Carlo vs OpenMC on real ENDF/B-VIII.0 data (matched-physics, infinite medium): a small, positive, <strong>bounded ≈ +320 pcm</strong> residual (band +205…+429) that is <strong>flat with temperature</strong> and tracks U-238 — the signature of a correct engine with a named residual, not a tuned one. A code-to-code characterization, not SMR validation. See the <a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/VNV_MATRIX.md" target="_blank" rel="noopener">V&amp;V matrix</a>.</p>
+            <p class="proof-note">Our continuous-energy Monte Carlo vs OpenMC on real ENDF/B-VIII.0 data (matched-physics, infinite medium): a small, positive, <strong>bounded ≈ +320 pcm</strong> residual (band +205…+429) that is <strong>flat with temperature</strong> and tracks U-238 — the signature of a consistent engine with a named residual, not a tuned one. A code-to-code characterization, not SMR validation. See the <a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/VNV_MATRIX.md" target="_blank" rel="noopener">V&amp;V matrix</a>.</p>
           </article>
           <article class="proof-card">
             <div class="proof-figure">−3<span class="unit">pcm</span></div>
@@ -319,8 +316,8 @@
           </article>
           <article class="proof-card">
             <div class="proof-figure">23/25<span class="unit">green</span></div>
-            <div class="proof-label">Measured criticality set · external-OpenMC-anchored</div>
-            <p class="proof-note">25 measured ICSBEP / BEAVRS-HZP criticality benchmarks (23 green / 2 red), each externally OpenMC-anchored with published C−E and split MC / nuclear-data / method budgets, honestly labeled advisory. These are LWR and method anchors, not SMR-specific validation — and we say so.</p>
+            <div class="proof-label">External OpenMC vs measured criticality · not SMRFORGE physics</div>
+            <p class="proof-note">25 measured ICSBEP / BEAVRS-HZP criticality benchmarks (23 green / 2 red). The calculated value in every row is <strong>external OpenMC</strong> — the tier you escalate to — not SMRFORGE's own engine scored against experiment; published C−E with split MC / nuclear-data / method budgets, honestly labeled advisory. These anchor the escalation target and the evidence machinery. LWR and method anchors, not SMR-specific validation — and we say so.</p>
           </article>
         </div>
         <p class="honest-note">
@@ -376,11 +373,11 @@
           </article>
           <article class="provenance-card">
             <h3>Air-gap by construction</h3>
-            <p>Pure Python standard library, zero dependencies, zero CDN fetches at runtime. Works on a laptop with no internet, in a SCIF, or behind an enterprise firewall. The bundled screening preset ships a cross-section set in-tree — no nuclear-data download is required to reach a k-effective number. Advanced ENDF-driven workflows stage their data separately; Pro adds verified air-gapped deployment bundles for those.</p>
+            <p>Pure Python standard library, zero dependencies, zero CDN fetches at runtime. Works on a laptop with no internet, in a SCIF, or behind an enterprise firewall. The bundled screening preset ships a cross-section set in-tree — no nuclear-data download is required to reach a k-effective number. Advanced ENDF-driven workflows stage their data separately; air-gapped deployment bundles for those are on the Pro roadmap.</p>
           </article>
           <article class="provenance-card">
             <h3>Locked surface, gated drift</h3>
-            <p>369 tests, golden snapshots, and published conformance vectors — run them yourself against any build. A determinism check guards bit-reproducibility. Blocking CI runs ruff and the full suite on every change; the same checks are yours to run.</p>
+            <p>369 tests, golden snapshots, and published conformance vectors — run them yourself against any build. A determinism check guards bit-reproducibility. Blocking CI runs ruff and the fast behavior suite on every change; the slow Monte-Carlo/transport and OpenMC tests run separately. The same checks are yours to run.</p>
           </article>
           <article class="provenance-card">
             <h3>Which data produced it</h3>
@@ -519,13 +516,13 @@
           <dt>What's the difference between Community and Pro?</dt>
           <dd>The free open core is MIT-licensed and is the whole screening engine: full-core Cartesian nodal diffusion, higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence, continuous-energy Monte Carlo, S<sub>n</sub> transport, SP3, burnup/depletion, kinetics and reactivity coefficients, rod-worth, shutdown-margin, pin-power, an OpenMC escalation path, and the full evidence spine (sealed bundles, standalone verifier, verifiable redaction, and data-library provenance). Full-core CMFD, R-Z (cylindrical) diffusion, and the IAEA-2D full-core closure ship free in the open core today; hex geometry is on the open-core roadmap. Pro adds the assurance / regulatory layer: the signed <em>assess</em> deliverable with a PASS/FAIL verdict against the safety floor, plus coverage / freshness / signed-report cards and support; requirements-to-evidence traceability, SRP-section mapping, and a hosted reviewer console are on the roadmap. Converters that generate input decks for — and read results from — your own licensed Serpent and MCNP installations (SMRFORGE does not include or distribute those export-controlled codes) are available on engagement.</dd>
           <dt>Does SMRFORGE include Serpent or MCNP?</dt>
-          <dd><strong>No.</strong> Serpent and MCNP are third-party codes with their own licenses — MCNP is export-controlled (distributed via RSICC) and Serpent is license-restricted (via VTT / OECD-NEA). SMRFORGE does not contain, bundle, or distribute them, or their nuclear-data libraries. Pro ships <em>converters</em> that generate input decks for, and read results from, a copy you license and install yourself. OpenMC (open source) is included as the built-in escalation path.</dd>
+          <dd><strong>No.</strong> Serpent and MCNP are third-party codes with their own licenses — MCNP is export-controlled (distributed via RSICC) and Serpent is license-restricted (via VTT / OECD-NEA). SMRFORGE does not contain, bundle, or distribute them, or their nuclear-data libraries. Pro can provide, on engagement,<em>converters</em> that generate input decks for, and read results from, a copy you license and install yourself. OpenMC (open source) is included as the built-in escalation path.</dd>
           <dt>How does SMRFORGE handle reproducibility?</dt>
-          <dd>Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (engine and code version, the nuclear-data library it read and its SHA-256, the RNG seed, and a determinism statement, plus an unsigned host diagnostic (Python version, platform) outside the seal), and a derivation lineage for composed results. <code>smrforge verify &lt;bundle&gt;</code> confirms or refutes a bundle's <strong>integrity</strong> offline — it checks the record is intact, complete, and untampered against the open schema (integrity), <em>without the tool that produced it</em>. Re-running the result end-to-end is a separate, deeper step: <code>smrforge reproduce &lt;bundle&gt;</code> re-runs the open engine on the bundle's own recorded inputs and checks the numbers re-derive (the <code>certify_bundle</code> / <code>reproduce_bundle</code> Python API is the same path).</dd>
+          <dd>Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (engine and code version, the nuclear-data library it read and its SHA-256, the RNG seed, and a determinism statement, plus an unsigned host diagnostic (Python version, platform) outside the seal), and a derivation lineage for composed results. <code>smrforge verify &lt;bundle&gt;</code> confirms or refutes a bundle's <strong>integrity</strong> offline — it checks the record is intact, complete, and untampered against the open schema (integrity), <em>with a checker that imports none of our physics</em>. Re-running the result end-to-end is a separate, deeper step: <code>smrforge reproduce &lt;bundle&gt;</code> re-runs the open engine on the bundle's own recorded inputs and checks the numbers re-derive (the <code>certify_bundle</code> / <code>reproduce_bundle</code> Python API is the same path).</dd>
           <dt>Is SMRFORGE Pro suitable for licensing-relevant work?</dt>
           <dd>Pro adds the assurance / regulatory layer: the signed <em>assess</em> deliverable — a real reference solve plus a tech-spec shutdown-margin gate in one bundle, with a PASS/FAIL verdict against the safety floor — plus coverage (USL / c_k trending), a freshness monitor, signed shareable evidence reports, and support; requirements-to-evidence traceability, report artifacts mapped to standard SRP sections, and a hosted reviewer console are on the roadmap. The open core ships the same evidence-bundle plumbing — Pro adds the assessment, those cards, and the support contract.</dd>
           <dt>Does SMRFORGE run air-gapped?</dt>
-          <dd>Yes. The open core is pure Python standard library with zero dependencies and no CDN fetches at runtime, so it runs fully offline — on a laptop with no internet, in a SCIF, or behind an enterprise firewall. Pro adds verifiable air-gapped deployment bundles for regulated environments without internet access.</dd>
+          <dd>Yes. The open core is pure Python standard library with zero dependencies and no CDN fetches at runtime, so it runs fully offline — on a laptop with no internet, in a SCIF, or behind an enterprise firewall. Air-gapped deployment bundles for regulated environments are on the Pro roadmap.</dd>
           <dt>What Python version is required?</dt>
           <dd>Python 3.11 or higher.</dd>
           <dt>How do I install SMRFORGE today?</dt>

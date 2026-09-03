@@ -57,7 +57,7 @@
     <div class="pillars">
       <div class="pillar"><div class="n">01 · FINGERPRINT</div><h3>Evidence envelopes</h3><p>Every output is a schema-registered bundle sealed by a SHA-256 manifest of its inputs and result — any edit breaks the seal, and it is <code>ed25519</code>-signable (a demo identity today, production key on the roadmap).</p></div>
       <div class="pillar"><div class="n">02 · REPLAY</div><h3>Bit-exact reproduction</h3><p><code>smrforge reproduce &lt;bundle&gt;</code> re-runs the open engine on the bundle's own recorded inputs and re-derives the same result core, bit-for-bit — deterministic given the pinned data library, seed, and code version.</p></div>
-      <div class="pillar"><div class="n">03 · VERIFY</div><h3><code>exit 0</code> = it holds</h3><p>A standalone, offline check against the open <b>Evidence Envelope</b> schema — a third party confirms your record's integrity (unedited and schema-valid) or refutes it, in seconds, no SMRFORGE license needed (re-running the number end-to-end is the separate REPLAY step above). A result also pins a content fingerprint of the nuclear data it read (or is honestly marked <code>unpinned</code>), so a reviewer confirms <b>which</b> data produced a number.</p></div>
+      <div class="pillar"><div class="n">03 · VERIFY</div><h3><code>exit 0</code> = it holds</h3><p>A standalone, offline check against the open <b>Evidence Envelope</b> schema — a third party confirms your record's integrity (unedited, schema-valid) or refutes it in seconds, no license needed. Each result also pins a fingerprint of the data it read, or is honestly marked <code>unpinned</code>.</p></div>
     </div>
   </div>
 
@@ -107,7 +107,7 @@
           <li>Full screening stack (nodal + NEM, CE-MC, S<sub>n</sub>, burnup, kinetics) + evidence spine &amp; reviewer-kit</li>
           <li>An LWR-SMR screening preset → a runnable, baseline-checked model via the Python API (HTGR/MSR/micro archetypes on the roadmap)</li>
           <li>One-step OpenMC escalation, free (Serpent/MCNP converters on engagement)</li>
-          <li>Benchmarks, stable Python API; CLI ships <code>verify</code>, <code>reproduce</code>, <code>license</code> &amp; <code>--version</code></li>
+          <li>Benchmarks, Python API; CLI ships <code>verify</code>, <code>reproduce</code>, <code>license</code> &amp; <code>--version</code></li>
         </ul>
       </div>
       <div class="card tier pro">

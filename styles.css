@@ -572,6 +572,13 @@ body {
   font-size: 0.7rem;
 }
 
+/* Keep subscripts/superscripts (e.g. S_n, D2O) from inflating a line's height,
+   which otherwise adds visible extra vertical spacing inside flex cards. */
+sub,
+sup {
+  line-height: 0;
+}
+
 /* Built For (teams + workflows) */
 .built-for-grid {
   display: grid;

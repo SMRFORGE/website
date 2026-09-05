@@ -146,23 +146,35 @@ const ISQRT = modpow(2n, (Q - 1n) / 4n, Q);
 function recoverX(y, sign) { const yy = y * y; const xx = mod((yy - 1n) * inv(D * yy + 1n)); let x = modpow(xx, (Q + 3n) / 8n, Q); if (mod(x * x - xx) !== 0n) x = mod(x * ISQRT); if ((x & 1n) !== BigInt(sign)) x = Q - x; return x; }
 const BY = mod(4n * inv(5n));
 const BASE = [recoverX(BY, 0), BY];
-function add(p, q) { const [x1, y1] = p, [x2, y2] = q; const t = D * x1 * x2 * y1 * y2; const x3 = mod((x1 * y2 + x2 * y1) * inv(1n + t)); const y3 = mod((y1 * y2 + x1 * x2) * inv(1n - t)); return [x3, y3]; }
-function mul(p, e) { let r = [0n, 1n]; while (e > 0n) { if (e & 1n) r = add(r, p); p = add(p, p); e >>= 1n; } return r; }
 const onCurve = (p) => { const [x, y] = p; return mod(-x * x + y * y - 1n - D * x * x * y * y) === 0n; };
 const leInt = (b) => { let n = 0n; for (let j = b.length - 1; j >= 0; j--) n = (n << 8n) | BigInt(b[j]); return n; };
 function decodepoint(b) { const y = leInt(b) & ((1n << 255n) - 1n); const x = recoverX(y, (b[31] >> 7) & 1); const p = [x, y]; if (!onCurve(p)) throw new Error('off curve'); return p; }
 const hexToBytes = (h) => { const a = new Uint8Array(h.length / 2); for (let j = 0; j < a.length; j++) a[j] = parseInt(h.substr(j * 2, 2), 16); return a; };
+
+// Extended twisted-Edwards coordinates (X:Y:Z:T). No field inversion per point op -> a verify is a few
+// thousand big-int mults instead of a million modpows, so it stays off the "freeze the tab" path.
+const _d2 = mod(2n * D);
+const ext = (p) => [p[0], p[1], 1n, mod(p[0] * p[1])];
+const IDENT = [0n, 1n, 1n, 0n];
+function eadd(p, q) {
+  const [X1, Y1, Z1, T1] = p, [X2, Y2, Z2, T2] = q;
+  const A = mod((Y1 - X1) * (Y2 - X2)), B = mod((Y1 + X1) * (Y2 + X2));
+  const C = mod(T1 * _d2 * T2), Dd = mod(Z1 * 2n * Z2);
+  const E = B - A, F = Dd - C, G = Dd + C, H = B + A;
+  return [mod(E * F), mod(G * H), mod(F * G), mod(E * H)];
+}
+function emul(p, e) { let r = IDENT; while (e > 0n) { if (e & 1n) r = eadd(r, p); p = eadd(p, p); e >>= 1n; } return r; }
+const eEqual = (p, q) => mod(p[0] * q[2]) === mod(q[0] * p[2]) && mod(p[1] * q[2]) === mod(q[1] * p[2]);
 function ed25519Verify(sig, msgStr, pub) {
   if (sig.length !== 64 || pub.length !== 32) return false;
-  let r, a;
-  try { r = decodepoint(sig.slice(0, 32)); a = decodepoint(pub); } catch { return false; }
+  let R, A;
+  try { R = ext(decodepoint(sig.slice(0, 32))); A = ext(decodepoint(pub)); } catch { return false; }
   const s = leInt(sig.slice(32));
   const msg = _enc.encode(msgStr);
   const buf = new Uint8Array(64 + msg.length);
   buf.set(sig.slice(0, 32), 0); buf.set(pub, 32); buf.set(msg, 64);
   const k = leInt(sha512(buf));
-  const L = mul(BASE, s), Rk = add(r, mul(a, k));
-  return L[0] === Rk[0] && L[1] === Rk[1];
+  return eEqual(emul(ext(BASE), s), eadd(R, emul(A, k)));
 }
 
 // ---------- verify_bundle: returns a structured checklist so the UI can show each step ----------

@@ -261,9 +261,9 @@ function initUI() {
       bundle.reproducibility.data_library_sha256 = dlInput.value;
       bundle.manifest.provenance.value.data_library_sha256 = dlInput.value;
       const kChanged = kInput.value.trim() !== K0, dlChanged = dlInput.value !== DL0;
-      // reflect the edit in the bundle panel itself, so you SEE the doctored value that breaks the seal
-      const ck = document.getElementById('claim-k'); ck.textContent = kv; ck.classList.toggle('tampered-val', kChanged);
-      const pdl = document.getElementById('prov-dl'); if (pdl) { pdl.textContent = trunc(dlInput.value); pdl.classList.toggle('tampered-val', dlChanged); }
+      // the edited values ARE the bundle inputs now -- turn them red as they're doctored
+      kInput.classList.toggle('tampered-val', kChanged);
+      dlInput.classList.toggle('tampered-val', dlChanged);
       const { ok, checks } = verifyBundle(bundle);
       renderVerdict(ok, checks, kChanged || dlChanged);
     } catch (e) { _fail('Check error: ' + ((e && e.message) || e)); }
@@ -292,7 +292,7 @@ function renderStatic(bundle) {
   const k = bundle.result.result['physics:openmc'].k_eff.raw;
   const ks = bundle.result.result['physics:openmc'].k_eff_sigma.raw;
   const el = (id) => document.getElementById(id);
-  el('claim-k').textContent = k;
+  // claim-k and data_library_sha256 are editable inputs now; their values are seeded by resetToCanonical
   el('claim-sigma').textContent = ks;
   el('claim-fidelity').textContent = core.fidelity;
   el('claim-verdict').textContent = core.verdict;
@@ -302,9 +302,8 @@ function renderStatic(bundle) {
     ['engine_version', rep.engine_version],
     ['code_version', rep.code_version],
     ['data_library', rep.data_library],
-    ['data_library_sha256', trunc(rep.data_library_sha256), 'prov-dl'],
     ['rng_seed', rep.rng_seed.raw],
-  ].map(([k2, v, id]) => `<div class="hr-row"><span class="hr-k">${k2}</span><span class="hr-v${id ? ' hr-hash' : ''}"${id ? ` id="${id}"` : ''}>${v}</span></div>`).join('');
+  ].map(([k2, v]) => `<div class="hr-row"><span class="hr-k">${k2}</span><span class="hr-v">${v}</span></div>`).join('');
 
   el('seal-rows').innerHTML = ['inputs', 'result', 'provenance']
     .map(s => `<div class="hr-row"><span class="hr-k">${s}</span><span class="hr-hash">${trunc(bundle.sha256sums[s])}</span></div>`).join('');

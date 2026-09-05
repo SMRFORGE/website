@@ -40,7 +40,18 @@
 .claim-tags { display: flex; gap: .5rem; justify-content: center; margin-top: .6rem; }
 /* a value the visitor has edited in the bundle panel -- shown doctored, in red */
 .tampered-val { color: #fca5a5 !important; }
-.claim-big .ck .tampered-val, .claim-big .ck.tampered-val { color: #fca5a5 !important; }
+
+/* inline-editable values, right in the bundle -- edit these to doctor it (everything else is sealed) */
+.inline-edit { font: inherit; color: inherit; background: rgba(124,179,236,.07); border: 1px dashed var(--accent-dim); border-radius: 5px; padding: 0 .35em; outline: none; }
+.inline-edit:hover { border-color: var(--accent); }
+.inline-edit:focus { border-style: solid; border-color: var(--accent); background: rgba(124,179,236,.14); }
+.inline-edit.tampered-val { border-color: rgba(248,113,113,.6); background: rgba(239,68,68,.08); }
+.ck-edit { font-family: var(--font-mono); font-size: 2rem; font-weight: 700; color: #6ee7b7; text-align: center; width: 7em; padding: .04em .2em; vertical-align: baseline; }
+.dl-edit { font-family: var(--font-mono); font-size: .8rem; color: var(--accent); width: 100%; box-sizing: border-box; margin-top: .35rem; padding: .4rem .55rem; }
+.edit-field { margin: .5rem 0 .2rem; }
+.edit-field .hr-k { font-family: var(--font-mono); font-size: .82rem; color: var(--text-muted); }
+.edit-hint { text-align: center; font-size: .82rem; color: var(--text-muted); line-height: 1.55; margin: .2rem auto 1.2rem; max-width: 44ch; }
+.edit-hint strong { color: var(--accent); }
 
 /* verify controls + checklist */
 .btn-row { display: flex; gap: .6rem; flex-wrap: wrap; margin: 0 0 1rem; }

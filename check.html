@@ -55,15 +55,17 @@
           <div class="panel-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="fname">openmc-criticality.bundle.json</span></div>
           <div class="panel-body">
             <div class="claim-big">
-              <div><span class="ck">k_eff = <span id="claim-k">—</span></span> <span class="cs">± <span id="claim-sigma">—</span></span></div>
+              <div><span class="ck">k_eff = <input id="tamper-k" class="inline-edit ck-edit" inputmode="decimal" autocomplete="off" spellcheck="false" aria-label="k_eff (editable)"></span> <span class="cs">± <span id="claim-sigma">—</span></span></div>
               <div class="claim-tags">
                 <span class="hr-pill" id="claim-fidelity">—</span>
                 <span class="hr-pill">verdict: <span id="claim-verdict">—</span></span>
               </div>
             </div>
+            <p class="edit-hint"><strong>The two dashed boxes are editable.</strong> Change them to doctor the bundle — the check re-runs as you type. Everything else (fingerprints, signature) is sealed.</p>
 
             <div class="sub-label">Provenance — what produced the number</div>
             <div id="prov-rows"></div>
+            <div class="edit-field"><span class="hr-k">data_library_sha256</span><input id="tamper-dl" class="inline-edit dl-edit" autocomplete="off" spellcheck="false" aria-label="data_library_sha256 (editable)"></div>
 
             <div class="sub-label">Sealed fingerprints (sha256sums)</div>
             <div id="seal-rows"></div>
@@ -84,20 +86,7 @@
               <button id="btn-reset" class="btn btn-secondary">Reset bundle</button>
             </div>
             <ul id="check-list" class="check-list"></ul>
-
-            <div class="tamper">
-              <h3>Now try to fool it</h3>
-              <p>Change either value. The check re-runs on every keystroke.</p>
-              <div class="field">
-                <label for="tamper-k">k_eff (the headline result)</label>
-                <input id="tamper-k" type="text" inputmode="decimal" autocomplete="off" spellcheck="false">
-              </div>
-              <div class="field">
-                <label for="tamper-dl">data_library_sha256 (the nuclear-data pin)</label>
-                <input id="tamper-dl" type="text" autocomplete="off" spellcheck="false">
-              </div>
-              <div id="tamper-note" class="tamper-note" hidden></div>
-            </div>
+            <div id="tamper-note" class="tamper-note" hidden></div>
           </div>
         </div>
       </div>
@@ -143,6 +132,6 @@
   </footer>
 
   <script src="script.js"></script>
-  <script type="module" src="check.js?v=2"></script>
+  <script type="module" src="check.js?v=3"></script>
 </body>
 </html>

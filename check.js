@@ -215,8 +215,16 @@ export { BUNDLE_TEXT, parseJSON, canon, verifyBundle, NumLit, PINNED_IS_DEMO, sh
 // UI wiring -- runs only in a browser; a Node import of the functions above skips all of this
 // ======================================================================================
 if (typeof document !== 'undefined') {
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initUI);
-  else initUI();
+  window.addEventListener('error', (ev) => _fail('Something went wrong running the check: ' + (ev.message || ev.error)));
+  const boot = () => { try { initUI(); } catch (e) { _fail('Could not start the check: ' + ((e && e.message) || e)); } };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+}
+
+// surface any failure in the banner rather than leaving the page looking stuck
+function _fail(msg) {
+  const b = document.getElementById('verdict-banner');
+  if (b) { b.className = 'verdict-banner is-fail'; b.textContent = msg; }
 }
 
 const trunc = (h, n = 10) => { const s = String(h).replace('sha256:', ''); return 'sha256:' + s.slice(0, n) + '…' + s.slice(-6); };
@@ -236,36 +244,33 @@ function initUI() {
 
   const kInput = document.getElementById('tamper-k');
   const dlInput = document.getElementById('tamper-dl');
-  kInput.value = K0;
-  dlInput.value = DL0;
 
   function run() {
-    kNodes.forEach(n => { n.raw = kInput.value.trim() === '' ? '0' : kInput.value.trim(); });
-    bundle.reproducibility.data_library_sha256 = dlInput.value;
-    bundle.manifest.provenance.value.data_library_sha256 = dlInput.value;
-    const tampered = kInput.value.trim() !== K0 || dlInput.value !== DL0;
-    const { ok, checks } = verifyBundle(bundle);
-    renderVerdict(ok, checks, tampered);
+    try {
+      kNodes.forEach(n => { n.raw = kInput.value.trim() === '' ? '0' : kInput.value.trim(); });
+      bundle.reproducibility.data_library_sha256 = dlInput.value;
+      bundle.manifest.provenance.value.data_library_sha256 = dlInput.value;
+      const tampered = kInput.value.trim() !== K0 || dlInput.value !== DL0;
+      const { ok, checks } = verifyBundle(bundle);
+      renderVerdict(ok, checks, tampered);
+    } catch (e) { _fail('Check error: ' + ((e && e.message) || e)); }
   }
 
-  // verify is real crypto, not free -- debounce so fast typing doesn't run one per keystroke
+  // ALWAYS start from the canonical as-built values. Browsers restore a previously-typed input value
+  // on reload / back-forward, which would show a tampered number at the start -- so we force-reset on
+  // load, on bfcache restore, and once more after paint to beat late restoration.
+  const resetToCanonical = () => { kInput.value = K0; dlInput.value = DL0; run(); };
+
   let deb;
   const runSoon = () => { clearTimeout(deb); deb = setTimeout(run, 90); };
   document.getElementById('btn-verify').addEventListener('click', run);
   kInput.addEventListener('input', runSoon);
   dlInput.addEventListener('input', runSoon);
-  document.getElementById('btn-reset').addEventListener('click', () => { kInput.value = K0; dlInput.value = DL0; run(); });
+  document.getElementById('btn-reset').addEventListener('click', resetToCanonical);
+  window.addEventListener('pageshow', resetToCanonical);
 
-  // console self-test so a real-browser regression is visible
-  try {
-    const fresh = parseJSON(BUNDLE_TEXT);
-    const clean = verifyBundle(fresh);
-    fresh.result.result['physics:openmc'].k_eff.raw = '1.5';
-    const dirty = verifyBundle(fresh);
-    console.info(`[check self-test] real=${clean.ok ? 'PASS' : 'FAIL'}  tampered=${dirty.ok ? 'PASS(!)' : 'caught'}`);
-  } catch (e) { console.error('[check self-test] error', e); }
-
-  run();
+  resetToCanonical();
+  requestAnimationFrame(resetToCanonical);
 }
 
 function renderStatic(bundle) {

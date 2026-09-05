@@ -47,9 +47,11 @@
 .inline-edit:focus { border-style: solid; border-color: var(--accent); background: rgba(124,179,236,.14); }
 .inline-edit.tampered-val { border-color: rgba(248,113,113,.6); background: rgba(239,68,68,.08); }
 .ck-edit { font-family: var(--font-mono); font-size: 2rem; font-weight: 700; color: #6ee7b7; text-align: center; width: 7em; padding: .04em .2em; vertical-align: baseline; }
-.dl-edit { font-family: var(--font-mono); font-size: .8rem; color: var(--accent); width: 100%; box-sizing: border-box; margin-top: .35rem; padding: .4rem .55rem; }
+.dl-edit { font-family: var(--font-mono); font-size: .8rem; color: var(--accent); width: 100%; box-sizing: border-box; margin-top: .35rem; padding: .5rem .6rem; border-color: var(--accent); }
 .edit-field { margin: .5rem 0 .2rem; }
 .edit-field .hr-k { font-family: var(--font-mono); font-size: .82rem; color: var(--text-muted); }
+/* explicit "editable" affordance so a boxed value doesn't read as a static display */
+.edit-tag { display: inline-block; margin-left: .45rem; font-family: var(--font-mono); font-size: .6rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--accent); background: rgba(124,179,236,.14); border: 1px solid rgba(124,179,236,.4); border-radius: 999px; padding: .06rem .45rem; vertical-align: middle; }
 .edit-hint { text-align: center; font-size: .82rem; color: var(--text-muted); line-height: 1.55; margin: .2rem auto 1.2rem; max-width: 44ch; }
 .edit-hint strong { color: var(--accent); }
 

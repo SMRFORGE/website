@@ -387,38 +387,36 @@
 
     <section id="gateway" class="section gateway">
       <div class="container">
-        <h2 class="section-title">One gateway, every surface</h2>
+        <h2 class="section-title">One process for the API and the agents</h2>
         <p class="section-desc section-desc-lead">
-          API + AI tools — one process you can audit.
+          A REST API and MCP tools, from one process you can audit.
         </p>
         <p class="section-desc">
-          The SMRFORGE gateway is a single stdlib HTTP surface — no web framework — that fronts
-          the REST API and the MCP tool catalog your AI agents can call. One process, one port,
-          one OpenAPI spec, one surface to inspect. Today it is a <strong>Python API</strong>
-          (<code>smrf_serve</code>) you start in-process; a <code>serve</code> console command is on
-          the roadmap.
+          SMRFORGE serves its REST API and its MCP tool catalog from a single Python process, built on
+          the standard library with no web framework. One port, one thing to inspect. Today you start it
+          in-process (<code>smrf_serve</code>); a <code>serve</code> command is on the roadmap.
         </p>
         <p class="section-desc">
-          The point of putting reactor physics behind MCP isn't just access — it's that an agent
-          calls a tool and gets back a <strong>signed evidence record, not a bare number</strong>, so
-          it can <code>verify</code> and <code>reproduce</code> the result before it trusts it. A
-          runnable demo in the repo does exactly this: the agent re-derives a k-eff for itself, then,
-          handed a <strong>validly-signed record whose number has been forged</strong>, its reproduce
-          check catches the lie and it <strong>refuses</strong> — trust riding on the re-run, not on a
-          signature alone. (<a href="https://gitlab.com/smrforge/smrforge/-/blob/main/demo/agent_checks_a_record.py" target="_blank" rel="noopener"><code>demo/agent_checks_a_record.py</code></a>.)
+          Putting reactor physics behind MCP does more than give an agent access. The agent calls a tool
+          and gets back a <strong>signed evidence record, not a bare number</strong>, so it can
+          <code>verify</code> and <code>reproduce</code> the result before it trusts it. There's a runnable
+          demo of exactly this: the agent re-derives a k-eff itself, then, handed a
+          <strong>validly-signed record whose number was forged</strong>, its reproduce check catches the
+          lie and it <strong>refuses</strong>. Trust rides on the re-run, not the signature.
+          (<a href="https://gitlab.com/smrforge/smrforge/-/blob/main/demo/agent_checks_a_record.py" target="_blank" rel="noopener"><code>demo/agent_checks_a_record.py</code></a>.)
         </p>
         <div class="gateway-grid">
           <article class="gateway-card">
             <h3>One process, one port</h3>
-            <p>The REST API and MCP tools served from a single stdlib HTTP process on port 8765 — no web framework to wire or patch. Localhost-bound; free capabilities are open, Pro capabilities gated by an offline Bearer license token. Pure Python standard library, so nothing to install and nothing to wire together.</p>
+            <p>The REST API and MCP tools run from one stdlib HTTP process on port 8765. No web framework to wire or patch. It binds to localhost; free capabilities are open, Pro ones need an offline license token. Pure Python standard library, so there's nothing to install.</p>
           </article>
           <article class="gateway-card">
             <h3>MCP tool catalog</h3>
-            <p>Public capabilities are exposed as MCP tools over real JSON-RPC 2.0 (<code>initialize</code> / <code>tools/list</code> / <code>tools/call</code>). Browse the catalog over HTTP, or call the same tools from your own agent or notebook — each call returns the same signed evidence bundle as the REST path, so an agent can verify and reproduce what it gets back instead of trusting a number.</p>
+            <p>Public capabilities show up as MCP tools over real JSON-RPC 2.0 (<code>initialize</code> / <code>tools/list</code> / <code>tools/call</code>). Browse the catalog over HTTP, or call the same tools from your own agent or notebook. Every call returns the same signed bundle as the REST path, so an agent can verify and reproduce what it gets back.</p>
           </article>
           <article class="gateway-card">
             <h3>Air-gap by design</h3>
-            <p>No CDN runtime fetches. No telemetry. Nothing phones home — bound to localhost (127.0.0.1), with Pro capabilities gated by an offline license token. Pure Python standard library, so it runs behind any firewall, in a SCIF, or on a laptop with no network at all.</p>
+            <p>No CDN fetches. No telemetry. Nothing phones home. It binds to localhost, and Pro capabilities need an offline license token. Pure Python standard library, so it runs behind any firewall, in a SCIF, or on a laptop with no network.</p>
           </article>
         </div>
       </div>
@@ -458,33 +456,33 @@
           <article class="product-card">
             <h3>Community</h3>
             <p class="product-tag">MIT · Open Source · Screening-grade</p>
-            <p>The whole screening engine, open source: full-core Cartesian nodal diffusion, higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence, a continuous-energy Monte Carlo, S<sub>n</sub> transport, SP3, burnup/depletion, kinetics and reactivity coefficients, rod-worth, shutdown-margin, pin-power, xenon/samarium — plus one-step OpenMC escalation and the full evidence spine (sealed bundles, standalone verifier, verifiable redaction, and data-library provenance). Pure Python standard library, zero dependencies. Every run produces a verifiable bundle you can hand to a reviewer. <em>Honestly screening-grade, with published V&amp;V and every result reproducible offline; production work escalates to OpenMC (open source) or your own licensed Serpent or MCNP.</em></p>
+            <p>The whole screening engine, open source: full-core Cartesian nodal diffusion, higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence, a continuous-energy Monte Carlo, S<sub>n</sub> transport, SP3, burnup/depletion, kinetics and reactivity coefficients, rod-worth, shutdown-margin, pin-power, and xenon/samarium. Plus one-step OpenMC escalation and the full evidence spine: sealed bundles, a standalone verifier, verifiable redaction, and data-library provenance. Pure Python standard library, zero dependencies. Every run produces a verifiable bundle you can hand to a reviewer. <em>It's honestly screening-grade, with published V&amp;V and every result reproducible offline. Production work escalates to OpenMC (open source) or your own licensed Serpent or MCNP.</em></p>
             <a href="https://gitlab.com/smrforge/smrforge" class="btn btn-outline" target="_blank" rel="noopener">GitLab →<span class="beta-badge">Open source</span></a>
           </article>
           <article class="product-card product-card-pro">
             <h3>Pro</h3>
             <p class="product-tag">Source-available (FSL-1.1-MIT) · Licensed · Enterprise</p>
-            <p class="pro-lede">Built on the same evidence-bundle plumbing as Community. Pro adds the templates, the workflows, and the support to take that evidence into a regulatory submission.</p>
+            <p class="pro-lede">Pro runs on the same evidence bundles as Community. It adds what you need to take that evidence into a regulatory submission: the assessment, the tracking, and the support.</p>
             <ul class="pro-pillars">
               <li>
-                <strong>The assess deliverable — the submission-ready verdict.</strong>
-                A genuine reference-grade assessment — a real reference solve plus a tech-spec shutdown-margin gate — collapsed into one signed, independently-verifiable assurance bundle with a PASS/FAIL verdict against the safety floor. This is what you pay for: the submission-ready assurance, not the k-eff.
+                <strong>The assess deliverable: a submission-ready verdict.</strong>
+                A real reference solve plus a tech-spec shutdown-margin gate, collapsed into one signed, verifiable bundle with a PASS/FAIL against the safety floor. That verdict is what you pay for, not the k-eff.
               </li>
               <li>
-                <strong>Coverage, freshness &amp; shareable reports.</strong>
-                Around the assess bundle: <em>coverage</em> — USL / c<sub>k</sub> trending of your application against the measured Tier-3 anchor suite; <em>watch</em> — re-derives a bundle on its own recorded inputs to flag evidence that has gone stale; and <em>report</em> — any evidence bundle rendered to a signed, shareable HTML report. Requirements-to-evidence traceability and SRP-section mapping are on the roadmap.
+                <strong>Coverage, freshness, and shareable reports.</strong>
+                Around the assess bundle: <em>coverage</em> trends your application against the measured Tier-3 anchor suite (USL / c<sub>k</sub>); <em>watch</em> re-runs a bundle on its own inputs to flag evidence that has gone stale; <em>report</em> renders any bundle to a signed, shareable HTML report. Requirements-to-evidence traceability and SRP-section mapping are on the roadmap.
               </li>
               <li>
-                <strong>Independent review — already free and open.</strong>
-                A vendor's evidence bundle can be reproduced end-to-end today with the <em>open</em> reviewer kit: it re-runs the pinned engine and verifies integrity with the separate <code>evidence-verifier</code> (its own Ed25519, no SMRFORGE import) — the reviewer runs a tool that isn't the producer's. A hosted Pro reviewer console (per-claim dashboards, subsidized regulator access) is on the roadmap.
+                <strong>Independent review is already free and open.</strong>
+                A vendor's evidence bundle can be reproduced end-to-end today with the <em>open</em> reviewer kit. It re-runs the pinned engine and verifies integrity with the separate <code>evidence-verifier</code> (its own Ed25519, no SMRFORGE import), so the reviewer runs a tool that isn't the producer's. A hosted Pro reviewer console (per-claim dashboards, subsidized regulator access) is on the roadmap.
               </li>
               <li>
                 <strong>Integrations, on engagement.</strong>
-                Converters that generate input for — and read decks from — your own licensed Serpent or MCNP installations. SMRFORGE would ship the converters, not the third-party codes: Serpent and MCNP are export-controlled / licensed tools you install yourself, and SMRFORGE contains none of their source or data. <em>Physics fidelity is never a Pro feature — full-core CMFD and R-Z geometry already ship free in the open core; hex geometry is on the open-core roadmap.</em>
+                Converters that write input for, and read results from, your own licensed Serpent or MCNP installations. SMRFORGE ships the converters, not the codes: Serpent and MCNP are export-controlled tools you install yourself, and SMRFORGE contains none of their source or data. <em>Physics is never a Pro feature. Full-core CMFD and R-Z geometry ship free in the open core; hex is on the roadmap.</em>
               </li>
               <li>
                 <strong>On the roadmap.</strong>
-                A production signing key that proves origin (bundles seal under a published demo identity today — integrity, not origin). Air-gapped deployment bundles for regulated environments. Large-sweep and UQ orchestration, and LLM-assisted analysis that operates against verifiable evidence bundles rather than raw chat.
+                A production signing key that proves origin (today bundles seal under a published demo key, which shows integrity, not origin). Air-gapped deployment bundles for regulated environments. Large-sweep and UQ orchestration, and LLM-assisted analysis that works against verifiable bundles rather than raw chat.
               </li>
             </ul>
             <a href="#contact" class="btn btn-primary">Contact Sales</a>

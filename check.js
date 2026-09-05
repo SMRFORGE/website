@@ -155,25 +155,42 @@ function initUI() {
 
   renderStatic(bundle);
 
+  // Web Crypto only exists in a secure context (https or localhost). Fail loud and clear instead of
+  // hanging on "Verifying…" if someone opens the file directly (file://).
+  const banner = document.getElementById('verdict-banner');
+  if (typeof crypto === 'undefined' || !crypto.subtle) {
+    banner.className = 'verdict-banner is-fail';
+    banner.innerHTML = 'This live check needs a secure context to run in your browser. Open it at <strong>https://smrforge.io/check.html</strong> (or via a localhost server).';
+    return;                       // the bundle is still shown above; only the interactive check is unavailable
+  }
+
   const kInput = document.getElementById('tamper-k');
   const dlInput = document.getElementById('tamper-dl');
   kInput.value = K0;
   dlInput.value = DL0;
 
+  let runSeq = 0;
   async function run() {
-    // apply current field values into the tree
+    const seq = ++runSeq;
+    // apply current field values into the tree (both readable + hashed copies)
     kNodes.forEach(n => { n.raw = kInput.value.trim() === '' ? '0' : kInput.value.trim(); });
     bundle.reproducibility.data_library_sha256 = dlInput.value;
     bundle.manifest.provenance.value.data_library_sha256 = dlInput.value;
-
     const tampered = kInput.value.trim() !== K0 || dlInput.value !== DL0;
-    const { ok, checks } = await verifyBundle(bundle);
-    renderVerdict(ok, checks, tampered);
+    try {
+      const { ok, checks } = await verifyBundle(bundle);
+      if (seq === runSeq) renderVerdict(ok, checks, tampered);   // a newer keystroke supersedes this run
+    } catch (e) {
+      if (seq === runSeq) { banner.className = 'verdict-banner is-fail'; banner.textContent = 'The check could not run in this browser: ' + e.message; }
+    }
   }
 
+  // verify is real crypto, not free -- debounce so fast typing doesn't queue a verify per keystroke
+  let deb;
+  const runSoon = () => { clearTimeout(deb); deb = setTimeout(run, 120); };
   document.getElementById('btn-verify').addEventListener('click', run);
-  kInput.addEventListener('input', run);
-  dlInput.addEventListener('input', run);
+  kInput.addEventListener('input', runSoon);
+  dlInput.addEventListener('input', runSoon);
   document.getElementById('btn-reset').addEventListener('click', () => { kInput.value = K0; dlInput.value = DL0; run(); });
 
   // self-test in the console so a real-browser regression is visible

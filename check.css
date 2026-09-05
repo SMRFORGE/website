@@ -1,8 +1,6 @@
 /* /check — the interactive evidence bundle. Page-specific styles; palette + nav/footer come from styles.css */
 
 .check-hero { padding: 7rem 1.5rem 2rem; max-width: 1080px; margin: 0 auto; text-align: center; }
-.check-logo { display: block; height: 92px; width: auto; margin: 0 auto 1.5rem; opacity: .95; }
-@media (max-width: 560px) { .check-logo { height: 72px; } }
 .check-hero .eyebrow { font-family: var(--font-mono); font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 0 0 .75rem; }
 .check-hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0 0 1rem; line-height: 1.05; }
 .check-hero p { color: var(--text-muted); max-width: 60ch; margin: 0 auto; font-size: 1.05rem; line-height: 1.6; }

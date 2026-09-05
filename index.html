@@ -42,7 +42,7 @@
         "name": "SMRFORGE Community",
         "applicationCategory": "EngineeringApplication",
         "operatingSystem": "Windows|macOS|Linux",
-        "softwareVersion": "0.7.1",
+        "softwareVersion": "0.9.0",
         "description": "Open-source (MIT) full screening reactor-physics engine for Small Modular Reactor design and analysis. In-tree pure-Python solvers — full-core Cartesian nodal diffusion, higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence, few-group homogenization, continuous-energy Monte Carlo, Sn transport, SP3, burnup/depletion, kinetics and reactivity coefficients — for fast screening, plus one-step escalation to OpenMC (free) for reference accuracy. Every run produces a verifiable evidence bundle (SHA-256 manifest, reproducibility block, derivation lineage for composed results) any third party can verify offline. Ships the CLI (smrforge verify, smrforge reproduce, smrforge license, smrforge --version) and the full evidence spine — sealed bundles, standalone verifier, verifiable redaction, and data-library provenance. Full-core CMFD, R-Z (cylindrical, screening-grade) diffusion, and the IAEA-2D full-core closure ship free in the open core; hex geometry is on the open-core roadmap. Honestly screening-grade and reproducible. Pro adds the assurance / regulatory layer for submissions — the signed assess deliverable with a PASS/FAIL verdict against the safety floor, report artifacts, and support; Serpent/MCNP converters are available on engagement. Pure Python standard library, zero dependencies; install from source (not on PyPI).",
         "offers": {
           "@type": "Offer",
@@ -363,7 +363,12 @@
           (Re-running the physics end-to-end is a separate, deeper check:
           <code>smrforge reproduce &lt;bundle&gt;</code> re-runs the open engine on the bundle's own
           recorded inputs and checks the numbers re-derive — the <code>certify_bundle</code> /
-          <code>reproduce_bundle</code> Python API is the same path.) The published conformance vectors let you certify any verifier —
+          <code>reproduce_bundle</code> Python API is the same path. A <em>stochastic</em> result —
+          a Monte Carlo k-eff — can't re-derive to the last digit, so its record carries a
+          statistical <code>reproduce_tolerance</code>: an n-sigma band built from the run's own
+          reported uncertainty, and reproduce accepts a re-run that lands inside it. That tolerance
+          rides <em>inside</em> the seal, so it can't be quietly widened to wave a bad number through —
+          loosen it and the seal breaks.) The published conformance vectors let you certify any verifier —
           ours or one you wrote yourself — so "independently-implementable" is something you prove,
           not something we ask you to take on faith.
         </p>
@@ -401,6 +406,15 @@
           (<code>smrf_serve</code>) you start in-process; a <code>serve</code> console command is on
           the roadmap.
         </p>
+        <p class="section-desc">
+          The point of putting reactor physics behind MCP isn't just access — it's that an agent
+          calls a tool and gets back a <strong>signed evidence record, not a bare number</strong>, so
+          it can <code>verify</code> and <code>reproduce</code> the result before it trusts it. A
+          runnable demo in the repo does exactly this: the agent re-derives a k-eff for itself, then,
+          handed a <strong>validly-signed record whose number has been forged</strong>, its reproduce
+          check catches the lie and it <strong>refuses</strong> — trust riding on the re-run, not on a
+          signature alone. (<a href="https://gitlab.com/smrforge/smrforge/-/blob/main/demo/agent_checks_a_record.py" target="_blank" rel="noopener"><code>demo/agent_checks_a_record.py</code></a>.)
+        </p>
         <div class="gateway-grid">
           <article class="gateway-card">
             <h3>One process, one port</h3>
@@ -408,7 +422,7 @@
           </article>
           <article class="gateway-card">
             <h3>MCP tool catalog</h3>
-            <p>Public capabilities are exposed as MCP tools. Browse the catalog over HTTP, or call the same tools from your own agent or notebook. Your agents can be clients of this catalog.</p>
+            <p>Public capabilities are exposed as MCP tools over real JSON-RPC 2.0 (<code>initialize</code> / <code>tools/list</code> / <code>tools/call</code>). Browse the catalog over HTTP, or call the same tools from your own agent or notebook — each call returns the same signed evidence bundle as the REST path, so an agent can verify and reproduce what it gets back instead of trusting a number.</p>
           </article>
           <article class="gateway-card">
             <h3>Air-gap by design</h3>
@@ -519,7 +533,7 @@
           <dt>Does SMRFORGE include Serpent or MCNP?</dt>
           <dd><strong>No.</strong> Serpent and MCNP are third-party codes with their own licenses — MCNP is export-controlled (distributed via RSICC) and Serpent is license-restricted (via VTT / OECD-NEA). SMRFORGE does not contain, bundle, or distribute them, or their nuclear-data libraries. Pro can provide, on engagement,<em>converters</em> that generate input decks for, and read results from, a copy you license and install yourself. OpenMC (open source) is included as the built-in escalation path.</dd>
           <dt>How does SMRFORGE handle reproducibility?</dt>
-          <dd>Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (engine and code version, the nuclear-data library it read and its SHA-256, the RNG seed, and a determinism statement, plus an unsigned host diagnostic (Python version, platform) outside the seal), and a derivation lineage for composed results. <code>smrforge verify &lt;bundle&gt;</code> confirms or refutes a bundle's <strong>integrity</strong> offline — it checks the record is intact, complete, and untampered against the open schema (integrity), <em>with a checker that imports none of our physics</em>. Re-running the result end-to-end is a separate, deeper step: <code>smrforge reproduce &lt;bundle&gt;</code> re-runs the open engine on the bundle's own recorded inputs and checks the numbers re-derive (the <code>certify_bundle</code> / <code>reproduce_bundle</code> Python API is the same path).</dd>
+          <dd>Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (engine and code version, the nuclear-data library it read and its SHA-256, the RNG seed, and a determinism statement, plus an unsigned host diagnostic (Python version, platform) outside the seal), and a derivation lineage for composed results. <code>smrforge verify &lt;bundle&gt;</code> confirms or refutes a bundle's <strong>integrity</strong> offline — it checks the record is intact, complete, and untampered against the open schema (integrity), <em>with a checker that imports none of our physics</em>. Re-running the result end-to-end is a separate, deeper step: <code>smrforge reproduce &lt;bundle&gt;</code> re-runs the open engine on the bundle's own recorded inputs and checks the numbers re-derive (the <code>certify_bundle</code> / <code>reproduce_bundle</code> Python API is the same path). A stochastic result (a Monte Carlo k-eff) can't re-derive to the last digit, so its record carries a statistical <code>reproduce_tolerance</code> — an n-sigma band from the run's own reported uncertainty — and reproduce accepts a re-run inside it; that tolerance is sealed in the record, so it can't be quietly widened.</dd>
           <dt>Is SMRFORGE Pro suitable for licensing-relevant work?</dt>
           <dd>Pro adds the assurance / regulatory layer: the signed <em>assess</em> deliverable — a real reference solve plus a tech-spec shutdown-margin gate in one bundle, with a PASS/FAIL verdict against the safety floor — plus coverage (USL / c_k trending), a freshness monitor, signed shareable evidence reports, and support; requirements-to-evidence traceability, report artifacts mapped to standard SRP sections, and a hosted reviewer console are on the roadmap. The open core ships the same evidence-bundle plumbing — Pro adds the assessment, those cards, and the support contract.</dd>
           <dt>Does SMRFORGE run air-gapped?</dt>

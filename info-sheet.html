@@ -56,7 +56,7 @@
     <span class="eyebrow">The differentiator — built for the person who doesn't trust you</span>
     <div class="pillars">
       <div class="pillar"><div class="n">01 · FINGERPRINT</div><h3>Evidence envelopes</h3><p>Every output is a schema-registered bundle sealed by a SHA-256 manifest of its inputs and result — any edit breaks the seal, and it is <code>ed25519</code>-signable (a demo identity today, production key on the roadmap).</p></div>
-      <div class="pillar"><div class="n">02 · REPLAY</div><h3>Bit-exact reproduction</h3><p><code>smrforge reproduce &lt;bundle&gt;</code> re-runs the open engine on the bundle's own recorded inputs and re-derives the same result core, bit-for-bit — deterministic given the pinned data library, seed, and code version.</p></div>
+      <div class="pillar"><div class="n">02 · REPLAY</div><h3>Bit-exact — or a sealed tolerance</h3><p><code>smrforge reproduce &lt;bundle&gt;</code> re-runs the open engine on the bundle's own recorded inputs and re-derives the result core. A deterministic core re-derives bit-for-bit (pinned data library, seed, and code version); a stochastic Monte&nbsp;Carlo result re-derives within a statistical tolerance sealed in the record — so it can't be quietly widened.</p></div>
       <div class="pillar"><div class="n">03 · VERIFY</div><h3><code>exit 0</code> = it holds</h3><p>A standalone, offline check against the open <b>Evidence Envelope</b> schema — a third party confirms your record's integrity (unedited, schema-valid) or refutes it in seconds, no license needed. Each result also pins a fingerprint of the data it read, or is honestly marked <code>unpinned</code>.</p></div>
     </div>
   </div>

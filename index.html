@@ -283,42 +283,42 @@
 
     <section id="validation" class="section validation">
       <div class="container">
-        <h2 class="section-title">Verified and characterized, closure-by-closure — error bars published</h2>
+        <h2 class="section-title">How the numbers are checked</h2>
         <p class="section-desc section-desc-lead">
-          We state each closure with its published band — and we publish where the methods don't agree, too.
+          The error bars are published, including where the methods don't fully agree.
         </p>
         <p class="section-desc">
-          An honest starting point: there are almost no <em>measured</em> SMR benchmarks yet — most
-          SMRs aren't operating — so, like the whole field, we anchor the <strong>method</strong>
-          to the best-characterized data that exists, and we characterize the engine against a
-          reference code (OpenMC). On real ENDF/B-VIII.0 data our continuous-energy Monte Carlo reproduces
-          OpenMC to a small, positive, <strong>bounded ≈ +320 pcm</strong> residual (band +205…+429),
-          and — the decisive evidence it's a consistent engine, not a tuned one — that residual is
-          <strong>flat with temperature</strong> and tracks U-238 content. Code-verification anchors
-          hold tightly too: the IAEA-2D full-core closure lands at <strong>≈ −3 pcm</strong> vs the
-          published 2-D reference, cross-checked FD-vs-NEM. Then — the part that
-          matters for <em>your</em> SMR — the same inputs escalate to
-          <strong>OpenMC, free for everyone</strong>, so you get a code-to-code check on your actual
-          design. These are <strong>method and code-verification anchors, not
-          SMR-specific validation — and we say so.</strong> Every result is a bundle you re-verify
-          offline; what <strong>Pro</strong> adds is the assurance layer that turns the numbers into a
-          regulatory submission.
+          Almost no <em>measured</em> SMR benchmarks exist yet, because almost no SMRs are running. So we
+          do what the whole field does: anchor the methods to the best-characterized data available, and
+          compare the engine against a reference code, OpenMC.
+        </p>
+        <p class="section-desc">
+          On real ENDF/B-VIII.0 data, our Monte Carlo reproduces OpenMC to about <strong>+320 pcm</strong>
+          (band +205…+429). It's small, and it stays flat across temperatures, which is what a consistent
+          engine looks like rather than one tuned to hit a number. The IAEA-2D full-core benchmark closes
+          to about <strong>−3 pcm</strong> against the published reference. And for your own design, the
+          same inputs escalate to <strong>OpenMC</strong> (free) for a direct code-to-code check.
+        </p>
+        <p class="section-desc">
+          We say this plainly: these check the method and the code, not the model against a measured
+          reactor. That data mostly doesn't exist yet. Turning these numbers into a regulatory submission
+          is what <strong>Pro</strong> is for.
         </p>
         <div class="proof-grid">
           <article class="proof-card">
             <div class="proof-figure">+320<span class="unit">pcm</span></div>
             <div class="proof-label">CE Monte Carlo vs OpenMC · characterized residual</div>
-            <p class="proof-note">Our continuous-energy Monte Carlo vs OpenMC on real ENDF/B-VIII.0 data (matched-physics, infinite medium): a small, positive, <strong>bounded ≈ +320 pcm</strong> residual (band +205…+429) that is <strong>flat with temperature</strong> and tracks U-238 — the signature of a consistent engine with a named residual, not a tuned one. A code-to-code characterization, not SMR validation. See the <a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/VNV_MATRIX.md" target="_blank" rel="noopener">V&amp;V matrix</a>.</p>
+            <p class="proof-note">Our Monte Carlo against OpenMC on real ENDF/B-VIII.0 data (infinite medium, matched physics): a small <strong>+320 pcm</strong> offset (band +205…+429) that stays flat with temperature and tracks U-238. That's a consistent engine with a known offset, not a tuned one. A code-to-code check, not SMR validation. See the <a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/VNV_MATRIX.md" target="_blank" rel="noopener">V&amp;V matrix</a>.</p>
           </article>
           <article class="proof-card">
             <div class="proof-figure">−3<span class="unit">pcm</span></div>
             <div class="proof-label">IAEA-2D full-core closure · code-verification</div>
-            <p class="proof-note">The open-core full-core diffusion solver closes the published IAEA-2D 2-D reference (k = 1.029585) to <strong>≈ −3 pcm</strong>, mesh-converged and cross-checked finite-difference vs NEM. A code-verification anchor for the full-core solver, CMFD-accelerated.</p>
+            <p class="proof-note">The full-core diffusion solver closes the published IAEA-2D reference (k = 1.029585) to about <strong>−3 pcm</strong>, mesh-converged and cross-checked FD vs NEM. Code-verification of the full-core solver, CMFD-accelerated.</p>
           </article>
           <article class="proof-card">
             <div class="proof-figure">23/25<span class="unit">green</span></div>
             <div class="proof-label">External OpenMC vs measured criticality · not SMRFORGE physics</div>
-            <p class="proof-note">25 measured ICSBEP / BEAVRS-HZP criticality benchmarks (23 green / 2 red). The calculated value in every row is <strong>external OpenMC</strong> — the tier you escalate to — not SMRFORGE's own engine scored against experiment; published C−E with split MC / nuclear-data / method budgets, honestly labeled advisory. These anchor the escalation target and the evidence machinery. LWR and method anchors, not SMR-specific validation — and we say so.</p>
+            <p class="proof-note">25 measured ICSBEP / BEAVRS-HZP criticality benchmarks, 23 green. Every calculated value here is <strong>external OpenMC</strong> (the tier you escalate to), not our own engine scored against experiment, with published C−E split into MC, nuclear-data, and method budgets. LWR and method anchors, not SMR validation.</p>
           </article>
         </div>
         <p class="honest-note">

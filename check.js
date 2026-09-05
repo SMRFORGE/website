@@ -194,6 +194,12 @@ function verifyBundle(bundle) {
   add_('Readable result equals the hashed result', canon(bundle.result) === canon(manifest.result?.value));
   add_('Readable provenance equals the hashed provenance', canon(bundle.reproducibility) === canon(manifest.provenance?.value));
 
+  // the data-library pin must be a real content digest, not just consistently-sealed garbage (matches smrf_verify)
+  const _pv = (manifest.provenance && manifest.provenance.value) || {};
+  const _dls = _pv.data_library_sha256, _dl = _pv.data_library;
+  const pinOk = (_dls == null || /^sha256:[0-9a-f]{64}$/.test(String(_dls))) && (_dl == null || (typeof _dl === 'string' && _dl.length > 0));
+  add_('Data-library pin is a well-formed digest', pinOk, pinOk ? '' : `not a sha256 digest: ${_dls}`);
+
   const rb = sha(canon(sums));
   const sealOk = rb === bundle.bundle_sha256;
   add_('Bundle seal covers the whole fingerprint list', sealOk, sealOk ? rb : `recomputed ${rb} ≠ ${bundle.bundle_sha256}`);

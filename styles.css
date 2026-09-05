@@ -1,5 +1,5 @@
 /* SMRFORGE — Company Website
-   Branding Packet v3: Void Black, Plasma Teal, Orbitron/Inter */
+   Branding Packet v3: Navy, Light Blue, Orbitron/Inter */
 
 /* Self-hosted fonts (no external CDN — air-gap-safe). Variable woff2. */
 @font-face {
@@ -25,15 +25,15 @@
 }
 
 :root {
-  --bg: #05080C;
-  --bg-elevated: #141A21;
-  --bg-card: #141A21;
+  --bg: #060e1a;
+  --bg-elevated: #101f34;
+  --bg-card: #101f34;
   --text: #F1F5F9;
   --text-muted: #94a3b8;
-  --accent: #00F5D4;
-  --accent-dim: #00d4b8;
-  --accent-secondary: #00B4D8;
-  --border: #1e293b;
+  --accent: #7cb3ec;
+  --accent-dim: #5b93d6;
+  --accent-secondary: #8fb8ee;
+  --border: #1f3350;
   --radius: 8px;
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
@@ -178,7 +178,7 @@ body {
 .hero-badge {
   display: inline-block;
   padding: 0.35rem 0.75rem;
-  background: rgba(0, 245, 212, 0.12);
+  background: rgba(124,179,236, 0.12);
   color: var(--accent);
   font-size: 0.8rem;
   font-weight: 600;
@@ -259,8 +259,8 @@ body {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent);
-  background: rgba(0, 245, 212, 0.08);
-  border: 1px solid rgba(0, 245, 212, 0.4);
+  background: rgba(124,179,236, 0.08);
+  border: 1px solid rgba(124,179,236, 0.4);
   border-radius: 999px;
   vertical-align: middle;
   white-space: nowrap;
@@ -287,7 +287,7 @@ body {
 .btn-primary:hover {
   background: #00e0c0;
   transform: translateY(-1px);
-  box-shadow: 0 0 20px rgba(0, 245, 212, 0.25);
+  box-shadow: 0 0 20px rgba(124,179,236, 0.25);
 }
 
 .btn-secondary {
@@ -308,7 +308,7 @@ body {
 }
 
 .btn-outline:hover {
-  background: rgba(0, 245, 212, 0.1);
+  background: rgba(124,179,236, 0.1);
 }
 
 /* Hero logo */
@@ -322,12 +322,12 @@ body {
   max-width: 100%;
   width: min(840px, 95%);
   height: auto;
-  filter: drop-shadow(0 0 24px rgba(0, 245, 212, 0.2));
+  filter: drop-shadow(0 0 24px rgba(124,179,236, 0.2));
   transition: filter 0.3s ease;
 }
 
 .hero-logo:hover {
-  filter: drop-shadow(0 0 32px rgba(0, 245, 212, 0.35));
+  filter: drop-shadow(0 0 32px rgba(124,179,236, 0.35));
 }
 
 /* Sections */
@@ -417,12 +417,12 @@ body {
 }
 
 .provenance-card:hover {
-  border-color: rgba(0, 245, 212, 0.35);
+  border-color: rgba(124,179,236, 0.35);
   border-left-color: var(--accent);
 }
 
 .gateway-card:hover {
-  border-color: rgba(0, 180, 216, 0.4);
+  border-color: rgba(143,184,238, 0.4);
   border-left-color: var(--accent-secondary);
 }
 
@@ -517,15 +517,15 @@ body {
 }
 
 .product-card:hover {
-  border-color: rgba(0, 245, 212, 0.25);
+  border-color: rgba(124,179,236, 0.25);
 }
 
 .product-card-pro {
-  border-color: rgba(0, 180, 216, 0.25);
+  border-color: rgba(143,184,238, 0.25);
 }
 
 .product-card-pro:hover {
-  border-color: rgba(0, 180, 216, 0.4);
+  border-color: rgba(143,184,238, 0.4);
 }
 
 .product-card h3 {
@@ -837,7 +837,7 @@ sup {
   margin-top: 2rem;
   padding: 1.25rem 1.5rem;
   border-left: 4px solid var(--accent-secondary);
-  background: rgba(0, 180, 216, 0.11);
+  background: rgba(143,184,238, 0.11);
   border-radius: 0 var(--radius) var(--radius) 0;
   color: var(--text);
   font-size: 1rem;
@@ -857,8 +857,8 @@ sup {
   height: 1.9rem;
   border-radius: 0.5rem;
   margin-bottom: 0.6rem;
-  background: rgba(0, 245, 212, 0.12);
-  border: 1px solid rgba(0, 245, 212, 0.35);
+  background: rgba(124,179,236, 0.12);
+  border: 1px solid rgba(124,179,236, 0.35);
   color: var(--accent);
   font-family: var(--font-mono);
   font-weight: 600;
@@ -869,7 +869,7 @@ sup {
   font-family: var(--font-mono);
   font-size: 0.86em;
   color: var(--accent);
-  background: rgba(0, 245, 212, 0.08);
+  background: rgba(124,179,236, 0.08);
   padding: 0.05rem 0.35rem;
   border-radius: 4px;
 }
@@ -882,7 +882,7 @@ sup {
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.6),
-              0 0 48px -18px rgba(0, 245, 212, 0.18);
+              0 0 48px -18px rgba(124,179,236, 0.18);
   font-family: var(--font-mono);
 }
 .hr-head {
@@ -891,7 +891,7 @@ sup {
   gap: 0.4rem;
   padding: 0.7rem 0.95rem;
   border-bottom: 2px solid transparent;
-  border-image: linear-gradient(90deg, var(--accent), rgba(0, 245, 212, 0)) 1;
+  border-image: linear-gradient(90deg, var(--accent), rgba(124,179,236, 0)) 1;
 }
 .hr-dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--border); }
 .hr-title { margin-left: 0.5rem; font-size: 0.78rem; color: var(--text-muted); letter-spacing: 0.04em; }
@@ -937,7 +937,7 @@ sup {
 .hr-term {
   padding: 0.8rem 1.2rem;
   border-top: 1px solid var(--border);
-  background: rgba(0, 245, 212, 0.045);
+  background: rgba(124,179,236, 0.045);
   color: var(--text-muted);
   font-size: 0.8rem;
   line-height: 1.7;

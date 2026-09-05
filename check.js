@@ -247,12 +247,16 @@ function initUI() {
 
   function run() {
     try {
-      kNodes.forEach(n => { n.raw = kInput.value.trim() === '' ? '0' : kInput.value.trim(); });
+      const kv = kInput.value.trim() === '' ? '0' : kInput.value.trim();
+      kNodes.forEach(n => { n.raw = kv; });
       bundle.reproducibility.data_library_sha256 = dlInput.value;
       bundle.manifest.provenance.value.data_library_sha256 = dlInput.value;
-      const tampered = kInput.value.trim() !== K0 || dlInput.value !== DL0;
+      const kChanged = kInput.value.trim() !== K0, dlChanged = dlInput.value !== DL0;
+      // reflect the edit in the bundle panel itself, so you SEE the doctored value that breaks the seal
+      const ck = document.getElementById('claim-k'); ck.textContent = kv; ck.classList.toggle('tampered-val', kChanged);
+      const pdl = document.getElementById('prov-dl'); if (pdl) { pdl.textContent = trunc(dlInput.value); pdl.classList.toggle('tampered-val', dlChanged); }
       const { ok, checks } = verifyBundle(bundle);
-      renderVerdict(ok, checks, tampered);
+      renderVerdict(ok, checks, kChanged || dlChanged);
     } catch (e) { _fail('Check error: ' + ((e && e.message) || e)); }
   }
 
@@ -289,9 +293,9 @@ function renderStatic(bundle) {
     ['engine_version', rep.engine_version],
     ['code_version', rep.code_version],
     ['data_library', rep.data_library],
-    ['data_library_sha256', trunc(rep.data_library_sha256)],
+    ['data_library_sha256', trunc(rep.data_library_sha256), 'prov-dl'],
     ['rng_seed', rep.rng_seed.raw],
-  ].map(([k2, v]) => `<div class="hr-row"><span class="hr-k">${k2}</span><span class="hr-v">${v}</span></div>`).join('');
+  ].map(([k2, v, id]) => `<div class="hr-row"><span class="hr-k">${k2}</span><span class="hr-v${id ? ' hr-hash' : ''}"${id ? ` id="${id}"` : ''}>${v}</span></div>`).join('');
 
   el('seal-rows').innerHTML = ['inputs', 'result', 'provenance']
     .map(s => `<div class="hr-row"><span class="hr-k">${s}</span><span class="hr-hash">${trunc(bundle.sha256sums[s])}</span></div>`).join('');

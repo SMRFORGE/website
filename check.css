@@ -38,6 +38,9 @@
 .claim-big .ck { font-family: var(--font-mono); font-size: 2rem; color: #6ee7b7; font-weight: 700; }
 .claim-big .cs { color: var(--text-muted); font-family: var(--font-mono); }
 .claim-tags { display: flex; gap: .5rem; justify-content: center; margin-top: .6rem; }
+/* a value the visitor has edited in the bundle panel -- shown doctored, in red */
+.tampered-val { color: #fca5a5 !important; }
+.claim-big .ck .tampered-val, .claim-big .ck.tampered-val { color: #fca5a5 !important; }
 
 /* verify controls + checklist */
 .btn-row { display: flex; gap: .6rem; flex-wrap: wrap; margin: 0 0 1rem; }

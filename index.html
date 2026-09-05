@@ -245,37 +245,40 @@
 
     <section id="design-engine" class="section design-engine">
       <div class="container">
-        <h2 class="section-title">A full-core design engine — not just a slice</h2>
+        <h2 class="section-title">The whole core, not one slice</h2>
         <p class="section-desc section-desc-lead">
-          Concept to core design, in one auditable loop.
+          From a concept to a core design, in one run you can check.
         </p>
         <p class="section-desc">
-          Most fast reactor-physics tools model a single fuel slice and extrapolate.
-          SMRFORGE's open-core nodal engine already gives you the whole core — a real full-core
-          Cartesian power shape, honestly screening-grade and free. That free engine also carries
-          higher-order <strong>NEM (1-D/2-D/3-D) with ADF/SPH equivalence</strong>, a
-          continuous-energy Monte Carlo, S<sub>n</sub> transport, burnup, and the control and safety
-          numbers you actually design against — rod worth, shutdown margin, and reactivity
-          coefficients — plus one-step escalation to OpenMC where a number has to be defensible.
-          Full-core <strong>CMFD</strong>, <strong>R-Z (cylindrical)</strong> screening geometry, and
-          the IAEA-2D full-core closure now ship free in the open core too; hex geometry is on the
-          open-core roadmap — engagement-funded, then shipped free.
+          Most fast reactor-physics tools model a single fuel slice and extrapolate to the rest.
+          SMRFORGE's open-core engine gives you the whole core: a real Cartesian power shape,
+          screening-grade and free.
+        </p>
+        <p class="section-desc">
+          The same free engine carries higher-order <strong>NEM (1-D/2-D/3-D) with ADF/SPH
+          equivalence</strong>, a continuous-energy Monte Carlo, S<sub>n</sub> transport, and burnup. It
+          computes the numbers you actually design against: rod worth, shutdown margin, reactivity
+          coefficients. And it escalates to OpenMC in one step when a number has to hold up. Full-core
+          <strong>CMFD</strong>, <strong>R-Z (cylindrical)</strong> screening geometry, and the IAEA-2D
+          closure ship free too; hex geometry is on the roadmap, engagement-funded then free.
+        </p>
+        <p class="section-desc">
           <strong>Pro</strong> turns those numbers into a submission-ready assessment: the signed
-          <em>assess</em> deliverable with a PASS/FAIL verdict against the safety floor and the
-          report artifacts regulators read (requirements-to-evidence traceability on the roadmap).
+          <em>assess</em> deliverable, with a PASS/FAIL against the safety floor and the report artifacts a
+          regulator reads.
         </p>
         <div class="provenance-grid">
           <article class="provenance-card">
-            <h3>Whole core — Cartesian, NEM included</h3>
-            <p>Lattice → few-group homogenization → full-core <strong>Cartesian nodal diffusion</strong> (1-D/2-D, with the IAEA-2D full-core closure and full-core <strong>CMFD</strong> acceleration — all free). The free open-core engine solves <strong>Cartesian</strong> cores — a real power shape, not a pin-cell guess — and carries the higher-order <strong>NEM (1-D/2-D/3-D) with ADF/SPH equivalence</strong> intra-node flux moments as code-verification. <strong>R-Z (cylindrical)</strong> screening geometry (SFR/LFR) now ships free too; <strong>hex</strong> geometry (prismatic HTGR, heat-pipe micro) is on the open-core roadmap: engagement-funded, then shipped free.</p>
+            <h3>Whole core, not a pin cell</h3>
+            <p>Lattice to few-group homogenization to a full-core <strong>Cartesian nodal solve</strong>, with the IAEA-2D closure and <strong>CMFD</strong> acceleration, all free. You get a real power shape, not a pin-cell guess. Higher-order <strong>NEM (1-D/2-D/3-D) with ADF/SPH equivalence</strong> backs it up as code-verification. <strong>R-Z (cylindrical)</strong> screening geometry (SFR/LFR) ships free too; <strong>hex</strong> (prismatic HTGR, heat-pipe micro) is on the roadmap, engagement-funded then free.</p>
           </article>
           <article class="provenance-card">
             <h3>The numbers you design against</h3>
-            <p>Rod worth, shutdown margin, reactivity coefficients, kinetics and point-kinetics, xenon/samarium, pin-power, and fuel burnup (multi-cycle on the roadmap) — the outputs a safety case is built on, all in the free open core.</p>
+            <p>Rod worth, shutdown margin, reactivity coefficients, kinetics, xenon/samarium, pin power, and burnup (multi-cycle on the roadmap). The outputs a safety case is built on, all free.</p>
           </article>
           <article class="provenance-card">
             <h3>Screen fast, then escalate</h3>
-            <p>Sweep hundreds of core options in seconds to minutes at screening fidelity — no HDF5, MPI, or license server. Then spend the minutes-to-hours of high-fidelity Monte Carlo (OpenMC) only on the few that have to be defensible. Same inputs, both results, one bundle.</p>
+            <p>Sweep hundreds of core options in seconds to minutes at screening fidelity, with no HDF5, MPI, or license server. Then spend the minutes-to-hours of OpenMC only on the few that have to hold up. Same inputs, both results, one bundle.</p>
           </article>
         </div>
       </div>
@@ -322,21 +325,13 @@
           </article>
         </div>
         <p class="honest-note">
-          <strong>Straight talk on scope.</strong> Two caveats we'd rather say first. These are
-          <strong>method and code-verification anchors</strong> — the +320 pcm figure is our engine
-          characterized against an OpenMC reference, the IAEA-2D closure is code-verification of the
-          full-core solver — <strong>not</strong> SMR-specific validation, because measured
-          <em>SMR-specific</em> benchmarks barely exist yet (a gap across the whole field): for SMRs we
-          lean on code-to-code checks against OpenMC on your own design, and we're working toward measured
-          HTGR data. And the in-tree continuous-energy Monte Carlo is <strong>screening-grade by
-          design</strong> — for a licensing-grade lattice number, escalate to OpenMC,
-          <strong>free for everyone</strong>. Every anchor and open item is in the
-          <a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/VNV_MATRIX.md" target="_blank" rel="noopener">public V&amp;V matrix</a>; we publish where the methods agree and where they don't, rather than hide it.
-          On the signing itself: bundles are sealed under a <strong>published demo identity</strong>
-          today, so a check proves a record is intact and unedited, not yet that it came uniquely
-          from us — the production key is a known next step, and every record is labeled
-          <code>demo</code> until it ships. What you pay <strong>Pro</strong> for is assurance —
-          the submission workflow, signed report artifacts, and support — not the k-eff.
+          <strong>Two more things, up front.</strong> The in-tree Monte Carlo is
+          <strong>screening-grade</strong> by design; for a licensing-grade lattice number, escalate to
+          OpenMC, free. And today every bundle is sealed under a <strong>published demo key</strong>, so a
+          check proves the record wasn't edited, not yet that it came from us. The production key is the
+          next step, and every record is labeled <code>demo</code> until it ships. Every anchor and open
+          item is in the <a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/VNV_MATRIX.md" target="_blank" rel="noopener">public V&amp;V matrix</a>,
+          where we show where the methods agree and where they don't.
         </p>
       </div>
     </section>

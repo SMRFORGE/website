@@ -170,6 +170,7 @@
         <li><a href="#gateway">Gateway</a></li>
         <li><a href="#built-for">Built For</a></li>
         <li><a href="#products">Products</a></li>
+        <li><a href="check.html">Check Us</a></li>
         <li><a href="#features">Features</a></li>
         <li><a href="#faq">FAQ</a></li>
         <li><a href="info-sheet.html">Info Sheet</a></li>
@@ -239,6 +240,23 @@
           <article class="provenance-card"><span class="trust-n">3</span><h3>Cryptographic sealing</h3><p>Each run is committed to a tamper-evident bundle — a SHA-256 manifest of every input, output, and software version; any alteration breaks the seal.</p></article>
           <article class="provenance-card"><span class="trust-n">4</span><h3>Data &amp; derivation provenance</h3><p>A result pins, in the signed record, a content fingerprint of the nuclear <b>data</b> it read — so a reviewer can confirm <em>which</em> data produced a number (a run that pins none is honestly marked <code>unpinned</code>, never a fabricated claim). A composed result also carries its <b>derivation lineage</b>: the ordered sub-calculations it was built from, each with input/output digests. Edit either and the seal breaks.</p></article>
           <article class="provenance-card"><span class="trust-n">5</span><h3>Independent verification</h3><p>A standalone verifier confirms a record's integrity — unedited, and consistent with the open Evidence Envelope schema — offline, with any conformant verifier, including one you implement yourself.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="check-us" class="section check-teaser">
+      <div class="container" style="text-align:center">
+        <h2 class="section-title">Don't take our word for it</h2>
+        <p class="section-desc section-desc-lead">
+          Verify a real evidence bundle in your browser — then try to fool it.
+        </p>
+        <p class="section-desc" style="margin-left:auto;margin-right:auto">
+          We put a real lab-grade bundle on a page and let your own browser check it: recompute every
+          fingerprint, test the signature, all client-side. Change a number and the seal catches you. No
+          server, no SMRFORGE code involved in the check.
+        </p>
+        <div class="hero-ctas" style="justify-content:center">
+          <a href="check.html" class="btn btn-primary">Check us — right here</a>
         </div>
       </div>
     </section>

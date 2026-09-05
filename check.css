@@ -1,0 +1,79 @@
+/* /check — the interactive evidence bundle. Page-specific styles; palette + nav/footer come from styles.css */
+
+.check-hero { padding: 7rem 1.5rem 2rem; max-width: 1080px; margin: 0 auto; text-align: center; }
+.check-hero .eyebrow { font-family: var(--font-mono); font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 0 0 .75rem; }
+.check-hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0 0 1rem; line-height: 1.05; }
+.check-hero p { color: var(--text-muted); max-width: 60ch; margin: 0 auto; font-size: 1.05rem; line-height: 1.6; }
+
+.check-wrap { max-width: 1080px; margin: 0 auto; padding: 1rem 1.5rem 5rem; }
+
+/* verdict banner */
+.verdict-banner { display: flex; align-items: center; gap: .6rem; font-family: var(--font-mono); font-weight: 600; font-size: 1.05rem; padding: 1rem 1.25rem; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg-elevated); margin: 0 0 1.5rem; }
+.verdict-banner .v-mark { font-size: 1.3rem; }
+.verdict-banner.is-pass { color: #6ee7b7; border-color: rgba(52, 211, 153, .4); background: rgba(16, 185, 129, .08); }
+.verdict-banner.is-fail { color: #fca5a5; border-color: rgba(248, 113, 113, .45); background: rgba(239, 68, 68, .08); }
+
+/* two-column: the bundle on the left, the check + controls on the right */
+.check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+@media (max-width: 860px) { .check-grid { grid-template-columns: 1fr; } }
+
+.panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.panel-head { display: flex; align-items: center; gap: .5rem; padding: .7rem 1rem; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: .82rem; color: var(--text-muted); }
+.panel-head .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); }
+.panel-head .fname { margin-left: .3rem; color: var(--text); }
+.panel-body { padding: 1rem; }
+
+/* bundle rows (reuse the receipt language from the homepage) */
+.hr-row { display: flex; justify-content: space-between; gap: 1rem; padding: .35rem 0; border-bottom: 1px dashed rgba(255,255,255,.05); font-family: var(--font-mono); font-size: .82rem; }
+.hr-row:last-child { border-bottom: 0; }
+.hr-k { color: var(--text-muted); }
+.hr-v { color: var(--text); text-align: right; word-break: break-word; }
+.hr-hash { color: var(--accent); font-size: .78rem; }
+.hr-result { color: #6ee7b7; font-weight: 600; }
+.hr-pill { display: inline-block; padding: .1rem .5rem; border-radius: 999px; font-size: .72rem; background: rgba(124,179,236,.14); color: var(--accent); border: 1px solid rgba(124,179,236,.3); }
+.sub-label { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin: 1rem 0 .4rem; }
+.sub-label:first-child { margin-top: 0; }
+
+.claim-big { text-align: center; padding: .8rem 0 1rem; }
+.claim-big .ck { font-family: var(--font-mono); font-size: 2rem; color: #6ee7b7; font-weight: 700; }
+.claim-big .cs { color: var(--text-muted); font-family: var(--font-mono); }
+.claim-tags { display: flex; gap: .5rem; justify-content: center; margin-top: .6rem; }
+
+/* verify controls + checklist */
+.btn-row { display: flex; gap: .6rem; flex-wrap: wrap; margin: 0 0 1rem; }
+.check-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; }
+.chk { display: grid; grid-template-columns: 1.2rem 1fr; align-items: start; gap: .5rem; font-size: .86rem; padding: .35rem .5rem; border-radius: 6px; }
+.chk .chk-mark { font-family: var(--font-mono); font-weight: 700; }
+.chk.ok { color: var(--text); } .chk.ok .chk-mark { color: #6ee7b7; }
+.chk.bad { color: #fca5a5; background: rgba(239,68,68,.06); } .chk.bad .chk-mark { color: #fca5a5; }
+.chk-detail { grid-column: 2; font-family: var(--font-mono); font-size: .72rem; color: var(--text-muted); word-break: break-all; margin-top: .15rem; }
+
+/* guided tamper */
+.tamper { margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.25rem; }
+.tamper h3 { margin: 0 0 .3rem; font-size: 1.05rem; }
+.tamper > p { color: var(--text-muted); font-size: .9rem; margin: 0 0 1rem; }
+.field { margin: 0 0 .8rem; }
+.field label { display: block; font-family: var(--font-mono); font-size: .74rem; color: var(--text-muted); margin: 0 0 .3rem; }
+.field input { width: 100%; box-sizing: border-box; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: var(--font-mono); font-size: .9rem; padding: .55rem .7rem; }
+.field input:focus { outline: 2px solid var(--accent-dim); outline-offset: 1px; border-color: var(--accent-dim); }
+.tamper-note { margin-top: 1rem; padding: .85rem 1rem; border-radius: 6px; background: rgba(124,179,236,.08); border: 1px solid rgba(124,179,236,.25); font-size: .86rem; line-height: 1.5; color: var(--text); }
+
+/* reproduce panel */
+.reproduce { margin-top: 2.5rem; }
+.reproduce .panel-body { padding: 1.5rem; }
+.repro-lead { color: var(--text-muted); max-width: 62ch; line-height: 1.6; margin: 0 0 1.5rem; }
+.repro-lead strong { color: var(--text); }
+.band { position: relative; height: 44px; margin: 1.5rem 0 .5rem; border-radius: 6px; background: linear-gradient(90deg, rgba(52,211,153,0) 0%, rgba(52,211,153,.18) 20%, rgba(52,211,153,.28) 50%, rgba(52,211,153,.18) 80%, rgba(52,211,153,0) 100%); border: 1px solid rgba(52,211,153,.25); }
+.band .center { position: absolute; left: 50%; top: -6px; bottom: -6px; width: 2px; background: #6ee7b7; transform: translateX(-50%); }
+.band .center::after { content: attr(data-label); position: absolute; top: -1.5rem; left: 50%; transform: translateX(-50%); white-space: nowrap; font-family: var(--font-mono); font-size: .78rem; color: #6ee7b7; }
+.band-ends { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: .76rem; color: var(--text-muted); }
+.repro-cmd { font-family: var(--font-mono); font-size: .86rem; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: .8rem 1rem; margin: 1.5rem 0; color: var(--accent); overflow-x: auto; }
+.repro-cmd .p { color: var(--text-muted); }
+
+/* demo-key honesty note */
+.demo-note { max-width: 1080px; margin: 2.5rem auto 0; padding: 1rem 1.25rem; border-radius: var(--radius); border: 1px dashed var(--border); background: var(--bg-elevated); color: var(--text-muted); font-size: .86rem; line-height: 1.6; }
+.demo-note strong { color: var(--text); }
+
+/* homepage teaser block */
+.check-teaser { text-align: center; }
+.check-teaser .section-desc { margin-left: auto; margin-right: auto; }

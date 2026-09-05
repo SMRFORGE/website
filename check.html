@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Check us — SMRFORGE</title>
+  <meta name="description" content="Verify a real SMRFORGE evidence bundle in your own browser. Recompute every hash, check the signature, then change a number and watch the seal catch you. No server, no SMRFORGE code — the check runs on your machine.">
+  <link rel="icon" href="images/smrforge_logo_white_transparent.png" type="image/png">
+  <link rel="canonical" href="https://smrforge.io/check.html">
+  <meta property="og:title" content="Check us — SMRFORGE">
+  <meta property="og:description" content="Verify a real evidence bundle in your browser. Recompute the hashes, check the signature, then tamper with a number and watch the seal break. No server, no trust required.">
+  <meta property="og:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
+  <meta property="og:url" content="https://smrforge.io/check.html">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="check.css">
+</head>
+<body>
+  <header class="header">
+    <nav class="nav">
+      <a href="index.html" class="logo">SMRFORGE</a>
+      <ul class="nav-links">
+        <li><a href="index.html#trust">Trust</a></li>
+        <li><a href="index.html#design-engine">Design Engine</a></li>
+        <li><a href="index.html#validation">V&amp;V</a></li>
+        <li><a href="index.html#provenance">Provenance</a></li>
+        <li><a href="index.html#products">Products</a></li>
+        <li><a href="check.html" aria-current="page">Check Us</a></li>
+        <li><a href="info-sheet.html">Info Sheet</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="check-hero">
+      <p class="eyebrow">Don't trust us. Check us.</p>
+      <h1>Verify a real bundle. Right here.</h1>
+      <p>
+        Below is a real SMRFORGE evidence bundle — a lab-grade OpenMC criticality result. Your browser is
+        about to recompute every fingerprint and check the signature itself. No server. No SMRFORGE code.
+        Then change a number and watch the seal catch you.
+      </p>
+    </section>
+
+    <div class="check-wrap">
+      <div id="verdict-banner" class="verdict-banner">Verifying…</div>
+
+      <div class="check-grid">
+        <!-- LEFT: the bundle -->
+        <div class="panel">
+          <div class="panel-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="fname">openmc-criticality.bundle.json</span></div>
+          <div class="panel-body">
+            <div class="claim-big">
+              <div><span class="ck">k_eff = <span id="claim-k">—</span></span> <span class="cs">± <span id="claim-sigma">—</span></span></div>
+              <div class="claim-tags">
+                <span class="hr-pill" id="claim-fidelity">—</span>
+                <span class="hr-pill">verdict: <span id="claim-verdict">—</span></span>
+              </div>
+            </div>
+
+            <div class="sub-label">Provenance — what produced the number</div>
+            <div id="prov-rows"></div>
+
+            <div class="sub-label">Sealed fingerprints (sha256sums)</div>
+            <div id="seal-rows"></div>
+
+            <div class="sub-label">Signature</div>
+            <div class="hr-row"><span class="hr-k">alg</span><span class="hr-v">ed25519</span></div>
+            <div class="hr-row"><span class="hr-k">public_key</span><span class="hr-hash" id="sig-key">—</span></div>
+            <div class="hr-row"><span class="hr-k">bundle seal</span><span class="hr-hash" id="bundle-seal">—</span></div>
+          </div>
+        </div>
+
+        <!-- RIGHT: the check + guided tamper -->
+        <div class="panel">
+          <div class="panel-head"><span class="fname">the check — running in your browser</span></div>
+          <div class="panel-body">
+            <div class="btn-row">
+              <button id="btn-verify" class="btn btn-primary">Run verify</button>
+              <button id="btn-reset" class="btn btn-secondary">Reset bundle</button>
+            </div>
+            <ul id="check-list" class="check-list"></ul>
+
+            <div class="tamper">
+              <h3>Now try to fool it</h3>
+              <p>Change either value. The check re-runs on every keystroke.</p>
+              <div class="field">
+                <label for="tamper-k">k_eff (the headline result)</label>
+                <input id="tamper-k" type="text" inputmode="decimal" autocomplete="off" spellcheck="false">
+              </div>
+              <div class="field">
+                <label for="tamper-dl">data_library_sha256 (the nuclear-data pin)</label>
+                <input id="tamper-dl" type="text" autocomplete="off" spellcheck="false">
+              </div>
+              <div id="tamper-note" class="tamper-note" hidden></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REPRODUCE: the honest offline step -->
+      <section class="reproduce">
+        <div class="panel">
+          <div class="panel-head"><span class="fname">and one step deeper — reproduce</span></div>
+          <div class="panel-body">
+            <p class="repro-lead">
+              Verify proves the file is <strong>untouched</strong>. Reproduce proves the number is
+              <strong>real</strong>: a reviewer installs the open engine, re-runs it on this bundle's own
+              recorded inputs, and the answer has to land inside the band the bundle sealed in advance. This
+              part runs offline on the reviewer's machine — a browser can't run a Monte Carlo eigenvalue
+              solve, and we are not going to pretend it did.
+            </p>
+            <div class="band"><span class="center" id="band-center-mark" data-label=""></span></div>
+            <div class="band-ends"><span id="band-lo">—</span><span>3σ reproduce band — the re-run must land in here</span><span id="band-hi">—</span></div>
+            <div class="repro-cmd"><span class="p">$</span> smrforge reproduce openmc-criticality.reproduce-demo.bundle.json</div>
+            <p class="repro-lead" style="margin:0">
+              The bundle, the reviewer guide, and the open engine are public:
+              <a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/REPRODUCE_LAB_OPENMC.md" target="_blank" rel="noopener">how to reproduce it yourself</a>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <p class="demo-note">
+        <strong>An honest note on the signature.</strong> The key pinned in this checker is still SMRFORGE's
+        public <em>demo</em> key — its private half ships in the open-source repo. So a passing signature here
+        proves <strong>integrity</strong> (the bundle was not edited), not <strong>origin</strong> (that it
+        came from us). Anyone can produce a demo-key signature. That changes the day we run the real signing
+        ceremony offline and re-sign the published bundles; until then, we would rather say so than let a green
+        check mean more than it should.
+      </p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© <span id="footer-year">2026</span> SMRFORGE. Community: MIT. Pro: Licensed.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script type="module" src="check.js"></script>
+</body>
+</html>

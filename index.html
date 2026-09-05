@@ -345,38 +345,29 @@
       <div class="container">
         <h2 class="section-title">Built for simulations you can defend</h2>
         <p class="section-desc section-desc-lead">
-          Reproducibility is the product, not a feature.
+          Every number leaves a record someone else can check.
         </p>
         <p class="section-desc">
-          Every k-eff calc, every benchmark, every report ships as a verifiable evidence bundle.
-          A SHA-256 manifest of inputs and outputs. A reproducibility block — engine and code version, the
-          data library it read and its content digest (the bundled few-group set for a screening k-eff, an
-          ENDF-derived pack for the continuous-energy path), the RNG seed, and a determinism statement, plus an unsigned host diagnostic (Python version, platform) outside the seal. And,
-          for a composed result, its derivation lineage — the ordered sub-calculations it was built from,
-          each with input/output digests — all inside the signed record.
+          Every result ships as one signed evidence bundle, whatever produced it. Inside is a hash of the
+          inputs and outputs, the engine and data versions, the random seed, and whether the run is
+          deterministic. If a result was built from smaller calculations, those are recorded in order too.
+          One signature covers all of it, so any edit breaks the seal.
         </p>
         <p class="section-desc">
-          Hand the bundle to a colleague, a reviewer, or a regulator. They run
-          a standalone verifier offline and either confirm the record's integrity — unedited
-          and schema-valid — or refute it, checked against the open, independently-implementable
-          <b>Evidence Envelope</b> schema (a versioned spec, JSON Schema, and conformance
-          vectors), not a SMRFORGE-proprietary format. No "trust me, it ran on my machine."
-          (Re-running the physics end-to-end is a separate, deeper check:
-          <code>smrforge reproduce &lt;bundle&gt;</code> re-runs the open engine on the bundle's own
-          recorded inputs and checks the numbers re-derive — the <code>certify_bundle</code> /
-          <code>reproduce_bundle</code> Python API is the same path. A <em>stochastic</em> result —
-          a Monte Carlo k-eff — can't re-derive to the last digit, so its record carries a
-          statistical <code>reproduce_tolerance</code>: an n-sigma band built from the run's own
-          reported uncertainty, and reproduce accepts a re-run that lands inside it. That tolerance
-          rides <em>inside</em> the seal, so it can't be quietly widened to wave a bad number through —
-          loosen it and the seal breaks. This is concrete for the lab tier: a real <strong>OpenMC</strong>
-          criticality result now ships as a reproducible bundle — a reviewer installs OpenMC, re-runs it
-          on the record's own inputs, and watches the k re-derive within that band
-          (<a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/REPRODUCE_LAB_OPENMC.md" target="_blank" rel="noopener">reviewer guide</a>;
-          honestly scoped — a multi-group eigenvalue, code-to-code against OpenMC, not a measured-reactor validation).)
-          The published conformance vectors let you certify any verifier —
-          ours or one you wrote yourself — so "independently-implementable" is something you prove,
-          not something we ask you to take on faith.
+          Hand that bundle to a reviewer. First they verify it, offline, with a standalone checker that
+          holds none of our physics: it confirms the record is intact and matches the open, public schema.
+          That proves the record wasn't tampered with. It doesn't prove the number is right.
+        </p>
+        <p class="section-desc">
+          The second check goes deeper. <code>smrforge reproduce &lt;bundle&gt;</code> re-runs the open
+          engine on the bundle's own inputs and watches the number come back out. A Monte Carlo k-eff
+          won't repeat to the last digit, so its record carries a statistical band from the run's own
+          uncertainty, sealed inside the signature where no one can widen it after the fact. The lab tier
+          reproduces the same way now: a reviewer installs OpenMC, re-runs a criticality bundle, and the k
+          lands inside that band
+          (<a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/REPRODUCE_LAB_OPENMC.md" target="_blank" rel="noopener">reviewer guide</a>).
+          That checks the calculation, not whether the model matches a real reactor. And the conformance
+          vectors are public, so you can hold any verifier to them, ours or one you wrote yourself.
         </p>
         <div class="provenance-grid">
           <article class="provenance-card">

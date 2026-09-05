@@ -223,8 +223,11 @@ export { BUNDLE_TEXT, parseJSON, canon, verifyBundle, NumLit, PINNED_IS_DEMO, sh
 if (typeof document !== 'undefined') {
   window.addEventListener('error', (ev) => _fail('Something went wrong running the check: ' + (ev.message || ev.error)));
   const boot = () => { try { initUI(); } catch (e) { _fail('Could not start the check: ' + ((e && e.message) || e)); } };
+  // module scripts are deferred, so this file often runs AFTER the DOM is ready -- meaning this branch
+  // runs synchronously mid-evaluation. Defer boot to a microtask so the whole module (every const
+  // below) has finished initializing before initUI touches it (else: TDZ on later consts like trunc).
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
+  else queueMicrotask(boot);
 }
 
 // surface any failure in the banner rather than leaving the page looking stuck
@@ -233,7 +236,7 @@ function _fail(msg) {
   if (b) { b.className = 'verdict-banner is-fail'; b.textContent = msg; }
 }
 
-const trunc = (h, n = 10) => { const s = String(h).replace('sha256:', ''); return 'sha256:' + s.slice(0, n) + '…' + s.slice(-6); };
+function trunc(h, n = 10) { const s = String(h).replace('sha256:', ''); return 'sha256:' + s.slice(0, n) + '…' + s.slice(-6); }
 
 function initUI() {
   const bundle = parseJSON(BUNDLE_TEXT);

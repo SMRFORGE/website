@@ -138,6 +138,7 @@ function sha512(msg) {
 
 // ---------- from-scratch RFC 8032 Ed25519 verify (BigInt field arithmetic) ----------
 const Q = (2n ** 255n) - 19n;
+const L = (1n << 252n) + 27742317777372353535851937790883648493n;   // prime-order subgroup order (RFC 8032)
 const mod = (a) => ((a % Q) + Q) % Q;
 function modpow(b, e, mm) { b = ((b % mm) + mm) % mm; let r = 1n; while (e > 0n) { if (e & 1n) r = r * b % mm; b = b * b % mm; e >>= 1n; } return r; }
 const inv = (a) => modpow(mod(a), Q - 2n, Q);
@@ -148,7 +149,7 @@ const BY = mod(4n * inv(5n));
 const BASE = [recoverX(BY, 0), BY];
 const onCurve = (p) => { const [x, y] = p; return mod(-x * x + y * y - 1n - D * x * x * y * y) === 0n; };
 const leInt = (b) => { let n = 0n; for (let j = b.length - 1; j >= 0; j--) n = (n << 8n) | BigInt(b[j]); return n; };
-function decodepoint(b) { const y = leInt(b) & ((1n << 255n) - 1n); const x = recoverX(y, (b[31] >> 7) & 1); const p = [x, y]; if (!onCurve(p)) throw new Error('off curve'); return p; }
+function decodepoint(b) { const y = leInt(b) & ((1n << 255n) - 1n); if (y >= Q) throw new Error('non-canonical point encoding'); const x = recoverX(y, (b[31] >> 7) & 1); const p = [x, y]; if (!onCurve(p)) throw new Error('off curve'); return p; }
 const hexToBytes = (h) => { const a = new Uint8Array(h.length / 2); for (let j = 0; j < a.length; j++) a[j] = parseInt(h.substr(j * 2, 2), 16); return a; };
 
 // Extended twisted-Edwards coordinates (X:Y:Z:T). No field inversion per point op -> a verify is a few
@@ -170,6 +171,7 @@ function ed25519Verify(sig, msgStr, pub) {
   let R, A;
   try { R = ext(decodepoint(sig.slice(0, 32))); A = ext(decodepoint(pub)); } catch { return false; }
   const s = leInt(sig.slice(32));
+  if (s >= L) return false;                 // reject a non-canonical / malleable scalar (RFC 8032)
   const msg = _enc.encode(msgStr);
   const buf = new Uint8Array(64 + msg.length);
   buf.set(sig.slice(0, 32), 0); buf.set(pub, 32); buf.set(msg, 64);

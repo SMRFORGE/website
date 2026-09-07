@@ -12,126 +12,298 @@
   <meta property="og:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
   <meta property="og:url" content="https://smrforge.io/check.html">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="check.css?v=2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<style>
+/* ---------- BLUE identity tokens (committed single dark theme) ---------- */
+:root {
+  --bg: #0b2035;
+  --bg-elevated: #143149;
+  --bg-card: #10293f;
+  --surface-2: #143149;
+  --line: #1f3f5a;
+  --border: #1f3f5a;
+  --text: #e6eef3;
+  --ink: #e6eef3;
+  --text-muted: #93adbf;
+  --faint: #62829b;
+  --accent: #4cd3e8;
+  --cyan: #4cd3e8;
+  --accent-dim: #5b93d6;
+  --lichen: #9fd67a;
+  --clay: #e0704f;
+  --teal: #57d6b0;
+  --accent-rgb: 76, 211, 232;
+  --lichen-rgb: 159, 214, 122;
+  --clay-rgb: 224, 112, 79;
+  --teal-rgb: 87, 214, 176;
+  --radius: 8px;
+  --font-display: "Archivo", "Public Sans", system-ui, sans-serif;
+  --font-sans: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+h1, h2, h3 { font-family: var(--font-display); color: var(--ink); letter-spacing: -0.01em; }
+a { color: var(--accent); }
+a:hover { color: #7fe3f1; }
+strong { color: var(--ink); }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+
+/* ---------- header / lockup ---------- */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(11, 32, 53, .88);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; max-width: 1200px; margin: 0 auto; padding: .85rem 1.5rem; }
+.logo { display: inline-flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--ink); }
+.logo .mark { width: 30px; height: 30px; display: block; }
+.logo .wordmark { font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; letter-spacing: .06em; line-height: 1; }
+.logo .wordmark .sm { color: var(--ink); }
+.logo .wordmark .fg { color: var(--cyan); }
+.nav-links { display: flex; flex-wrap: nowrap; gap: clamp(.85rem, 1.7vw, 1.6rem); list-style: none; margin: 0; padding: 0; }
+.nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: .9rem; white-space: nowrap; transition: color .2s; }
+.nav-links a:hover { color: var(--accent); }
+.nav-links a[aria-current="page"] { color: var(--ink); border-bottom: 2px solid var(--cyan); padding-bottom: .1rem; }
+@media (max-width: 720px) { .nav-links { display: none; } }
+
+/* ---------- hero ---------- */
+.check-hero { position: relative; padding: 4.5rem 1.5rem 2rem; max-width: 1080px; margin: 0 auto; text-align: center; }
+.check-hero::before {
+  content: ""; position: absolute; inset: -6rem 0 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse 60% 55% at 50% 0%, rgba(var(--accent-rgb), .14), transparent 70%);
+}
+.check-hero .eyebrow { font-family: var(--font-mono); font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 0 0 .75rem; }
+.check-hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin: 0 0 1rem; line-height: 1.05; }
+.check-hero p { color: var(--text-muted); max-width: 60ch; margin: 0 auto; font-size: 1.05rem; line-height: 1.6; }
+
+.check-wrap { max-width: 1080px; margin: 0 auto; padding: 1rem 1.5rem 5rem; }
+
+/* ---------- verdict banner ---------- */
+.verdict-banner { display: flex; align-items: center; gap: .6rem; font-family: var(--font-mono); font-weight: 600; font-size: 1.05rem; padding: 1rem 1.25rem; border-radius: var(--radius); border: 1px solid var(--line); background: var(--bg-elevated); margin: 0 0 1.5rem; color: var(--text-muted); }
+.verdict-banner .v-mark { font-size: 1.3rem; }
+.verdict-banner.is-pass { color: var(--lichen); border-color: rgba(var(--lichen-rgb), .45); background: rgba(var(--lichen-rgb), .08); }
+.verdict-banner.is-fail { color: var(--clay); border-color: rgba(var(--clay-rgb), .5); background: rgba(var(--clay-rgb), .09); }
+
+/* ---------- two-column: bundle left, check right ---------- */
+.check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+@media (max-width: 860px) { .check-grid { grid-template-columns: 1fr; } }
+
+.panel { background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; min-width: 0; }
+.panel-head { display: flex; align-items: center; gap: .5rem; padding: .7rem 1rem; border-bottom: 1px solid var(--line); background: var(--surface-2); font-family: var(--font-mono); font-size: .82rem; color: var(--text-muted); }
+.panel-head .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.panel-head .fname { margin-left: .3rem; color: var(--text); }
+.panel-body { padding: 1rem; min-width: 0; }
+
+/* bundle rows */
+.hr-row { display: flex; justify-content: space-between; gap: 1rem; padding: .35rem 0; border-bottom: 1px dashed rgba(230, 238, 243, .06); font-family: var(--font-mono); font-size: .82rem; overflow-x: auto; }
+.hr-row:last-child { border-bottom: 0; }
+.hr-k { color: var(--text-muted); white-space: nowrap; }
+.hr-v { color: var(--text); text-align: right; word-break: break-word; }
+.hr-hash { color: var(--accent); font-size: .78rem; white-space: nowrap; }
+.hr-result { color: var(--lichen); font-weight: 600; }
+.hr-pill { display: inline-block; padding: .1rem .5rem; border-radius: 999px; font-size: .72rem; font-family: var(--font-mono); background: rgba(var(--accent-rgb), .12); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), .3); }
+.sub-label { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin: 1rem 0 .4rem; }
+.sub-label:first-child { margin-top: 0; }
+
+.claim-big { text-align: center; padding: .8rem 0 1rem; }
+.claim-big .ck { font-family: var(--font-mono); font-size: 2rem; color: var(--lichen); font-weight: 700; }
+.claim-big .cs { color: var(--text-muted); font-family: var(--font-mono); }
+.claim-tags { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; margin-top: .6rem; }
+/* a value the visitor has edited -- shown doctored, in clay */
+.tampered-val { color: var(--clay) !important; }
+
+/* inline-editable values, right in the bundle */
+.inline-edit { font: inherit; color: inherit; background: rgba(var(--accent-rgb), .07); border: 1px dashed var(--accent-dim); border-radius: 5px; padding: 0 .35em; outline: none; }
+.inline-edit:hover { border-color: var(--accent); }
+.inline-edit:focus { border-style: solid; border-color: var(--accent); background: rgba(var(--accent-rgb), .14); }
+.inline-edit.tampered-val { border-color: rgba(var(--clay-rgb), .65); background: rgba(var(--clay-rgb), .09); }
+.ck-edit { font-family: var(--font-mono); font-size: 2rem; font-weight: 700; color: var(--lichen); text-align: center; width: 7em; max-width: 100%; padding: .04em .2em; vertical-align: baseline; }
+.dl-edit { font-family: var(--font-mono); font-size: .8rem; color: var(--accent); width: 100%; box-sizing: border-box; margin-top: .35rem; padding: .5rem .6rem; border-color: var(--accent); }
+.edit-field { margin: .5rem 0 .2rem; }
+.edit-field .hr-k { font-family: var(--font-mono); font-size: .82rem; color: var(--text-muted); white-space: normal; }
+.edit-tag { display: inline-block; margin-left: .45rem; font-family: var(--font-mono); font-size: .6rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--accent); background: rgba(var(--accent-rgb), .12); border: 1px solid rgba(var(--accent-rgb), .4); border-radius: 999px; padding: .06rem .45rem; vertical-align: middle; }
+.edit-hint { text-align: center; font-size: .82rem; color: var(--text-muted); line-height: 1.55; margin: .2rem auto 1.2rem; max-width: 44ch; }
+.edit-hint strong { color: var(--accent); }
+
+/* ---------- verify controls + checklist ---------- */
+.btn { display: inline-block; padding: .7rem 1.4rem; font-family: var(--font-display); font-weight: 700; font-size: .92rem; letter-spacing: .01em; text-decoration: none; border-radius: var(--radius); transition: all .2s; cursor: pointer; border: 1px solid transparent; }
+.btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.btn-primary:hover { background: #7fe3f1; border-color: #7fe3f1; transform: translateY(-1px); box-shadow: 0 0 20px rgba(var(--accent-rgb), .28); }
+.btn-secondary { background: transparent; color: var(--text); border-color: var(--line); }
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn-row { display: flex; gap: .6rem; flex-wrap: wrap; margin: 0 0 1rem; }
+.check-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; }
+.chk { display: grid; grid-template-columns: 1.2rem 1fr; align-items: start; gap: .5rem; font-size: .86rem; padding: .35rem .5rem; border-radius: 6px; }
+.chk .chk-mark { font-family: var(--font-mono); font-weight: 700; }
+.chk.ok { color: var(--text); } .chk.ok .chk-mark { color: var(--lichen); }
+.chk.bad { color: var(--clay); background: rgba(var(--clay-rgb), .07); } .chk.bad .chk-mark { color: var(--clay); }
+.chk-detail { grid-column: 2; font-family: var(--font-mono); font-size: .72rem; color: var(--text-muted); word-break: break-all; margin-top: .15rem; }
+
+.tamper-note { margin-top: 1rem; padding: .85rem 1rem; border-radius: 6px; background: rgba(var(--accent-rgb), .08); border: 1px solid rgba(var(--accent-rgb), .25); font-size: .86rem; line-height: 1.5; color: var(--text); }
+.tamper-note strong { color: var(--accent); }
+
+/* ---------- reproduce panel ---------- */
+.reproduce { margin-top: 2.5rem; }
+.reproduce .panel-body { padding: 1.5rem; }
+.repro-lead { color: var(--text-muted); max-width: 62ch; line-height: 1.6; margin: 0 0 1.5rem; }
+.repro-lead strong { color: var(--text); }
+.band { position: relative; height: 44px; margin: 2.2rem 0 .5rem; border-radius: 6px; background: linear-gradient(90deg, rgba(var(--teal-rgb), 0) 0%, rgba(var(--teal-rgb), .18) 20%, rgba(var(--teal-rgb), .3) 50%, rgba(var(--teal-rgb), .18) 80%, rgba(var(--teal-rgb), 0) 100%); border: 1px solid rgba(var(--teal-rgb), .28); }
+.band .center { position: absolute; left: 50%; top: -6px; bottom: -6px; width: 2px; background: var(--teal); transform: translateX(-50%); }
+.band .center::after { content: attr(data-label); position: absolute; top: -1.5rem; left: 50%; transform: translateX(-50%); white-space: nowrap; font-family: var(--font-mono); font-size: .78rem; color: var(--teal); }
+.band-ends { display: flex; justify-content: space-between; gap: .5rem; font-family: var(--font-mono); font-size: .76rem; color: var(--text-muted); }
+.band-ends span:nth-child(2) { text-align: center; }
+.repro-cmd { font-family: var(--font-mono); font-size: .86rem; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: .8rem 1rem; margin: 1.5rem 0; color: var(--accent); overflow-x: auto; white-space: nowrap; }
+.repro-cmd .p { color: var(--faint); }
+
+/* ---------- demo-key honesty note ---------- */
+.demo-note { max-width: 1080px; margin: 2.5rem auto 0; padding: 1rem 1.25rem; border-radius: var(--radius); border: 1px dashed var(--line); background: var(--bg-elevated); color: var(--text-muted); font-size: .86rem; line-height: 1.6; }
+.demo-note strong { color: var(--text); }
+.demo-note em { color: var(--accent); font-style: normal; }
+
+/* ---------- footer ---------- */
+.footer { padding: 2rem 0; border-top: 1px solid var(--line); text-align: center; background: var(--bg); }
+.footer p { margin: 0; color: var(--faint); font-size: .9rem; }
+.footer .wordmark { font-family: var(--font-display); font-weight: 800; letter-spacing: .06em; }
+.footer .wordmark .sm { color: var(--text-muted); }
+.footer .wordmark .fg { color: var(--cyan); }
+
+@media (max-width: 480px) {
+  .check-hero { padding-top: 3rem; }
+  .claim-big .ck, .ck-edit { font-size: 1.6rem; }
+  .verdict-banner { font-size: .95rem; }
+}
+</style>
 </head>
 <body>
-  <header class="header">
-    <nav class="nav">
-      <a href="index.html" class="logo">SMRFORGE</a>
-      <ul class="nav-links">
-        <li><a href="index.html#trust">Trust</a></li>
-        <li><a href="index.html#design-engine">Design Engine</a></li>
-        <li><a href="index.html#validation">V&amp;V</a></li>
-        <li><a href="index.html#provenance">Provenance</a></li>
-        <li><a href="index.html#products">Products</a></li>
-        <li><a href="check.html" aria-current="page">Check Us</a></li>
-        <li><a href="info-sheet.html">Info Sheet</a></li>
-        <li><a href="index.html#contact">Contact</a></li>
-      </ul>
-      <button class="nav-toggle" aria-label="Toggle menu">
-        <span></span><span></span><span></span>
-      </button>
-    </nav>
-  </header>
+<header class="header">
+  <nav class="nav" aria-label="Primary">
+    <a href="/" class="logo" aria-label="SMRFORGE home">
+      <img class="mark" src="data:image/png;base64,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" alt="">
+      <span class="wordmark"><span class="sm">SMR</span><span class="fg">FORGE</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/#engagements">Engagements</a></li>
+      <li><a href="/#howit">How it works</a></li>
+      <li><a href="/#valid">Verification</a></li>
+      <li><a href="/#products">Community &amp; Pro</a></li>
+      <li><a href="/check.html" aria-current="page">Check a bundle</a></li>
+    </ul>
+  </nav>
+</header>
 
-  <main>
-    <section class="check-hero">
-      <p class="eyebrow">Don't trust us. Check us.</p>
-      <h1>Verify a real bundle. Right here.</h1>
-      <p>
-        Below is a real SMRFORGE evidence bundle — a lab-grade OpenMC criticality result. Your browser is
-        about to recompute every fingerprint and check the signature itself. No server. No SMRFORGE code.
-        Then change a number and watch the seal catch you.
-      </p>
-    </section>
+<main>
+  <section class="check-hero">
+    <p class="eyebrow">Don't trust us. Check us.</p>
+    <h1>Verify a real bundle. Right here.</h1>
+    <p>
+      Below is a real SMRFORGE evidence bundle — a lab-grade OpenMC criticality result. Your browser is
+      about to recompute every fingerprint and check the signature itself. No server. No SMRFORGE code.
+      Then change a number and watch the seal catch you.
+    </p>
+  </section>
 
-    <div class="check-wrap">
-      <div id="verdict-banner" class="verdict-banner" role="status" aria-live="polite">Verifying…</div>
+  <div class="check-wrap">
+    <div id="verdict-banner" class="verdict-banner" role="status" aria-live="polite">Verifying…</div>
 
-      <div class="check-grid">
-        <!-- LEFT: the bundle -->
-        <div class="panel">
-          <div class="panel-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="fname">openmc-criticality.bundle.json</span></div>
-          <div class="panel-body">
-            <div class="claim-big">
-              <div><span class="ck">k_eff = <input id="tamper-k" class="inline-edit ck-edit" inputmode="decimal" autocomplete="off" spellcheck="false" aria-label="k_eff (editable)"></span> <span class="cs">± <span id="claim-sigma">—</span></span></div>
-              <div class="claim-tags">
-                <span class="hr-pill" id="claim-fidelity">—</span>
-                <span class="hr-pill">verdict: <span id="claim-verdict">—</span></span>
-              </div>
+    <div class="check-grid">
+      <!-- LEFT: the bundle -->
+      <div class="panel">
+        <div class="panel-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="fname">openmc-criticality.bundle.json</span></div>
+        <div class="panel-body">
+          <div class="claim-big">
+            <div><span class="ck">k_eff = <input id="tamper-k" class="inline-edit ck-edit" inputmode="decimal" autocomplete="off" spellcheck="false" aria-label="k_eff (editable)"></span> <span class="cs">± <span id="claim-sigma">—</span></span></div>
+            <div class="claim-tags">
+              <span class="hr-pill" id="claim-fidelity">—</span>
+              <span class="hr-pill">verdict: <span id="claim-verdict">—</span></span>
             </div>
-            <p class="edit-hint"><strong>The two dashed boxes are editable.</strong> Change them to doctor the bundle — the check re-runs as you type. Everything else (fingerprints, signature) is sealed.</p>
-
-            <div class="sub-label">Provenance — what produced the number</div>
-            <div id="prov-rows"></div>
-            <div class="edit-field"><span class="hr-k">data_library_sha256 <span class="edit-tag">✎ editable</span></span><input id="tamper-dl" class="inline-edit dl-edit" autocomplete="off" spellcheck="false" aria-label="data_library_sha256 (editable)"></div>
-
-            <div class="sub-label">Sealed fingerprints (sha256sums)</div>
-            <div id="seal-rows"></div>
-
-            <div class="sub-label">Signature</div>
-            <div class="hr-row"><span class="hr-k">alg</span><span class="hr-v">ed25519</span></div>
-            <div class="hr-row"><span class="hr-k">public_key</span><span class="hr-hash" id="sig-key">—</span></div>
-            <div class="hr-row"><span class="hr-k">bundle seal</span><span class="hr-hash" id="bundle-seal">—</span></div>
           </div>
-        </div>
+          <p class="edit-hint"><strong>The two dashed boxes are editable.</strong> Change them to doctor the bundle — the check re-runs as you type. Everything else (fingerprints, signature) is sealed.</p>
 
-        <!-- RIGHT: the check + guided tamper -->
-        <div class="panel">
-          <div class="panel-head"><span class="fname">the check — running in your browser</span></div>
-          <div class="panel-body">
-            <div class="btn-row">
-              <button id="btn-verify" class="btn btn-primary">Run verify</button>
-              <button id="btn-reset" class="btn btn-secondary">Reset bundle</button>
-            </div>
-            <ul id="check-list" class="check-list"></ul>
-            <div id="tamper-note" class="tamper-note" hidden></div>
-          </div>
+          <div class="sub-label">Provenance — what produced the number</div>
+          <div id="prov-rows"></div>
+          <div class="edit-field"><span class="hr-k">data_library_sha256 <span class="edit-tag">✎ editable</span></span><input id="tamper-dl" class="inline-edit dl-edit" autocomplete="off" spellcheck="false" aria-label="data_library_sha256 (editable)"></div>
+
+          <div class="sub-label">Sealed fingerprints (sha256sums)</div>
+          <div id="seal-rows"></div>
+
+          <div class="sub-label">Signature</div>
+          <div class="hr-row"><span class="hr-k">alg</span><span class="hr-v">ed25519</span></div>
+          <div class="hr-row"><span class="hr-k">public_key</span><span class="hr-hash" id="sig-key">—</span></div>
+          <div class="hr-row"><span class="hr-k">bundle seal</span><span class="hr-hash" id="bundle-seal">—</span></div>
         </div>
       </div>
 
-      <!-- REPRODUCE: the honest offline step -->
-      <section class="reproduce">
-        <div class="panel">
-          <div class="panel-head"><span class="fname">and one step deeper — reproduce</span></div>
-          <div class="panel-body">
-            <p class="repro-lead">
-              Verify proves the file is <strong>untouched</strong>. Reproduce proves the number is
-              <strong>real</strong>: a reviewer installs the open engine, re-runs it on this bundle's own
-              recorded inputs, and the answer has to land inside the band the bundle sealed in advance. This
-              part runs offline on the reviewer's machine — a browser can't run a Monte Carlo eigenvalue
-              solve, and we are not going to pretend it did.
-            </p>
-            <div class="band"><span class="center" id="band-center-mark" data-label=""></span></div>
-            <div class="band-ends"><span id="band-lo">—</span><span>3σ reproduce band — the re-run must land in here</span><span id="band-hi">—</span></div>
-            <div class="repro-cmd"><span class="p">$</span> smrforge reproduce openmc-criticality.reproduce-demo.bundle.json</div>
-            <p class="repro-lead" style="margin:0">
-              The bundle, the reviewer guide, and the open engine are public:
-              <a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/REPRODUCE_LAB_OPENMC.md" target="_blank" rel="noopener">how to reproduce it yourself</a>.
-            </p>
+      <!-- RIGHT: the check + guided tamper -->
+      <div class="panel">
+        <div class="panel-head"><span class="fname">the check — running in your browser</span></div>
+        <div class="panel-body">
+          <div class="btn-row">
+            <button id="btn-verify" class="btn btn-primary" type="button">Run verify</button>
+            <button id="btn-reset" class="btn btn-secondary" type="button">Reset bundle</button>
           </div>
+          <ul id="check-list" class="check-list"></ul>
+          <div id="tamper-note" class="tamper-note" hidden></div>
         </div>
-      </section>
-
-      <p class="demo-note">
-        <strong>An honest note on the signature.</strong> The key pinned in this checker is still SMRFORGE's
-        public <em>demo</em> key — its private half ships in the open-source repo. So a passing signature here
-        proves <strong>integrity</strong> (the bundle was not edited), not <strong>origin</strong> (that it
-        came from us). Anyone can produce a demo-key signature. That changes the day we run the real signing
-        ceremony offline and re-sign the published bundles; until then, we would rather say so than let a green
-        check mean more than it should.
-      </p>
+      </div>
     </div>
-  </main>
 
-  <footer class="footer">
-    <div class="container">
-      <p>© <span id="footer-year">2026</span> SMRFORGE. Community: MIT. Pro: Licensed.</p>
-    </div>
-  </footer>
+    <!-- REPRODUCE: the honest offline step -->
+    <section class="reproduce">
+      <div class="panel">
+        <div class="panel-head"><span class="fname">and one step deeper — reproduce</span></div>
+        <div class="panel-body">
+          <p class="repro-lead">
+            Verify proves the file is <strong>untouched</strong>. Reproduce proves the number is
+            <strong>real</strong>: a reviewer installs the open engine, re-runs it on this bundle's own
+            recorded inputs, and the answer has to land inside the band the bundle sealed in advance. This
+            part runs offline on the reviewer's machine — a browser can't run a Monte Carlo eigenvalue
+            solve, and we are not going to pretend it did.
+          </p>
+          <div class="band"><span class="center" id="band-center-mark" data-label=""></span></div>
+          <div class="band-ends"><span id="band-lo">—</span><span>3σ reproduce band — the re-run must land in here</span><span id="band-hi">—</span></div>
+          <div class="repro-cmd"><span class="p">$</span> smrforge reproduce openmc-criticality.reproduce-demo.bundle.json</div>
+          <p class="repro-lead" style="margin:0">
+            The bundle, the reviewer guide, and the open engine are public:
+            <a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/REPRODUCE_LAB_OPENMC.md" target="_blank" rel="noopener">how to reproduce it yourself</a>.
+          </p>
+        </div>
+      </div>
+    </section>
 
-  <script src="script.js"></script>
-  <script type="module" src="check.js?v=4"></script>
+    <p class="demo-note">
+      <strong>An honest note on the signature.</strong> The key pinned in this checker is still SMRFORGE's
+      public <em>demo</em> key — its private half ships in the open-source repo. So a passing signature here
+      proves <strong>integrity</strong> (the bundle was not edited), not <strong>origin</strong> (that it
+      came from us). Anyone can produce a demo-key signature. That changes the day we run the real signing
+      ceremony offline and re-sign the published bundles; until then, we would rather say so than let a green
+      check mean more than it should.
+    </p>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <p>© <span id="footer-year">2026</span> <span class="wordmark"><span class="sm">SMR</span><span class="fg">FORGE</span></span>. Community: MIT. Pro: Licensed.</p>
+  </div>
+</footer>
+<script src="script.js"></script>
+<script type="module" src="check.js?v=4"></script>
 </body>
 </html>

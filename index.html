@@ -153,437 +153,441 @@
     ]
   }
   </script>
-  <link rel="preload" href="fonts/Inter.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="fonts/Orbitron.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" as="image" href="images/smrforge_logo_white_transparent.png">
-  <link rel="stylesheet" href="styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  /* ---- chosen palette: cyanotype / prussian ground with a faint teal undertone,
+         glacier-cyan identity accent, one warm signal-amber for "checked" moments,
+         a lichen green for pass and a fired-clay for fail.
+         (deliberately NOT tailwind slate #0f172a / periwinkle #7cb3ec / sky-400 #38bdf8 /
+          slate-100 #F1F5F9 / slate-400 #94a3b8 / emerald-300 / red-300) ---- */
+  :root{
+    --bg:#0b2035; --bg-2:#0e2640; --surface:#10293f; --surface-2:#143149;
+    --line:#1f3f5a; --line-soft:#193449;
+    --ink:#e6eef3; --muted:#93adbf; --faint:#62829b;
+    --cyan:#4cd3e8; --cyan-2:#7ae3f2; --cyan-soft:rgba(76,211,232,.11);
+    --amber:#f2a33a; --amber-soft:rgba(242,163,58,.14);
+    --lichen:#9fd67a; --clay:#e0704f;
+    --disp:"Archivo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+    --body:"Public Sans",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);
+    line-height:1.62;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 clamp(18px,4vw,40px)}
+  a{color:var(--ink)}
+  :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:2px}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .kicker{font-family:var(--mono);font-size:.73rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan)}
+  .rule{height:1px;background:var(--line);border:0;margin:0}
+
+  header{display:flex;justify-content:space-between;align-items:center;
+    padding:20px clamp(18px,4vw,40px);border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:.7rem;font-family:var(--disp);font-weight:800;font-size:1.5rem;letter-spacing:.03em}
+  .brand .wm{line-height:1;color:var(--ink)}
+  .brand .logo{height:52px;width:auto;display:block}
+  .brand b{color:var(--cyan)}
+  nav{display:flex;gap:26px;font-family:var(--mono);font-size:.8rem;text-transform:uppercase;letter-spacing:.06em}
+  nav a{color:var(--muted);text-decoration:none}nav a:hover{color:var(--ink)}
+  .ghost{border:1px solid var(--line);padding:.5rem .85rem;color:var(--ink)!important}
+  .ghost:hover{border-color:var(--cyan)}
+  @media(max-width:760px){nav a:not(.ghost){display:none}}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(30px,5vw,64px);
+    align-items:center;padding:clamp(44px,7vw,88px) 0 clamp(30px,5vw,56px)}
+  @media(max-width:900px){.hero{grid-template-columns:1fr;gap:38px}}
+  .problem{font-family:var(--mono);font-size:.86rem;color:var(--muted);margin:0 0 1rem;letter-spacing:.01em}
+  h1{font-family:var(--disp);font-weight:800;font-size:clamp(2.6rem,6vw,4.3rem);
+    line-height:1.0;letter-spacing:-.015em;margin:0;text-wrap:balance}
+  /* the one warm word on the page: the thing that gets checked */
+  h1 .u{color:var(--amber);text-decoration:underline;text-decoration-thickness:.08em;
+    text-underline-offset:.12em;text-decoration-color:rgba(242,163,58,.55)}
+  .desc{font-size:1.12rem;color:var(--ink);max-width:40ch;margin:1.35rem 0 0}
+  .desc b{font-weight:600}
+  .ctas{display:flex;gap:14px;flex-wrap:wrap;margin-top:1.9rem}
+  .btn{font-family:var(--mono);font-size:.85rem;letter-spacing:.04em;text-transform:uppercase;
+    padding:.78rem 1.2rem;text-decoration:none;transition:background .14s,border-color .14s,color .14s}
+  .btn.primary{background:var(--cyan);color:#06202f;font-weight:600}
+  .btn.primary:hover{background:var(--cyan-2)}
+  .btn.line{border:1px solid var(--line);color:var(--ink)}
+  .btn.line:hover{border-color:var(--cyan);color:var(--cyan)}
+  .avail{margin-top:1.7rem;font-size:.92rem;color:var(--muted);max-width:46ch}
+  .avail b{color:var(--ink);font-weight:600}
+  .avail a{color:var(--cyan);text-decoration:none}
+
+  /* the ONE lifted object: an evidence receipt */
+  .receipt{background:var(--surface);border:1px solid var(--line);border-top:2px solid var(--cyan);border-radius:4px;
+    box-shadow:0 28px 64px -30px rgba(2,10,20,.9),0 0 0 1px rgba(76,211,232,.06);overflow:hidden;font-family:var(--mono)}
+  .receipt .top{display:flex;justify-content:space-between;align-items:center;
+    padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+  .receipt .top .t{font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .receipt .top .dot{width:9px;height:9px;border-radius:50%;background:var(--lichen);box-shadow:0 0 8px rgba(159,214,122,.6)}
+  .receipt .mid{padding:20px 18px}
+  .receipt .k{font-size:2.15rem;color:var(--ink);letter-spacing:.01em;font-variant-numeric:tabular-nums}
+  .receipt .k small{color:var(--muted);font-size:.9rem;margin-left:.4rem}
+  .receipt .tag{display:inline-block;margin-top:.4rem;font-size:.72rem;color:var(--lichen);
+    border:1px solid rgba(159,214,122,.4);padding:.06rem .5rem;border-radius:3px;letter-spacing:.04em}
+  .receipt .rows{border-top:1px dashed var(--line);margin-top:16px;padding-top:14px;display:grid;gap:8px}
+  .receipt .row{display:flex;justify-content:space-between;font-size:.82rem}
+  .receipt .row .l{color:var(--faint);letter-spacing:.04em}
+  .receipt .row .v{color:var(--muted)}
+  .receipt .row .v.ok{color:var(--amber)}      /* checked: the warm counter-accent */
+  .receipt .row .v.bad{color:var(--clay)}      /* tamper / fail, if a seal breaks */
+  .receipt .foot{border-top:1px solid var(--line);padding:12px 18px;display:flex;justify-content:space-between;
+    font-size:.74rem;color:var(--faint);background:var(--surface-2)}
+  .receipt .foot .pass{color:var(--lichen);letter-spacing:.06em}
+
+  /* how you check it — rules, not cards */
+  .check{padding:clamp(48px,6vw,80px) 0;border-top:1px solid var(--line)}
+  .check .head{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;margin-bottom:34px}
+  .check h2{font-family:var(--disp);font-weight:700;font-size:clamp(1.8rem,3.6vw,2.6rem);letter-spacing:-.01em;margin:.35rem 0 0;max-width:20ch;text-wrap:balance}
+  .check .lead{color:var(--ink);max-width:44ch;margin:0;font-size:1.18rem;line-height:1.5;font-weight:500}
+  .check .lead b{color:var(--cyan);font-weight:700}
+  .three{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  @media(max-width:780px){.three{grid-template-columns:1fr}}
+  .col{padding:26px 26px 26px 0;border-left:1px solid var(--line);padding-left:26px}
+  .col:first-child{border-left:0;padding-left:0}
+  @media(max-width:780px){.col{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:24px}.col:first-child{border-top:0}}
+  .col .cmd{font-family:var(--mono);font-size:.8rem;color:var(--cyan);letter-spacing:.02em}
+  .col h3{font-family:var(--disp);font-weight:700;font-size:1.3rem;margin:.55rem 0 .5rem}
+  .col p{margin:0;color:var(--muted);font-size:.96rem}
+
+  /* validation — a data table, not big-number tiles */
+  .valid{padding:clamp(48px,6vw,80px) 0;border-top:1px solid var(--line)}
+  .valid h2{font-family:var(--disp);font-weight:700;font-size:clamp(1.8rem,3.6vw,2.6rem);margin:.3rem 0 .3rem;letter-spacing:-.01em}
+  .valid .lead{color:var(--muted);max-width:62ch;margin:0 0 28px}
+  table{width:100%;border-collapse:collapse;font-size:.92rem}
+  th,td{text-align:left;padding:13px 14px;border-bottom:1px solid var(--line-soft)}
+  th{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:500}
+  td{color:var(--muted)}
+  td.n{font-family:var(--mono);color:var(--ink);font-variant-numeric:tabular-nums}
+  td .fid{font-family:var(--mono);font-size:.74rem;color:var(--cyan);border:1px solid var(--line);padding:.05rem .45rem;border-radius:3px}
+  td .fid.lab{color:var(--amber);border-color:rgba(242,163,58,.35)}
+  tr:last-child td{border-bottom:0}
+  .valid .note{font-size:.85rem;color:var(--faint);margin-top:16px;max-width:60ch}
+
+  /* ladder */
+  .ladder{padding:clamp(48px,6vw,80px) 0;border-top:1px solid var(--line)}
+  .ladder h2{font-family:var(--disp);font-weight:700;font-size:clamp(1.8rem,3.6vw,2.6rem);margin:.3rem 0 .3rem;letter-spacing:-.01em}
+  .ladder .lead{color:var(--muted);max-width:60ch;margin:0 0 28px}
+  .rungs{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line)}
+  @media(max-width:780px){.rungs{grid-template-columns:1fr 1fr}}
+  .rung{padding:20px 18px;border-left:1px solid var(--line)}
+  .rung:first-child{border-left:0}
+  @media(max-width:780px){.rung:nth-child(3){border-left:0;border-top:1px solid var(--line)}.rung:nth-child(4){border-top:1px solid var(--line)}}
+  .rung .rk{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+  .rung .rt{font-family:var(--disp);font-weight:700;font-size:1.15rem;margin:8px 0 4px}
+  .rung .rd{margin:0;font-size:.85rem;color:var(--muted)}
+  .rung.free{background:var(--cyan-soft)}
+  .rung.free .rt{color:var(--cyan)}
+  .rung.free .rk{color:var(--cyan)}
+  .rung .soon{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--amber);border:1px solid rgba(242,163,58,.45);padding:0 .35rem;border-radius:3px;margin-left:.3rem}
+
+  /* products */
+  .products{padding:clamp(48px,6vw,80px) 0;border-top:1px solid var(--line)}
+  .prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line)}
+  @media(max-width:780px){.prod-grid{grid-template-columns:1fr}}
+  .prod{padding:30px clamp(20px,3vw,32px)}
+  .prod+.prod{border-left:1px solid var(--line)}
+  @media(max-width:780px){.prod+.prod{border-left:0;border-top:1px solid var(--line)}}
+  .prod .pt{font-family:var(--disp);font-weight:800;font-size:1.5rem}
+  .prod .lic{font-family:var(--mono);font-size:.72rem;color:var(--faint);letter-spacing:.06em;margin-top:2px}
+  .prod p{color:var(--muted);font-size:.96rem;margin:.9rem 0 0}
+  .prod ul{list-style:none;padding:0;margin:1rem 0 0;display:grid;gap:.5rem}
+  .prod li{font-size:.9rem;color:var(--ink);padding-left:1.3rem;position:relative}
+  .prod li::before{content:"—";position:absolute;left:0;color:var(--cyan)}
+  .prod.pro{background:var(--bg-2)}
+  .prod.pro li::before{color:var(--amber)}
+
+  /* contact */
+  .contact{padding:clamp(48px,6vw,72px) 0;border-top:1px solid var(--line);text-align:left}
+  .contact h2{font-family:var(--disp);font-weight:800;font-size:clamp(1.9rem,4vw,2.8rem);margin:.3rem 0 .5rem;letter-spacing:-.015em;max-width:22ch}
+  .contact p{color:var(--muted);max-width:52ch;margin:0 0 1.5rem}
+  .contact p a{color:var(--cyan);text-decoration:none}
+  footer{border-top:1px solid var(--line);padding:22px 0 46px;display:flex;justify-content:space-between;
+    flex-wrap:wrap;gap:12px;font-family:var(--mono);font-size:.76rem;color:var(--faint)}
+  footer a{color:var(--muted);text-decoration:none}
+
+  /* engagements — third way to work; rules, not cards */
+  .eng{padding:clamp(48px,6vw,80px) 0;border-top:1px solid var(--line)}
+  .eng h2{font-family:var(--disp);font-weight:700;font-size:clamp(1.8rem,3.6vw,2.6rem);margin:.3rem 0 .3rem;letter-spacing:-.01em}
+  .eng .lead{color:var(--muted);max-width:62ch;margin:0 0 30px}
+  .eng-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line)}
+  @media(max-width:780px){.eng-grid{grid-template-columns:1fr}}
+  .eng-item{padding:26px clamp(20px,2.6vw,30px);border-left:1px solid var(--line);border-top:1px solid var(--line)}
+  .eng-item:nth-child(1),.eng-item:nth-child(2){border-top:0}
+  .eng-item:nth-child(odd){border-left:0}
+  @media(max-width:780px){.eng-item{border-left:0}.eng-item:nth-child(2){border-top:1px solid var(--line)}}
+  .eng-item .en{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan)}
+  .eng-item h3{font-family:var(--disp);font-weight:700;font-size:1.25rem;margin:.55rem 0 .5rem}
+  .eng-item p{margin:0;color:var(--muted);font-size:.94rem}
+  .eng-item .warm{color:var(--amber);font-weight:600}
+  .eng .aside{margin:28px 0 0;padding:16px 20px;background:var(--amber-soft);border-left:3px solid var(--amber);color:var(--ink);font-size:1.06rem;font-weight:500}
+  .eng .aside b{color:var(--amber);font-weight:700}
+  /* engagement-forward: flagship block, secondary trio, how-it-works */
+  .eng .sublead{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:36px 0 12px}
+  .flagship{display:grid;grid-template-columns:1.45fr 1fr;gap:0;border:1px solid var(--line);border-top:2px solid var(--cyan);background:var(--surface);margin-top:6px}
+  @media(max-width:820px){.flagship{grid-template-columns:1fr}}
+  .flagship .fl-main{padding:28px clamp(20px,3vw,34px);display:flex;flex-direction:column;gap:.85rem;align-items:flex-start}
+  .flagship .fl-main .en{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
+  .flagship .fl-main h3{font-family:var(--disp);font-weight:800;font-size:1.55rem;margin:0;letter-spacing:-.01em}
+  .flagship .fl-main p{margin:0;color:var(--muted);font-size:.98rem}
+  .flagship .fl-flow{border-left:1px solid var(--line);background:var(--surface-2);padding:24px clamp(18px,2.4vw,28px);display:flex;flex-direction:column;justify-content:center;gap:16px}
+  @media(max-width:820px){.flagship .fl-flow{border-left:0;border-top:1px solid var(--line)}}
+  .flagship .fl-step{display:flex;flex-direction:column;gap:3px}
+  .flagship .fl-step .s{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+  .flagship .fl-step b{font-family:var(--mono);color:var(--ink);font-size:.92rem;font-weight:500}
+  .eng3{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line)}
+  @media(max-width:760px){.eng3{grid-template-columns:1fr}}
+  .eng3 .eng-item{border-top:0;border-left:1px solid var(--line)}
+  .eng3 .eng-item:first-child{border-left:0}
+  @media(max-width:760px){.eng3 .eng-item{border-left:0}.eng3 .eng-item:nth-child(n+2){border-top:1px solid var(--line)}}
+  .howit{padding:clamp(40px,5vw,66px) 0;border-top:1px solid var(--line)}
+  .howit h2{font-family:var(--disp);font-weight:700;font-size:clamp(1.8rem,3.6vw,2.6rem);margin:.3rem 0 26px;letter-spacing:-.01em;color:var(--ink)}
+  .steps4{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line)}
+  @media(max-width:820px){.steps4{grid-template-columns:1fr 1fr}}
+  @media(max-width:480px){.steps4{grid-template-columns:1fr}}
+  .s4{padding:24px 20px;border-left:1px solid var(--line)}
+  .s4:first-child{border-left:0}
+  @media(max-width:820px){.s4:nth-child(odd){border-left:0}.s4:nth-child(n+3){border-top:1px solid var(--line)}}
+  @media(max-width:480px){.s4{border-left:0}.s4:nth-child(n+2){border-top:1px solid var(--line)}}
+  .s4 .sn{font-family:var(--disp);font-weight:800;font-size:1rem;color:var(--cyan);display:inline-grid;place-items:center;width:2em;height:2em;border:1px solid var(--cyan);border-radius:50%}
+  .s4 h4{font-family:var(--disp);font-weight:700;font-size:1.05rem;margin:.7rem 0 .3rem}
+  .s4 p{margin:0;color:var(--muted);font-size:.88rem}
+
+</style>
 </head>
 <body>
-  <header class="header">
-    <nav class="nav">
-      <a href="#" class="logo">SMRFORGE</a>
-      <ul class="nav-links">
-        <li><a href="#trust">Trust</a></li>
-        <li><a href="#design-engine">Design Engine</a></li>
-        <li><a href="#validation">V&amp;V</a></li>
-        <li><a href="#provenance">Provenance</a></li>
-        <li><a href="#gateway">Gateway</a></li>
-        <li><a href="#built-for">Built For</a></li>
-        <li><a href="#products">Products</a></li>
-        <li><a href="check.html">Check Us</a></li>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#faq">FAQ</a></li>
-        <li><a href="info-sheet.html">Info Sheet</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-      <button class="nav-toggle" aria-label="Toggle menu">
-        <span></span><span></span><span></span>
-      </button>
-    </nav>
-  </header>
+<header>
+  <div class="brand"><img class="logo" src="data:image/png;base64,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" alt="SMRFORGE mark"><span class="wm">SMR<b>FORGE</b></span></div>
+  <nav>
+    <a href="#engagements">Engagements</a><a href="#howit">How it works</a><a href="#valid">Verification</a>
+    <a href="#products">Community &amp; Pro</a><a class="ghost" href="check.html">Check a bundle</a>
+  </nav>
+</header>
 
-  <main>
-    <section class="hero">
-      <div class="hero-content">
-        <p class="hero-badge">SMRFORGE — How Trust Is Built</p>
-        <p class="hero-problem">Simulation outputs aren't enough. Regulators, reviewers, and partners need evidence.</p>
-        <h1 class="hero-title">Not "trust us." Check us.</h1>
-        <p class="hero-desc">
-          Take an SMR from concept to a full-core design and the safety numbers —
-          in one auditable run. Screen fast in pure Python; escalate the same inputs to
-          OpenMC when a number has to hold up. Every result ships as a
-          <strong>sealed, tamper-evident evidence bundle</strong> — labeled with how sure
-          it is, its leftover error published, and its nuclear data pinned by a content fingerprint.
-          Anyone can verify it offline, against an open standard, with a checker they wrote
-          themselves.
-        </p>
-        <div class="hero-ctas">
-          <a href="https://gitlab.com/smrforge/smrforge" class="btn btn-primary" target="_blank" rel="noopener">View on GitLab<span class="beta-badge">MIT · open source</span></a>
-          <a href="#contact" class="btn btn-secondary">Contact for Pro</a>
-          <a href="info-sheet.html" class="btn btn-secondary">Info Sheet</a>
-        </div>
-        <p class="hero-status"><strong>The Community engine is open source and available now.</strong> Clone it from GitLab and install from source (Python 3.11+); not yet on PyPI. The Pro tier is licensed and in commercial beta. <a href="#contact">Email us</a> to talk Pro or a pilot.</p>
-        <p class="hero-meta">Sealed evidence bundles · Offline verify against an open schema · Data &amp; derivation provenance in the seal · Full-core design engine · Free OpenMC escalation · MIT / FSL-1.1-MIT</p>
+<div class="wrap">
+  <section class="hero">
+    <div>
+      <p class="kicker">Reactor-physics evidence</p>
+      <p class="problem">A simulation output is a claim. A reviewer has to be able to check it.</p>
+      <h1>Reactor physics<br>you can <span class="u">prove</span>.</h1>
+      <p class="desc">SMRFORGE takes a small modular reactor from concept to a full-core
+        <b>k-effective</b> — and seals each result so anyone can verify it offline and
+        <b>re-derive it from scratch</b> on the open engine. You don't have to take our word for it.</p>
+      <div class="ctas">
+        <a class="btn primary" href="#engagements">Bring us a number →</a>
+        <a class="btn line" href="check.html">Verify a bundle yourself</a>
       </div>
-      <div class="hero-visual">
-        <div class="hero-receipt" role="img" aria-label="An example SMRFORGE evidence bundle with illustrative values: a k-effective result labeled screening, a SHA-256 bundle hash, a sealed attestation, and an offline integrity check passing.">
-          <div class="hr-head">
-            <span class="hr-dot"></span><span class="hr-dot"></span><span class="hr-dot"></span>
-            <span class="hr-title">evidence-bundle.json</span>
-            <span class="hr-eg">example — illustrative values</span>
-          </div>
-          <div class="hr-body">
-            <div class="hr-row"><span class="hr-k">analysis</span><span class="hr-v">smr-core-screening</span></div>
-            <div class="hr-row"><span class="hr-k">result</span><span class="hr-v hr-result">k_eff = 1.29841</span></div>
-            <div class="hr-row"><span class="hr-k">fidelity</span><span class="hr-pill">screening</span></div>
-            <div class="hr-row"><span class="hr-k">bundle</span><span class="hr-hash">sha256:6a21fc…9cd0</span></div>
-            <div class="hr-row"><span class="hr-k">attestation</span><span class="hr-v"><span class="hr-ok">✓</span> sealed&ensp;·&ensp;<span class="hr-ok">✓</span> data-pinned</span></div>
-          </div>
-          <div class="hr-term">$ smrforge verify evidence-bundle.json<br><span class="hr-ok">✓ sealed · schema ok · unedited · exit 0</span></div>
+      <p class="avail"><b>Engagements are open now</b> — bring a number and we&rsquo;ll produce the
+        reproducible evidence with you. The Community engine is open source and available today;
+        Pro is in commercial beta.</p>
+    </div>
+
+    <div class="receipt" aria-label="An example evidence bundle: SMRFORGE computes a k-effective of 1.029554 for the IAEA-2D benchmark, closing the published reference of 1.029585 to minus 3 pcm; screening-grade code-verification, a SHA-256 seal, an Ed25519 signature, and an offline integrity check passing.">
+      <div class="top"><span class="t">Evidence bundle · smrforge.result.v1</span><span class="dot" aria-hidden="true"></span></div>
+      <div class="mid">
+        <div class="k">1.029554<small>k_eff</small></div>
+        <span class="tag">fidelity: screening · code-verification</span>
+        <div class="rows">
+          <div class="row"><span class="l">case</span><span class="v">IAEA-2D · full core</span></div>
+          <div class="row"><span class="l">published reference</span><span class="v">k = 1.029585</span></div>
+          <div class="row"><span class="l">C−E</span><span class="v ok">−3 pcm</span></div>
+          <div class="row"><span class="l">data library</span><span class="v ok">endf/b-viii · sha ✓</span></div>
+          <div class="row"><span class="l">seal (sha-256)</span><span class="v">4c1a 7f… 9e02</span></div>
+          <div class="row"><span class="l">signature</span><span class="v ok">ed25519 ✓</span></div>
         </div>
       </div>
-    </section>
+      <div class="foot"><span>$ smrforge verify</span><span class="pass">INTEGRITY OK ✓</span></div>
+    </div>
+  </section>
+</div>
 
-    <section id="trust" class="section trust-spine">
-      <div class="container">
-        <h2 class="section-title">How trust is built</h2>
-        <p class="section-desc section-desc-lead">
-          Five steps. Each one ends in an artifact you can check.
-        </p>
-        <p class="section-desc">
-          Every code claims to be accurate. SMRFORGE ships, with every result, the record that lets an
-          independent reviewer check the number themselves, and the process that would have caught a wrong one.
-        </p>
-        <div class="provenance-grid trust-steps">
-          <article class="provenance-card"><span class="trust-n">1</span><h3>Fidelity declaration</h3><p>Every result carries a machine-readable <code>fidelity</code> label — <code>screening</code>, <code>reference</code>, or <code>lab-escalation</code> — stated in the output record itself.</p></article>
-          <article class="provenance-card"><span class="trust-n">2</span><h3>Residual quantification</h3><p>Validation is reported per benchmark with published bands — e.g. the CE Monte Carlo's characterized <strong>+320 pcm</strong> residual vs OpenMC (bounded, temperature-consistent) and the IAEA-2D full-core closure to <strong>≈ −3 pcm</strong> — with every anchor and open item in the <a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/VNV_MATRIX.md" target="_blank" rel="noopener">public V&amp;V matrix</a>.</p></article>
-          <article class="provenance-card"><span class="trust-n">3</span><h3>Cryptographic sealing</h3><p>Each run is committed to a tamper-evident bundle — a SHA-256 manifest of every input, output, and software version; any alteration breaks the seal.</p></article>
-          <article class="provenance-card"><span class="trust-n">4</span><h3>Data &amp; derivation provenance</h3><p>A result pins, in the signed record, a content fingerprint of the nuclear <b>data</b> it read — so a reviewer can confirm <em>which</em> data produced a number (a run that pins none is honestly marked <code>unpinned</code>, never a fabricated claim). A composed result also carries its <b>derivation lineage</b>: the ordered sub-calculations it was built from, each with input/output digests. Edit either and the seal breaks.</p></article>
-          <article class="provenance-card"><span class="trust-n">5</span><h3>Independent verification</h3><p>A standalone verifier confirms a record's integrity — unedited, and consistent with the open Evidence Envelope schema — offline, with any conformant verifier, including one you implement yourself.</p></article>
-        </div>
+<div class="wrap">
+  <section class="eng" id="engagements">
+    <p class="kicker">Work with us</p>
+    <h2>Bring us a number a reviewer won&rsquo;t take on faith.</h2>
+    <p class="lead">Most of our work starts as a scoped engagement &mdash; we produce the evidence with you, and
+      you leave with sealed bundles a reviewer can re-run. For an SMR developer heading to the NRC, or a team that
+      needs an independent confirmation before a submission, that&rsquo;s the work.</p>
+
+    <div class="flagship">
+      <div class="fl-main">
+        <div class="en">Flagship engagement</div>
+        <h3>Independent confirmatory analysis</h3>
+        <p>Send us your criticality or shutdown-margin number. We re-derive it on the open engine and OpenMC
+          and hand back a <span class="warm">signed, reproducible confirmation</span> your reviewer can
+          re-run &mdash; a second opinion that checks itself, not one they have to trust.</p>
+        <a class="btn primary" href="mailto:support@smrforge.io" style="display:inline-block">Bring us a number &rarr;</a>
       </div>
-    </section>
-
-    <section id="check-us" class="section check-teaser">
-      <div class="container" style="text-align:center">
-        <h2 class="section-title">Don't take our word for it</h2>
-        <p class="section-desc section-desc-lead">
-          Verify a real evidence bundle in your browser — then try to fool it.
-        </p>
-        <p class="section-desc" style="margin-left:auto;margin-right:auto">
-          We put a real lab-grade bundle on a page and let your own browser check it: recompute every
-          fingerprint, test the signature, all client-side. Change a number and the seal catches you. No
-          server, no SMRFORGE code involved in the check.
-        </p>
-        <div class="hero-ctas" style="justify-content:center">
-          <a href="check.html" class="btn btn-primary">Check us — right here</a>
-        </div>
-      </div>
-    </section>
-
-    <section id="design-engine" class="section design-engine">
-      <div class="container">
-        <h2 class="section-title">The whole core, not one slice</h2>
-        <p class="section-desc section-desc-lead">
-          From a concept to a core design, in one run you can check.
-        </p>
-        <p class="section-desc">
-          Most fast reactor-physics tools model a single fuel slice and extrapolate to the rest.
-          SMRFORGE's open-core engine gives you the whole core: a real Cartesian power shape,
-          screening-grade and free.
-        </p>
-        <p class="section-desc">
-          The same free engine carries higher-order <strong>NEM (1-D/2-D/3-D) with ADF/SPH
-          equivalence</strong>, a continuous-energy Monte Carlo, S<sub>n</sub> transport, and burnup. It
-          computes the numbers you actually design against: rod worth, shutdown margin, reactivity
-          coefficients. And it escalates to OpenMC in one step when a number has to hold up. Full-core
-          <strong>CMFD</strong>, <strong>R-Z (cylindrical)</strong> screening geometry, and the IAEA-2D
-          closure ship free too; hex geometry is on the roadmap, engagement-funded then free.
-        </p>
-        <p class="section-desc">
-          <strong>Pro</strong> turns those numbers into a submission-ready assessment: the signed
-          <em>assess</em> deliverable, with a PASS/FAIL against the safety floor and the report artifacts a
-          regulator reads.
-        </p>
-        <div class="provenance-grid">
-          <article class="provenance-card">
-            <h3>Whole core, not a pin cell</h3>
-            <p>Lattice to few-group homogenization to a full-core <strong>Cartesian nodal solve</strong>, with the IAEA-2D closure and <strong>CMFD</strong> acceleration, all free. You get a real power shape, not a pin-cell guess. Higher-order <strong>NEM (1-D/2-D/3-D) with ADF/SPH equivalence</strong> backs it up as code-verification. <strong>R-Z (cylindrical)</strong> screening geometry (SFR/LFR) ships free too; <strong>hex</strong> (prismatic HTGR, heat-pipe micro) is on the roadmap, engagement-funded then free.</p>
-          </article>
-          <article class="provenance-card">
-            <h3>The numbers you design against</h3>
-            <p>Rod worth, shutdown margin, reactivity coefficients, kinetics, xenon/samarium, pin power, and burnup (multi-cycle on the roadmap). The outputs a safety case is built on, all free.</p>
-          </article>
-          <article class="provenance-card">
-            <h3>Screen fast, then escalate</h3>
-            <p>Sweep hundreds of core options in seconds to minutes at screening fidelity, with no HDF5, MPI, or license server. Then spend the minutes-to-hours of OpenMC only on the few that have to hold up. Same inputs, both results, one bundle.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="validation" class="section validation">
-      <div class="container">
-        <h2 class="section-title">How the numbers are checked</h2>
-        <p class="section-desc section-desc-lead">
-          The error bars are published, including where the methods don't fully agree.
-        </p>
-        <p class="section-desc">
-          Almost no <em>measured</em> SMR benchmarks exist yet, because almost no SMRs are running. So we
-          do what the whole field does: anchor the methods to the best-characterized data available, and
-          compare the engine against a reference code, OpenMC.
-        </p>
-        <p class="section-desc">
-          On real ENDF/B-VIII.0 data, our Monte Carlo reproduces OpenMC to about <strong>+320 pcm</strong>
-          (band +205…+429). It's small, and it stays flat across temperatures, which is what a consistent
-          engine looks like rather than one tuned to hit a number. The IAEA-2D full-core benchmark closes
-          to about <strong>−3 pcm</strong> against the published reference. And for your own design, the
-          same inputs escalate to <strong>OpenMC</strong> (free) for a direct code-to-code check.
-        </p>
-        <p class="section-desc">
-          We say this plainly: these check the method and the code, not the model against a measured
-          reactor. That data mostly doesn't exist yet. Turning these numbers into a regulatory submission
-          is what <strong>Pro</strong> is for.
-        </p>
-        <div class="proof-grid">
-          <article class="proof-card">
-            <div class="proof-figure">+320<span class="unit">pcm</span></div>
-            <div class="proof-label">CE Monte Carlo vs OpenMC · characterized residual</div>
-            <p class="proof-note">Our Monte Carlo against OpenMC on real ENDF/B-VIII.0 data (infinite medium, matched physics): a small <strong>+320 pcm</strong> offset (band +205…+429) that stays flat with temperature and tracks U-238. That's a consistent engine with a known offset, not a tuned one. A code-to-code check, not SMR validation. See the <a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/VNV_MATRIX.md" target="_blank" rel="noopener">V&amp;V matrix</a>.</p>
-          </article>
-          <article class="proof-card">
-            <div class="proof-figure">−3<span class="unit">pcm</span></div>
-            <div class="proof-label">IAEA-2D full-core closure · code-verification</div>
-            <p class="proof-note">The full-core diffusion solver closes the published IAEA-2D reference (k = 1.029585) to about <strong>−3 pcm</strong>, mesh-converged and cross-checked FD vs NEM. Code-verification of the full-core solver, CMFD-accelerated.</p>
-          </article>
-          <article class="proof-card">
-            <div class="proof-figure">23/25<span class="unit">green</span></div>
-            <div class="proof-label">External OpenMC vs measured criticality · not SMRFORGE physics</div>
-            <p class="proof-note">25 measured ICSBEP / BEAVRS-HZP criticality benchmarks, 23 green. Every calculated value here is <strong>external OpenMC</strong> (the tier you escalate to), not our own engine scored against experiment, with published C−E split into MC, nuclear-data, and method budgets. LWR and method anchors, not SMR validation.</p>
-          </article>
-        </div>
-        <p class="honest-note">
-          <strong>Two more things, up front.</strong> The in-tree Monte Carlo is
-          <strong>screening-grade</strong> by design; for a licensing-grade lattice number, escalate to
-          OpenMC, free. And today every bundle is sealed under a <strong>published demo key</strong>, so a
-          check proves the record wasn't edited, not yet that it came from us. The production key is the
-          next step, and every record is labeled <code>demo</code> until it ships. Every anchor and open
-          item is in the <a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/VNV_MATRIX.md" target="_blank" rel="noopener">public V&amp;V matrix</a>,
-          where we show where the methods agree and where they don't.
-        </p>
-      </div>
-    </section>
-
-    <section id="provenance" class="section provenance">
-      <div class="container">
-        <h2 class="section-title">Built for simulations you can defend</h2>
-        <p class="section-desc section-desc-lead">
-          Every number leaves a record someone else can check.
-        </p>
-        <p class="section-desc">
-          Every result ships as one signed evidence bundle, whatever produced it. Inside is a hash of the
-          inputs and outputs, the engine and data versions, the random seed, and whether the run is
-          deterministic. If a result was built from smaller calculations, those are recorded in order too.
-          One signature covers all of it, so any edit breaks the seal.
-        </p>
-        <p class="section-desc">
-          Hand that bundle to a reviewer. First they verify it, offline, with a standalone checker that
-          holds none of our physics: it confirms the record is intact and matches the open, public schema.
-          That proves the record wasn't tampered with. It doesn't prove the number is right.
-        </p>
-        <p class="section-desc">
-          The second check goes deeper. <code>smrforge reproduce &lt;bundle&gt;</code> re-runs the open
-          engine on the bundle's own inputs and watches the number come back out. A Monte Carlo k-eff
-          won't repeat to the last digit, so its record carries a statistical band from the run's own
-          uncertainty, sealed inside the signature where no one can widen it after the fact. The lab tier
-          reproduces the same way now: a reviewer installs OpenMC, re-runs a criticality bundle, and the k
-          lands inside that band
-          (<a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/REPRODUCE_LAB_OPENMC.md" target="_blank" rel="noopener">reviewer guide</a>).
-          That checks the calculation, not whether the model matches a real reactor. And the conformance
-          vectors are public, so you can hold any verifier to them, ours or one you wrote yourself.
-        </p>
-        <div class="provenance-grid">
-          <article class="provenance-card">
-            <h3>Evidence bundles</h3>
-            <p>Versioned, hashable, schema-checked. The same evidence plumbing internally is what regulators and reviewers receive — no separate export pipeline to maintain.</p>
-          </article>
-          <article class="provenance-card">
-            <h3>Air-gap by construction</h3>
-            <p>Pure Python standard library, zero dependencies, zero CDN fetches at runtime. Works on a laptop with no internet, in a SCIF, or behind an enterprise firewall. The bundled screening preset ships a cross-section set in-tree — no nuclear-data download is required to reach a k-effective number. Advanced ENDF-driven workflows stage their data separately; air-gapped deployment bundles for those are on the Pro roadmap.</p>
-          </article>
-          <article class="provenance-card">
-            <h3>Locked surface, gated drift</h3>
-            <p>A full behavior test suite, published conformance vectors, and signed reproduce-demo bundles — run them yourself against any build. A determinism check guards bit-reproducibility. Blocking CI runs ruff and the fast behavior suite on every change; the slow Monte-Carlo/transport and OpenMC tests run separately. The same checks are yours to run.</p>
-          </article>
-          <article class="provenance-card">
-            <h3>Which data produced it</h3>
-            <p>A result pins, in the signed record, a content fingerprint of the nuclear data it read — so a reviewer confirms <b>which</b> data set produced a number, and re-derives that fingerprint from their own copy of the data (a run that pins none is honestly marked <code>unpinned</code>). Change a constant and the fingerprint changes; edit the claim and the seal breaks. (Proof that a bundle existed at a point in time will use a commodity timestamp when a customer needs it.)</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="gateway" class="section gateway">
-      <div class="container">
-        <h2 class="section-title">One process for the API and the agents</h2>
-        <p class="section-desc section-desc-lead">
-          A REST API and MCP tools, from one process you can audit.
-        </p>
-        <p class="section-desc">
-          SMRFORGE serves its REST API and its MCP tool catalog from a single Python process, built on
-          the standard library with no web framework. One port, one thing to inspect. Today you start it
-          in-process (<code>smrf_serve</code>); a <code>serve</code> command is on the roadmap.
-        </p>
-        <p class="section-desc">
-          Putting reactor physics behind MCP does more than give an agent access. The agent calls a tool
-          and gets back a <strong>signed evidence record, not a bare number</strong>, so it can
-          <code>verify</code> and <code>reproduce</code> the result before it trusts it. There's a runnable
-          demo of exactly this: the agent re-derives a k-eff itself, then, handed a
-          <strong>validly-signed record whose number was forged</strong>, its reproduce check catches the
-          lie and it <strong>refuses</strong>. Trust rides on the re-run, not the signature.
-          (<a href="https://gitlab.com/smrforge/smrforge/-/blob/main/demo/agent_checks_a_record.py" target="_blank" rel="noopener"><code>demo/agent_checks_a_record.py</code></a>.)
-        </p>
-        <div class="gateway-grid">
-          <article class="gateway-card">
-            <h3>One process, one port</h3>
-            <p>The REST API and MCP tools run from one stdlib HTTP process on port 8765. No web framework to wire or patch. It binds to localhost; free capabilities are open, Pro ones need an offline license token. Pure Python standard library, so there's nothing to install.</p>
-          </article>
-          <article class="gateway-card">
-            <h3>MCP tool catalog</h3>
-            <p>Public capabilities show up as MCP tools over real JSON-RPC 2.0 (<code>initialize</code> / <code>tools/list</code> / <code>tools/call</code>). Browse the catalog over HTTP, or call the same tools from your own agent or notebook. Every call returns the same signed bundle as the REST path, so an agent can verify and reproduce what it gets back.</p>
-          </article>
-          <article class="gateway-card">
-            <h3>Air-gap by design</h3>
-            <p>No CDN fetches. No telemetry. Nothing phones home. It binds to localhost, and Pro capabilities need an offline license token. Pure Python standard library, so it runs behind any firewall, in a SCIF, or on a laptop with no network.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="built-for" class="section built-for">
-      <div class="container">
-        <h2 class="section-title">Built For</h2>
-        <p class="section-desc">The people building advanced reactors, and the workflows they run.</p>
-        <div class="built-for-grid">
-          <div class="built-for-col">
-            <h3 class="built-for-subhead">Teams</h3>
-            <ul class="built-for-list">
-              <li>SMR developers</li>
-              <li>Advanced reactor startups</li>
-              <li>Nuclear engineering firms</li>
-              <li>National labs &amp; research institutions</li>
-            </ul>
-          </div>
-          <div class="built-for-col">
-            <h3 class="built-for-subhead">Workflows</h3>
-            <ul class="built-for-list">
-              <li>Screen and iterate on new core designs in a fast, auditable loop</li>
-              <li>Reproduce benchmarks for papers or validation</li>
-              <li>Generate regulatory documentation backed by sealed evidence bundles</li>
-              <li>Run parameter sweeps and design exploration overnight</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="products" class="section products">
-      <div class="container">
-        <h2 class="section-title">Community & Pro</h2>
-        <div class="product-cards">
-          <article class="product-card">
-            <h3>Community</h3>
-            <p class="product-tag">MIT · Open Source · Screening-grade</p>
-            <p>The whole screening engine, open source: full-core Cartesian nodal diffusion, higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence, a continuous-energy Monte Carlo, S<sub>n</sub> transport, SP3, burnup/depletion, kinetics and reactivity coefficients, rod-worth, shutdown-margin, pin-power, and xenon/samarium. Plus one-step OpenMC escalation and the full evidence spine: sealed bundles, a standalone verifier, verifiable redaction, and data-library provenance. Pure Python standard library, zero dependencies. Every run produces a verifiable bundle you can hand to a reviewer. <em>It's honestly screening-grade, with published V&amp;V and every result reproducible offline. Production work escalates to OpenMC (open source) or your own licensed Serpent or MCNP.</em></p>
-            <a href="https://gitlab.com/smrforge/smrforge" class="btn btn-outline" target="_blank" rel="noopener">GitLab →<span class="beta-badge">Open source</span></a>
-          </article>
-          <article class="product-card product-card-pro">
-            <h3>Pro</h3>
-            <p class="product-tag">Source-available (FSL-1.1-MIT) · Licensed · Enterprise</p>
-            <p class="pro-lede">Pro runs on the same evidence bundles as Community. It adds what you need to take that evidence into a regulatory submission: the assessment, the tracking, and the support.</p>
-            <ul class="pro-pillars">
-              <li>
-                <strong>The assess deliverable: a submission-ready verdict.</strong>
-                A real reference solve plus a tech-spec shutdown-margin gate, collapsed into one signed, verifiable bundle with a PASS/FAIL against the safety floor. That verdict is what you pay for, not the k-eff.
-              </li>
-              <li>
-                <strong>Coverage, freshness, and shareable reports.</strong>
-                Around the assess bundle: <em>coverage</em> trends your application against the measured Tier-3 anchor suite (USL / c<sub>k</sub>); <em>watch</em> re-runs a bundle on its own inputs to flag evidence that has gone stale; <em>report</em> renders any bundle to a signed, shareable HTML report. Requirements-to-evidence traceability and SRP-section mapping are on the roadmap.
-              </li>
-              <li>
-                <strong>Independent review is already free and open.</strong>
-                A vendor's evidence bundle can be reproduced end-to-end today with the <em>open</em> reviewer kit. It re-runs the pinned engine and verifies integrity with the separate <code>evidence-verifier</code> (its own Ed25519, no SMRFORGE import), so the reviewer runs a tool that isn't the producer's. A hosted Pro reviewer console (per-claim dashboards, subsidized regulator access) is on the roadmap.
-              </li>
-              <li>
-                <strong>Integrations, on engagement.</strong>
-                Converters that write input for, and read results from, your own licensed Serpent or MCNP installations. SMRFORGE ships the converters, not the codes: Serpent and MCNP are export-controlled tools you install yourself, and SMRFORGE contains none of their source or data. <em>Physics is never a Pro feature. Full-core CMFD and R-Z geometry ship free in the open core; hex is on the roadmap.</em>
-              </li>
-              <li>
-                <strong>On the roadmap.</strong>
-                A production signing key that proves origin (today bundles seal under a published demo key, which shows integrity, not origin). Air-gapped deployment bundles for regulated environments. Large-sweep and UQ orchestration, and LLM-assisted analysis that works against verifiable bundles rather than raw chat.
-              </li>
-            </ul>
-            <a href="#contact" class="btn btn-primary">Contact Sales</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="features" class="section features">
-      <div class="container">
-        <h2 class="section-title">What's Inside</h2>
-        <p class="section-desc">From lattice physics to a full-core power shape, kinetics, and burnup — every capability in the free open core, shipped with the same evidence-bundle plumbing. The in-tree solvers are pure Python standard library, fast, auditable, and built for screening and design iteration; when you need reference accuracy, escalate the same model to OpenMC (open source). Deck converters for your own licensed Serpent or MCNP are available on engagement.</p>
-        <ul class="feature-grid">
-          <li><span class="feature-icon">◇</span> Multi-group diffusion + full-core Cartesian nodal solver, full-core CMFD &amp; R-Z (cylindrical) geometry — all free (hex on the open-core roadmap)</li>
-          <li><span class="feature-icon">◇</span> Higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence</li>
-          <li><span class="feature-icon">◇</span> <span>Continuous-energy Monte Carlo, S<sub>n</sub> transport &amp; SP3</span></li>
-          <li><span class="feature-icon">◇</span> Lattice homogenization &amp; assembly discontinuity factors</li>
-          <li><span class="feature-icon">◇</span> Kinetics, point-kinetics &amp; reactivity coefficients</li>
-          <li><span class="feature-icon">◇</span> Rod-worth, shutdown-margin, pin-power &amp; xenon/samarium</li>
-          <li><span class="feature-icon">◇</span> Burnup &amp; decay heat (multi-cycle fuel on the roadmap)</li>
-          <li><span class="feature-icon">◇</span> One bundled screening preset today (LWR-SMR); HTGR, MSR &amp; micro archetypes on the roadmap</li>
-          <li><span class="feature-icon">◇</span> Non-water moderators (graphite, BeO, ZrH, D₂O) on the roadmap</li>
-          <li><span class="feature-icon">◇</span> One-step escalation to OpenMC (free); deck converters for your licensed Serpent/MCNP on engagement</li>
-          <li><span class="feature-icon">◇</span> ENDF-derived pointwise packs, MF=31/33 covariance parsing &amp; resonance self-shielding</li>
-          <li><span class="feature-icon">◇</span> Data-uncertainty quantification</li>
-        </ul>
-      </div>
-    </section>
-
-    <section id="faq" class="section faq">
-      <div class="container">
-        <h2 class="section-title">FAQ</h2>
-        <dl class="faq-list">
-          <dt>What is SMRFORGE?</dt>
-          <dd>SMRFORGE is a verifiable platform for Small Modular Reactor (SMR) design and analysis. The free open core (MIT) is the full screening reactor-physics engine: full-core Cartesian nodal diffusion, higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence, few-group homogenization, an in-tree continuous-energy Monte Carlo, S<sub>n</sub> transport, SP3, burnup/depletion, kinetics and reactivity coefficients, rod-worth, shutdown-margin, pin-power, and xenon/samarium — every result a reproducible evidence bundle, honestly labeled for fidelity. Its Pro tier (FSL-1.1-MIT) adds the assurance layer regulators read: the signed <em>assess</em> deliverable with a PASS/FAIL verdict against the safety floor, plus coverage / freshness / signed-report cards and support — requirements-to-evidence traceability, SRP-section mapping, and a hosted reviewer console are on the roadmap (all physics fidelity — including advanced geometry and full-core CMFD — is free open core; Serpent/MCNP converters are on engagement). Screen fast in pure Python, then escalate the same inputs to a lab-grade Monte Carlo code (OpenMC, free) for reference accuracy. Every run ships as a verifiable evidence bundle.</dd>
-          <dt>What's the difference between Community and Pro?</dt>
-          <dd>The free open core is MIT-licensed and is the whole screening engine: full-core Cartesian nodal diffusion, higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence, continuous-energy Monte Carlo, S<sub>n</sub> transport, SP3, burnup/depletion, kinetics and reactivity coefficients, rod-worth, shutdown-margin, pin-power, an OpenMC escalation path, and the full evidence spine (sealed bundles, standalone verifier, verifiable redaction, and data-library provenance). Full-core CMFD, R-Z (cylindrical) diffusion, and the IAEA-2D full-core closure ship free in the open core today; hex geometry is on the open-core roadmap. Pro adds the assurance / regulatory layer: the signed <em>assess</em> deliverable with a PASS/FAIL verdict against the safety floor, plus coverage / freshness / signed-report cards and support; requirements-to-evidence traceability, SRP-section mapping, and a hosted reviewer console are on the roadmap. Converters that generate input decks for — and read results from — your own licensed Serpent and MCNP installations (SMRFORGE does not include or distribute those export-controlled codes) are available on engagement.</dd>
-          <dt>Does SMRFORGE include Serpent or MCNP?</dt>
-          <dd><strong>No.</strong> Serpent and MCNP are third-party codes with their own licenses — MCNP is export-controlled (distributed via RSICC) and Serpent is license-restricted (via VTT / OECD-NEA). SMRFORGE does not contain, bundle, or distribute them, or their nuclear-data libraries. Pro can provide, on engagement,<em>converters</em> that generate input decks for, and read results from, a copy you license and install yourself. OpenMC (open source) is included as the built-in escalation path.</dd>
-          <dt>How does SMRFORGE handle reproducibility?</dt>
-          <dd>Every run produces an evidence bundle: a SHA-256 manifest of inputs and outputs, a reproducibility block (engine and code version, the nuclear-data library it read and its SHA-256, the RNG seed, and a determinism statement, plus an unsigned host diagnostic (Python version, platform) outside the seal), and a derivation lineage for composed results. <code>smrforge verify &lt;bundle&gt;</code> confirms or refutes a bundle's <strong>integrity</strong> offline — it checks the record is intact, complete, and untampered against the open schema (integrity), <em>with a checker that imports none of our physics</em>. Re-running the result end-to-end is a separate, deeper step: <code>smrforge reproduce &lt;bundle&gt;</code> re-runs the open engine on the bundle's own recorded inputs and checks the numbers re-derive (the <code>certify_bundle</code> / <code>reproduce_bundle</code> Python API is the same path). A stochastic result (a Monte Carlo k-eff) can't re-derive to the last digit, so its record carries a statistical <code>reproduce_tolerance</code> — an n-sigma band from the run's own reported uncertainty — and reproduce accepts a re-run inside it; that tolerance is sealed in the record, so it can't be quietly widened. A lab-grade <strong>OpenMC</strong> criticality result reproduces the same way — a reviewer re-runs OpenMC on the recorded inputs and the k re-derives within its band (code-to-code against OpenMC, not a measured-reactor validation).</dd>
-          <dt>Is SMRFORGE Pro suitable for licensing-relevant work?</dt>
-          <dd>Pro adds the assurance / regulatory layer: the signed <em>assess</em> deliverable — a real reference solve plus a tech-spec shutdown-margin gate in one bundle, with a PASS/FAIL verdict against the safety floor — plus coverage (USL / c_k trending), a freshness monitor, signed shareable evidence reports, and support; requirements-to-evidence traceability, report artifacts mapped to standard SRP sections, and a hosted reviewer console are on the roadmap. The open core ships the same evidence-bundle plumbing — Pro adds the assessment, those cards, and the support contract.</dd>
-          <dt>Does SMRFORGE run air-gapped?</dt>
-          <dd>Yes. The open core is pure Python standard library with zero dependencies and no CDN fetches at runtime, so it runs fully offline — on a laptop with no internet, in a SCIF, or behind an enterprise firewall. Air-gapped deployment bundles for regulated environments are on the Pro roadmap.</dd>
-          <dt>What Python version is required?</dt>
-          <dd>Python 3.11 or higher.</dd>
-          <dt>How do I install SMRFORGE today?</dt>
-          <dd>The <strong>open core is open source (MIT)</strong> and public now at <a href="https://gitlab.com/smrforge/smrforge" target="_blank" rel="noopener">gitlab.com/smrforge/smrforge</a>. It is <strong>not yet on PyPI</strong>, so you install from source: <code>git clone</code> the repo, then <code>pip install -e .</code> (Python 3.11+, pure Python standard library, zero dependencies). Today the CLI ships <code>smrforge verify &lt;bundle&gt;</code>, <code>smrforge reproduce &lt;bundle&gt;</code>, <code>smrforge license</code>, and <code>smrforge --version</code>; the rest of the engine is used as a Python API. Also public: the Evidence Envelope standard, its reference verifier (which independently verifies a bundle with its own Ed25519 — no SMRFORGE import), and the reviewer kit (which reproduces a real bundle end-to-end against the pinned engine). The <strong>Pro tier</strong> is source-available (FSL-1.1) and licensed, in commercial beta; <a href="#contact">email us</a> for Pro or a pilot. A package-manager-friendly <code>pip install</code> distribution is on the roadmap.</dd>
-          <dt>Is there a REST / MCP server?</dt>
-          <dd>A single stdlib HTTP surface (<code>smrf_serve</code>) fronts the REST API and the MCP tool catalog as a <strong>Python API today</strong> — no web framework, no CDN runtime fetches, so it works in fully air-gapped environments. There is no console command for it yet; a <code>serve</code> command is on the roadmap.</dd>
-        </dl>
-      </div>
-    </section>
-
-    <section id="contact" class="section contact">
-      <div class="container">
-        <h2 class="section-title">Get in Touch</h2>
-        <p class="section-desc">Pro licensing, support — or an early design partnership: we're early-stage and taking our first design partners now, so you get the engine pointed at your reactor class and help shape what we build on top of it. Build the software that builds reactors.</p>
-        <a href="mailto:support@smrforge.io" class="btn btn-primary">support@smrforge.io</a>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container">
-      <nav class="footer-docs" aria-label="Documentation">
-        <span class="footer-docs-label">Docs:</span>
-        <a href="https://gitlab.com/smrforge/smrforge/-/tree/main/docs" target="_blank" rel="noopener">Docs (in the repo)</a>
-        <a href="https://gitlab.com/smrforge/smrforge" target="_blank" rel="noopener">GitLab</a>
-      </nav>
-      <p>© <span id="footer-year">2026</span> SMRFORGE. Community: MIT. Pro: Licensed.</p>
-      <div class="footer-social">
-        <a href="https://www.linkedin.com/company/smrforge/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        </a>
-        <a href="https://x.com/smrforge" target="_blank" rel="noopener noreferrer" aria-label="X">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        </a>
+      <div class="fl-flow">
+        <div class="fl-step"><span class="s">You send</span><b>a k_eff / shutdown margin</b></div>
+        <div class="fl-step"><span class="s">We return</span><b>a sealed, re-runnable bundle</b></div>
+        <div class="fl-step"><span class="s">Your reviewer</span><b>re-derives it, offline</b></div>
       </div>
     </div>
-  </footer>
 
-  <script src="script.js"></script>
+    <p class="sublead">More ways to engage</p>
+    <div class="eng3">
+      <div class="eng-item">
+        <div class="en">Packaging</div>
+        <h3>Evidence packaging</h3>
+        <p>A number from Serpent, MCNP, or your own tools &mdash; shipped as a sealed, verifiable, reproducible bundle so it travels to a reviewer intact.</p>
+      </div>
+      <div class="eng-item">
+        <div class="en">V&amp;V</div>
+        <h3>Pre-submission V&amp;V</h3>
+        <p>Code-verification, a V&amp;V matrix, and the benchmark evidence a regulator reads &mdash; stood up, sealed, re-runnable.</p>
+      </div>
+      <div class="eng-item">
+        <div class="en">Integration</div>
+        <h3>Integration &amp; converters</h3>
+        <p>Serpent/MCNP converters for codes you license, and MCP/REST wiring into your &mdash; or a lab&rsquo;s &mdash; pipeline.</p>
+      </div>
+    </div>
+    <p class="aside"><b>Lab collaborations</b> and <b>academic partnerships</b> welcome &mdash; we&rsquo;ll scope the work to fit.</p>
+  </section>
+</div>
+
+<div class="wrap">
+  <section class="howit">
+    <p class="kicker">How an engagement works</p>
+    <h2>From your number to a reviewer’s re-run.</h2>
+    <div class="steps4">
+      <div class="s4"><span class="sn">1</span><h4>Bring a number</h4><p>Your k_eff, shutdown margin, or a result from any code.</p></div>
+      <div class="s4"><span class="sn">2</span><h4>We re-derive it</h4><p>On the open engine, escalated to OpenMC where it has to hold up.</p></div>
+      <div class="s4"><span class="sn">3</span><h4>You get a sealed bundle</h4><p>Signed, with the data pinned and the lineage recorded.</p></div>
+      <div class="s4"><span class="sn">4</span><h4>Your reviewer re-runs it</h4><p>Offline, with a checker that imports none of our physics.</p></div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap" id="check">
+  <section class="check">
+    <div class="head">
+      <div>
+        <p class="kicker">How you check it</p>
+        <h2>Two ways to catch us, both on your machine.</h2>
+      </div>
+      <p class="lead">Integrity is one command; re-deriving the number is a separate, deeper one.
+        <b>Neither needs a network, and neither trusts us.</b></p>
+    </div>
+    <div class="three">
+      <div class="col">
+        <div class="cmd">$ smrforge verify</div>
+        <h3>Verify offline</h3>
+        <p>A standalone checker confirms the record is intact, complete and signed — and it imports none
+          of our physics, so a pass isn't us grading our own work.</p>
+      </div>
+      <div class="col">
+        <div class="cmd">$ smrforge reproduce</div>
+        <h3>Reproduce it</h3>
+        <p>A signature can't catch a signed lie. This re-runs the open engine on the record's own recorded
+          inputs and checks the number comes back.</p>
+      </div>
+      <div class="col">
+        <div class="cmd">sealed provenance</div>
+        <h3>Pinned data &amp; lineage</h3>
+        <p>Each bundle names the nuclear data it read by content hash, and the steps a composed number was
+          built from. Alter the graph and the seal breaks.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap" id="valid">
+  <section class="valid">
+    <p class="kicker">Verification, honestly labeled</p>
+    <h2>Numbers you can look up.</h2>
+    <p class="lead">These are code-verification closures — the engine checked against analytic solutions and
+      published benchmark references, not against measured experiments. Screening-grade by design, and every
+      row re-runs from its own bundle.</p>
+    <div style="overflow-x:auto">
+    <table>
+      <thead><tr><th>Anchor</th><th>Compared against</th><th>Result</th><th>Fidelity</th></tr></thead>
+      <tbody>
+        <tr><td>IAEA-2D full core</td><td class="n">k = 1.029585</td><td class="n">C−E ≈ −3 pcm</td><td><span class="fid">screening</span></td></tr>
+        <tr><td>Bare-cylinder R-Z</td><td>analytic k(B²)</td><td class="n">&lt; 2 pcm</td><td><span class="fid">screening</span></td></tr>
+        <tr><td>Infinite-medium k∞</td><td>closed-form 2-group</td><td class="n">≤ 1 pcm</td><td><span class="fid">screening</span></td></tr>
+        <tr><td>Criticality (OpenMC)</td><td>continuous-energy MC</td><td>re-derives in ±3σ</td><td><span class="fid">screening</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="note">pcm = per cent mille (10⁻⁵ Δk/k). This is verification (vs analytic / published
+      references), not validation (vs measured experiments) — validation against measured critical experiments
+      is the Pro measured-anchor lane. Screening k-eff is a trend, not a validated absolute.</p>
+  </section>
+</div>
+
+<div class="wrap" id="ladder">
+  <section class="ladder">
+    <p class="kicker">The fidelity ladder</p>
+    <h2>Screen fast, escalate the same inputs.</h2>
+    <p class="lead">Every method here runs today, and today they are all labeled screening-grade. The graded
+      <b style="color:var(--amber);font-weight:600">reference</b> and <b style="color:var(--amber);font-weight:600">lab</b>
+      tiers — a result classified above screening — are on the roadmap; the Pro measured-anchor lane is the first step.</p>
+    <div class="rungs">
+      <div class="rung"><div class="rk">rung 1 · screening</div><div class="rt">Nodal / NEM</div><p class="rd">Full-core diffusion, in-tree.</p></div>
+      <div class="rung"><div class="rk">rung 2 · screening</div><div class="rt">Sₙ / SP₃</div><p class="rd">Transport on the same set.</p></div>
+      <div class="rung"><div class="rk">rung 3 · reference <span class="soon">planned</span></div><div class="rt">CE Monte Carlo</div><p class="rd">Continuous-energy, in-tree — runs today at screening grade.</p></div>
+      <div class="rung free"><div class="rk">rung 4 · lab <span class="soon">planned</span> · free</div><div class="rt">OpenMC</div><p class="rd">Same inputs, a lab-grade eigenvalue — free and running today.</p></div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap" id="products">
+  <section class="products">
+    <p class="kicker">Run it yourself</p>
+    <h2 style="font-family:var(--disp);font-weight:700;font-size:clamp(1.8rem,3.6vw,2.6rem);margin:.3rem 0 26px;letter-spacing:-.01em">The engine behind the work — free, and yours.</h2>
+    <div class="prod-grid">
+      <div class="prod">
+        <div class="pt">Community</div>
+        <div class="lic">MIT · open source</div>
+        <p>The whole screening engine and evidence spine — the same tools we run in an engagement. Free, MIT.</p>
+        <ul>
+          <li>Full-core diffusion, NEM, Sₙ/SP₃, CE Monte Carlo</li>
+          <li>One-step OpenMC escalation, free</li>
+          <li>Sealed bundles, standalone verifier, reproduce</li>
+          <li>Verifiable redaction, data-library provenance</li>
+        </ul>
+      </div>
+      <div class="prod pro">
+        <div class="pt">Pro</div>
+        <div class="lic">FSL-1.1-MIT · commercial beta</div>
+        <p>Our engagement work, productized: the PASS/FAIL assurance package, run in-house at scale.</p>
+        <ul>
+          <li>Signed <b>assess</b> deliverable: PASS / FAIL vs the safety floor</li>
+          <li>Coverage (USL / c_k) against measured anchors</li>
+          <li>Freshness monitor &amp; signed evidence reports</li>
+          <li>Serpent / MCNP converters on engagement</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+<div class="wrap" id="contact">
+  <section class="contact">
+    <p class="kicker">Talk to us</p>
+    <h2>Bring a number you need a reviewer to believe.</h2>
+    <p>We'll show you the same result as a sealed bundle you can verify offline and re-run yourself. Pilots
+      and Pro: <a href="mailto:support@smrforge.io">support@smrforge.io</a>.</p>
+    <a class="btn primary" href="mailto:support@smrforge.io">Email us →</a>
+  </section>
+</div>
+
+<div class="wrap">
+  <footer>
+    <span>SMRFORGE · reactor physics you can prove</span>
+    <span><a href="https://gitlab.com/smrforge">gitlab.com/smrforge</a> · <a href="info-sheet.html">Info sheet</a> · Community MIT · Pro FSL-1.1-MIT · air-gap-safe</span>
+  </footer>
+</div>
+<script src="script.js"></script>
 </body>
 </html>

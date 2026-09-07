@@ -514,7 +514,7 @@
         <tr><td>IAEA-2D full core</td><td class="n">k = 1.029585</td><td class="n">C−E ≈ −3 pcm</td><td><span class="fid">screening</span></td></tr>
         <tr><td>Bare-cylinder R-Z</td><td>analytic k(B²)</td><td class="n">&lt; 2 pcm</td><td><span class="fid">screening</span></td></tr>
         <tr><td>Infinite-medium k∞</td><td>closed-form 2-group</td><td class="n">≤ 1 pcm</td><td><span class="fid">screening</span></td></tr>
-        <tr><td>Criticality (OpenMC)</td><td>continuous-energy MC</td><td>re-derives in ±3σ</td><td><span class="fid">screening</span></td></tr>
+        <tr><td>Criticality (OpenMC)</td><td>continuous-energy MC</td><td>re-derives in ±3σ</td><td><span class="fid lab">lab</span></td></tr>
       </tbody>
     </table>
     </div>
@@ -528,14 +528,15 @@
   <section class="ladder">
     <p class="kicker">The fidelity ladder</p>
     <h2>Screen fast, escalate the same inputs.</h2>
-    <p class="lead">Every method here runs today, and today they are all labeled screening-grade. The graded
-      <b style="color:var(--amber);font-weight:600">reference</b> and <b style="color:var(--amber);font-weight:600">lab</b>
-      tiers — a result classified above screening — are on the roadmap; the Pro measured-anchor lane is the first step.</p>
+    <p class="lead">Every method here runs today. Most results are labeled screening-grade;
+      <b style="color:var(--cyan);font-weight:600">OpenMC carries the lab tier now</b>. The graded
+      <b style="color:var(--amber);font-weight:600">reference</b> tier — a result above screening on our own
+      engine, validated against measurement — is on the roadmap.</p>
     <div class="rungs">
       <div class="rung"><div class="rk">rung 1 · screening</div><div class="rt">Nodal / NEM</div><p class="rd">Full-core diffusion, in-tree.</p></div>
       <div class="rung"><div class="rk">rung 2 · screening</div><div class="rt">Sₙ / SP₃</div><p class="rd">Transport on the same set.</p></div>
       <div class="rung"><div class="rk">rung 3 · reference <span class="soon">planned</span></div><div class="rt">CE Monte Carlo</div><p class="rd">Continuous-energy, in-tree — runs today at screening grade.</p></div>
-      <div class="rung free"><div class="rk">rung 4 · lab <span class="soon">planned</span> · free</div><div class="rt">OpenMC</div><p class="rd">Same inputs, a lab-grade eigenvalue — free and running today.</p></div>
+      <div class="rung free"><div class="rk">rung 4 · lab · free</div><div class="rt">OpenMC</div><p class="rd">Same inputs, a lab-grade eigenvalue — free and running today.</p></div>
     </div>
   </section>
 </div>

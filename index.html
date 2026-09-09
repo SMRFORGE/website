@@ -145,7 +145,7 @@
             "name": "Is there a REST / MCP server?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "A single stdlib HTTP surface (smrf_serve) fronts the REST API and MCP tool catalog as a Python API today — no web framework, no CDN runtime fetches, so it works in fully air-gapped environments. There is no console command for it yet; a `serve` command is on the roadmap."
+              "text": "A single stdlib HTTP surface (smrf_serve) fronts the REST API and MCP tool catalog — no web framework, no CDN runtime fetches, so it works in fully air-gapped environments. Launch it with `smrforge serve` (or `python -m smrf_serve`). The MCP endpoint speaks real JSON-RPC 2.0: an agent can initialize, list the generated tools, and call one — getting back the same signed evidence bundle a REST call returns. Pro tools require a Bearer entitlement token, verified locally; free tools stay open."
             }
           }
         ]

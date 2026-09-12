@@ -1,0 +1,12 @@
+SMRFORGE trust root
+===================
+The public key that SMRFORGE evidence bundles are signed with. To confirm a
+bundle's origin, check that the fingerprint printed by `smrforge verify` matches
+the value below AND matches at least one other independent channel (the DNS TXT
+record at smrforge-trust-root.smrforge.io) before relying on it.
+
+ed25519:cfb88804b92163566d485c8be3757baf74215944ad4852326457fcfd3d69b52c
+
+issued:  2026-09-12
+status:  active
+contact: support@smrforge.io

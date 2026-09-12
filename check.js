@@ -5,10 +5,12 @@
 // smrf_verify/verify.py.
 import { BUNDLE_TEXT } from './check-bundle.js';
 
-// SMRFORGE's pinned signing public key. It still equals the public DEMO identity, so a passing verify
-// proves INTEGRITY (the bundle was not edited), not ORIGIN (that it came from SMRFORGE). This flips
-// itself the day a real production key is generated out-of-repo and the bundles re-signed.
-const PINNED_PUBKEY = '069aba87747dd9c1f46f24004eb79e05eb8f2e0f2c3adfdde60c1e2e00bac838';
+// SMRFORGE's pinned signing public key. As of the 2026-09-12 offline key ceremony this is the
+// PRODUCTION issuer key, so a passing verify proves INTEGRITY (the bundle was not edited) AND ORIGIN
+// (it was sealed by SMRFORGE) -- provided you cross-check this fingerprint against SMRFORGE's published
+// trust root (smrforge.io/.well-known/smrforge-trust-root and the DNS TXT record at
+// smrforge-trust-root.smrforge.io). The demo key is kept below only to recognise a demo-signed bundle.
+const PINNED_PUBKEY = 'cfb88804b92163566d485c8be3757baf74215944ad4852326457fcfd3d69b52c';
 const DEMO_PUBKEY   = '069aba87747dd9c1f46f24004eb79e05eb8f2e0f2c3adfdde60c1e2e00bac838';
 const PINNED_IS_DEMO = PINNED_PUBKEY === DEMO_PUBKEY;
 

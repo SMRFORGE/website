@@ -288,12 +288,13 @@ strong { color: var(--ink); }
     </section>
 
     <p class="demo-note">
-      <strong>An honest note on the signature.</strong> The key pinned in this checker is still SMRFORGE's
-      public <em>demo</em> key — its private half ships in the open-source repo. So a passing signature here
-      proves <strong>integrity</strong> (the bundle was not edited), not <strong>origin</strong> (that it
-      came from us). Anyone can produce a demo-key signature. That changes the day we run the real signing
-      ceremony offline and re-sign the published bundles; until then, we would rather say so than let a green
-      check mean more than it should.
+      <strong>How to trust this check.</strong> The key pinned in this checker is SMRFORGE's
+      <em>production</em> signing key (fingerprint <em>ed25519:cfb88804…d69b52c</em>), generated in an
+      offline ceremony. So a passing signature here proves both <strong>integrity</strong> (the bundle was
+      not edited) and <strong>origin</strong> (that it was sealed by SMRFORGE). Don't take our word for the
+      key: cross-check that fingerprint against our published trust root — the file at
+      <em>/.well-known/smrforge-trust-root</em> and the DNS TXT record at
+      <em>smrforge-trust-root.smrforge.io</em>. Origin holds only if they match.
     </p>
   </div>
 </main>

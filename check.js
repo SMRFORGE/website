@@ -189,6 +189,24 @@ function verifyBundle(bundle) {
   add_('Envelope schema recognised', bundle.schema === 'smrforge.evidence_envelope.v1', bundle.schema);
 
   const manifest = bundle.manifest || {}, sums = bundle.sha256sums || {};
+
+  // Reject any key OUTSIDE the signed envelope shape -- top-level, or inside a manifest section block.
+  // The seal binds only the three section digests, so such a key rides UNSIGNED: an intermediary could
+  // staple an attacker-authored claim (e.g. a top-level "conclusion") onto a genuinely-signed bundle
+  // and this checker would otherwise show all-green. Mirrors smrf_verify / evidence-verifier.
+  const allowedTop = new Set(['schema', 'result', 'reproducibility', 'manifest', 'sha256sums',
+                              'bundle_sha256', 'signature', 'host', 'redaction']);
+  const extraTop = Object.keys(bundle).filter(k => !allowedTop.has(k)).sort();
+  let extraBlk = [];
+  for (const side of ['inputs', 'result', 'provenance']) {
+    const blk = manifest[side] || {};
+    extraBlk = extraBlk.concat(Object.keys(blk).filter(k => k !== 'sha256' && k !== 'value').map(k => `${side}.${k}`));
+  }
+  extraBlk.sort();
+  const noUnsigned = extraTop.length === 0 && extraBlk.length === 0;
+  add_('No unsigned keys ride outside the signed shape', noUnsigned,
+       noUnsigned ? '' : `unsigned: top-level ${JSON.stringify(extraTop)} block ${JSON.stringify(extraBlk)}`);
+
   for (const side of ['inputs', 'result', 'provenance']) {
     const blk = manifest[side] || {};
     const rc = sha(canon(blk.value));

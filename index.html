@@ -398,7 +398,7 @@
           <div class="row"><span class="l">case</span><span class="v">IAEA-2D · full core</span></div>
           <div class="row"><span class="l">published reference</span><span class="v">k = 1.029585</span></div>
           <div class="row"><span class="l">C−E</span><span class="v ok">−3 pcm</span></div>
-          <div class="row"><span class="l">data library</span><span class="v ok">endf/b-viii · sha ✓</span></div>
+          <div class="row"><span class="l">data library</span><span class="v ok">endf/b-viii.1 · sha ✓</span></div>
           <div class="row"><span class="l">seal (sha-256)</span><span class="v">4c1a 7f… 9e02</span></div>
           <div class="row"><span class="l">signature</span><span class="v ok">ed25519 ✓</span></div>
         </div>
@@ -497,6 +497,40 @@
           built from. Alter the graph and the seal breaks.</p>
       </div>
     </div>
+  </section>
+</div>
+
+<div class="wrap" id="watch">
+  <section class="check">
+    <div class="head">
+      <div>
+        <p class="kicker">Evidence Watch · early access</p>
+        <h2>A sealed result can go stale without anyone touching it.</h2>
+      </div>
+      <p class="lead">Nuclear-data libraries get revised and engines get upgraded. A number that re-derived
+        cleanly last year may not re-derive on today's library — which means the sealed claim quietly stops
+        matching the world. A one-time check can't catch that. <b>Evidence Watch can.</b></p>
+    </div>
+    <div class="three">
+      <div class="col">
+        <h3>We watch on a cadence</h3>
+        <p>SMRFORGE re-runs the check against your sealed bundles on a schedule, and flags the moment a result
+          stops reproducing — or the data library it was sealed against changes underneath it.</p>
+      </div>
+      <div class="col">
+        <h3>We re-attest what still holds</h3>
+        <p>For a bundle that still holds, we re-sign it with the production origin key — the one signature you
+          can't produce yourself — so your evidence stays current, not just archived.</p>
+      </div>
+      <div class="col">
+        <h3>You hear about drift first</h3>
+        <p>If something stops holding, you get told, with the specific reason, before a reviewer or regulator
+          runs into it.</p>
+      </div>
+    </div>
+    <p class="avail"><b>Evidence Watch is in early access.</b> We're taking a small number of design partners
+      while we finalize how it runs on your side. If keeping a body of licensing evidence provably current
+      matters to you, <a href="#contact">get in touch</a>.</p>
   </section>
 </div>
 

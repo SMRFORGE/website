@@ -605,6 +605,38 @@
         </ul>
       </div>
     </div>
+
+    <p class="avail"><b>Install is source-only, by design.</b> <span class="mono">git clone https://gitlab.com/smrforge/smrforge.git</span>,
+      then <span class="mono">pip install -e .</span> — Python 3.11+, pure standard library, no dependencies. It is not on
+      PyPI, on purpose: the engine is built for air-gapped and regulated environments, so what you install is the
+      source tree you can read, never a package index. Full walkthrough:
+      <a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/GETTING_STARTED.md">Getting started &rarr;</a></p>
+    <div class="three">
+      <div class="col">
+        <div class="cmd">$ smrforge run physics:nodal --preset lwr-smr-2g --enrichment-pct 4.5 --core-size-cm 200</div>
+        <h3>Command line</h3>
+        <p>One flag per declared input. <span class="mono">smrforge tools</span> lists the open capabilities and
+          <span class="mono">smrforge schema &lt;card&gt;</span> prints one card's inputs; a missing or misspelled
+          input is a named error, not a stack trace. The output is a sealed evidence bundle.</p>
+      </div>
+      <div class="col">
+        <div class="cmd">run_capability("physics:nodal", inputs)</div>
+        <h3>Python</h3>
+        <p>Register the open cards, call <span class="mono">run_capability(name, inputs)</span>, and get the result
+          and the same sealed bundle back — the same input checks, the same record.</p>
+      </div>
+      <div class="col">
+        <div class="cmd">$ smrforge serve</div>
+        <h3>REST + MCP, on your machine</h3>
+        <p>A standard-library HTTP server bound to 127.0.0.1. POST a JSON body to run a card and the response is
+          the bundle; the same server speaks MCP to an AI agent. No web framework, no network fetches.</p>
+      </div>
+    </div>
+    <p class="avail"><b>What runs where.</b> The in-tree engine is screening-grade and runs anywhere Python does.
+      The lab-grade OpenMC path needs a real OpenMC install and a continuous-energy cross-section library on your
+      host — without them those cards refuse, rather than fabricate a number. The
+      <a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/GETTING_STARTED.md">getting-started guide</a>
+      covers that setup.</p>
   </section>
 </div>
 

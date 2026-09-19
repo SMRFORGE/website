@@ -43,7 +43,7 @@
         "name": "SMRFORGE Community",
         "applicationCategory": "EngineeringApplication",
         "operatingSystem": "Windows|macOS|Linux",
-        "softwareVersion": "0.9.1",
+        "softwareVersion": "0.11.0",
         "description": "Open-source (MIT) full screening reactor-physics engine for Small Modular Reactor design and analysis. In-tree pure-Python solvers — full-core Cartesian nodal diffusion, higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence, few-group homogenization, continuous-energy Monte Carlo, Sn transport, SP3, burnup/depletion, kinetics and reactivity coefficients — for fast screening, plus one-step escalation to OpenMC (free) for reference accuracy. Every run produces a verifiable evidence bundle (SHA-256 manifest, reproducibility block, derivation lineage for composed results) any third party can verify offline. Ships the CLI (smrforge verify, smrforge reproduce, smrforge license, smrforge --version) and the full evidence spine — sealed bundles, standalone verifier, verifiable redaction, and data-library provenance. Full-core CMFD, R-Z (cylindrical, screening-grade) diffusion, and the IAEA-2D full-core closure ship free in the open core; hex geometry is on the open-core roadmap. Honestly screening-grade and reproducible. Pro adds the assurance / regulatory layer for submissions — the signed assess deliverable with a PASS/FAIL verdict against the safety floor, report artifacts, and support; Serpent/MCNP converters are available on engagement. Pure Python standard library, zero dependencies; install from source (not on PyPI).",
         "offers": {
           "@type": "Offer",
@@ -137,7 +137,7 @@
             "name": "How do I install SMRFORGE today?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "The open core is open source (MIT) and public now at gitlab.com/smrforge/smrforge. It is not yet on PyPI, so you install from source: git clone the repo, then pip install -e . (Python 3.11+, pure Python standard library, zero dependencies). Today the CLI ships smrforge verify <bundle>, smrforge reproduce <bundle>, smrforge license, and smrforge --version; the rest of the engine is used as a Python API. Also public: the Evidence Envelope standard, its reference verifier (which independently verifies a bundle with its own Ed25519 — no SMRFORGE import), and the reviewer kit (which reproduces a real bundle end-to-end against the pinned engine). The Pro tier is source-available (FSL-1.1) and licensed, in commercial beta. A package-manager-friendly pip install distribution is on the roadmap."
+              "text": "The open core is open source (MIT) and public now at gitlab.com/smrforge/smrforge. It is not on PyPI, by design (the engine targets air-gapped and regulated environments), so you install from source: git clone the repo, then pip install -e . (Python 3.11+, pure Python standard library, zero dependencies). Today the CLI ships smrforge run <capability> (one flag per declared input; smrforge tools lists the open capabilities and smrforge schema <capability> prints one card's input schema), smrforge verify <bundle>, smrforge reproduce <bundle>, smrforge serve (a local REST + MCP server), smrforge license, and smrforge --version. The same capabilities are a Python API (run_capability(name, inputs)). Also public: the Evidence Envelope standard, its reference verifier (which independently verifies a bundle with its own Ed25519 — no SMRFORGE import), and the reviewer kit (which reproduces a real bundle end-to-end against the pinned engine). The Pro tier is source-available (FSL-1.1) and licensed, in commercial beta. A package-manager-friendly pip install distribution is on the roadmap."
             }
           },
           {
@@ -145,7 +145,7 @@
             "name": "Is there a REST / MCP server?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "A single stdlib HTTP surface (smrf_serve) fronts the REST API and MCP tool catalog as a Python API today — no web framework, no CDN runtime fetches, so it works in fully air-gapped environments. There is no console command for it yet; a `serve` command is on the roadmap."
+              "text": "Yes. smrforge serve starts a Python-standard-library HTTP server bound to 127.0.0.1 (port 8765 by default; --host/--port to change) that fronts both a REST API (POST a JSON body to /v1/run/<capability>; the response is the signed evidence bundle; /v1/tools lists the open capabilities and /openapi.json is the spec) and an MCP endpoint (JSON-RPC 2.0 at /mcp) for AI agents. No web framework, no CDN runtime fetches, so it works in fully air-gapped environments. Pro cards are not served by the open server; they ship in the private Pro plugins and need an entitlement token."
             }
           }
         ]

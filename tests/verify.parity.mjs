@@ -8,6 +8,11 @@
 //     what the CLI (the challenge judge) rejects -- duplicate keys, a stapled top-level/host key, an extra
 //     manifest section, or a named data-library with a null digest -- and altering the sealed number must
 //     fail the hash-chain while the signature stays valid (the central "Break the Seal" invariant).
+//  3. Parity-hardening S1-S6 + timestamp/result-core shape (evidence-verifier v0.3.3, 2026-10-04): a
+//     stapled signature-block key, a bad signature.message, a non-string host value, a wrong-typed
+//     redaction field, unpinned+null digest, a malformed timestamp block, a result core missing a required
+//     field, and a malformed JSON document (trailing data, bad literal, NaN) must all FAIL -- while a
+//     well-formed timestamp and the genuine bundle still PASS.
 import { BUNDLE_TEXT, parseJSON, verifyBundle } from '../check.js';
 
 let failures = 0;
@@ -80,6 +85,93 @@ check('an extra (unsigned) host key is rejected', hostRes.ok === false && chk(ho
 
 const red = fresh(); red.redaction = { schema: 'smrforge.evidence_envelope.redaction.v1', withheld: ['inputs'] };
 check('a redacted bundle fails closed in the browser (CLI-only feature)', verifyBundle(red).ok === false);
+
+// --- 4. parity-hardening S1-S6 + timestamp / result-core shape (fix-spec 2026-10-04, verifier v0.3.3) ---
+// Each variant is cut from the GENUINE production-signed bundle so the Ed25519 signature still verifies;
+// only the new shape check may catch it. That is the false-attestation class these checks close.
+const sigOnly = (res) => chk(res, /Ed25519/).ok === true;
+
+// S1: a stapled signature-block key (rides unsigned next to a genuine signature)
+const s1 = fresh(); s1.signature.attestation = 'APPROVED BY THE US NRC';
+const s1Res = verifyBundle(s1);
+check('S1: a stapled signature-block key is rejected (signature itself still verifies)',
+  s1Res.ok === false && chk(s1Res, /Signature block carries only/).ok === false && sigOnly(s1Res));
+const s1b = fresh(); s1b.signature.identity = 'smrforge';
+check('S1: the retired signature.identity key is rejected like any other extra key',
+  chk(verifyBundle(s1b), /Signature block carries only/).ok === false);
+
+// S2: signature.message must be exactly "bundle_sha256"
+const s2 = fresh(); s2.signature.message = 'manifest';
+const s2Res = verifyBundle(s2);
+check('S2: a signature.message other than "bundle_sha256" is rejected',
+  s2Res.ok === false && chk(s2Res, /Signature message is bound/).ok === false && sigOnly(s2Res));
+const s2b = fresh(); delete s2b.signature.message;
+check('S2: a missing signature.message is rejected', chk(verifyBundle(s2b), /Signature message is bound/).ok === false);
+
+// S4: host values must be strings (an object under an allowed key is still an unsigned claim)
+const s4 = fresh(); s4.host.platform = { conclusion: 'approved for operation' };
+const s4Res = verifyBundle(s4);
+check('S4: a non-string host value is rejected', s4Res.ok === false && chk(s4Res, /Host block/).ok === false && sigOnly(s4Res));
+
+// S5: redaction field types (reason a string; caveats a list of strings)
+const s5a = fresh(); s5a.redaction = { schema: 'smrforge.evidence_envelope.redaction.v1', withheld: ['inputs'], reason: { conclusion: 'approved' } };
+const s5aRes = verifyBundle(s5a);
+check('S5: a non-string redaction.reason is rejected by the redaction shape check',
+  s5aRes.ok === false && chk(s5aRes, /Redaction record/).ok === false);
+const s5b = fresh(); s5b.redaction = { schema: 'smrforge.evidence_envelope.redaction.v1', withheld: ['inputs'], caveats: 'approved' };
+check('S5: a non-list redaction.caveats is rejected', chk(verifyBundle(s5b), /Redaction record/).ok === false);
+const s5c = fresh(); s5c.redaction = { schema: 'smrforge.evidence_envelope.redaction.v1', withheld: ['inputs'], caveats: ['ok', 7] };
+check('S5: a redaction.caveats list with a non-string entry is rejected', chk(verifyBundle(s5c), /Redaction record/).ok === false);
+const s5ok = fresh(); s5ok.redaction = { schema: 'smrforge.evidence_envelope.redaction.v1', withheld: ['inputs'], reason: 'export control', caveats: ['inputs withheld'] };
+const s5okRes = verifyBundle(s5ok);
+check('S5 control: a well-typed redaction record passes the shape check (and still fails closed as CLI-only)',
+  chk(s5okRes, /Redaction record/).ok === true && s5okRes.ok === false);
+
+// S6: the unpinned+null exception is gone -- "unpinned" needs a real digest like any other name
+const s6 = fresh();
+for (const pv of [s6.manifest.provenance.value, s6.reproducibility]) { pv.data_library = 'unpinned'; pv.data_library_sha256 = null; }
+const s6Res = verifyBundle(s6);
+check('S6: "unpinned" with a null digest is rejected by the pin check', s6Res.ok === false && chk(s6Res, /Data-library pin/).ok === false);
+const s6b = fresh();
+for (const pv of [s6b.manifest.provenance.value, s6b.reproducibility]) { pv.data_library = 'unpinned'; delete pv.data_library_sha256; }
+check('S6: "unpinned" with a MISSING digest is rejected', chk(verifyBundle(s6b), /Data-library pin/).ok === false);
+const s6c = fresh();
+for (const pv of [s6c.manifest.provenance.value, s6c.reproducibility]) { pv.data_library_sha256 = 'sha256:' + 'G'.repeat(64); }
+check('S6: a malformed (non-hex) digest is rejected', chk(verifyBundle(s6c), /Data-library pin/).ok === false);
+
+// timestamp shape: keys subset of {format, tsa, token}, all strings, format rfc3161, token <= 200000 chars
+const goodTs = { format: 'rfc3161', tsa: 'https://freetsa.org/tsr', token: 'aGVsbG8=' };
+const tsOk = fresh(); tsOk.timestamp = { ...goodTs };
+check('timestamp control: a well-formed RFC 3161 timestamp block still PASSES', verifyBundle(tsOk).ok === true);
+const tsA = fresh(); tsA.timestamp = { ...goodTs, conclusion: 'APPROVED' };
+const tsARes = verifyBundle(tsA);
+check('timestamp: an extra (unsigned) key is rejected', tsARes.ok === false && chk(tsARes, /Timestamp block/).ok === false && sigOnly(tsARes));
+const tsB = fresh(); tsB.timestamp = { ...goodTs, tsa: { url: 'x' } };
+check('timestamp: a non-string value is rejected', chk(verifyBundle(tsB), /Timestamp block/).ok === false);
+const tsC = fresh(); tsC.timestamp = { ...goodTs, format: 'pgp' };
+check('timestamp: a format other than rfc3161 is rejected', chk(verifyBundle(tsC), /Timestamp block/).ok === false);
+const tsD = fresh(); tsD.timestamp = { ...goodTs, token: 'A'.repeat(200001) };
+check('timestamp: an oversize token (> 200000 chars) is rejected', chk(verifyBundle(tsD), /Timestamp block/).ok === false);
+const tsE = fresh(); tsE.timestamp = 'stapled';
+check('timestamp: a non-object timestamp is rejected', chk(verifyBundle(tsE), /Timestamp block/).ok === false);
+
+// result core: every result.v1 required field must be present
+for (const field of ['schema', 'schema_version', 'result', 'fidelity', 'verdict']) {
+  const rc = fresh(); delete rc.result[field]; delete rc.manifest.result.value[field];
+  const rcRes = verifyBundle(rc);
+  check(`result core: a missing required field "${field}" is rejected`, rcRes.ok === false && chk(rcRes, /Result core carries/).ok === false);
+}
+
+// strict JSON parse: a malformed document throws cleanly (the verdict path surfaces that as a FAIL)
+const throws = (txt) => { try { parseJSON(txt); return false; } catch { return true; } };
+check('parse: the genuine bundle text still parses', !throws(BUNDLE_TEXT));
+check('parse: trailing data after the document is rejected', throws(BUNDLE_TEXT + ' {"conclusion":"approved"}'));
+check('parse: a bad literal is rejected', throws('{"a": tru}') && throws('{"a": nul}') && throws('{"a": True}'));
+check('parse: NaN / Infinity are rejected', throws('{"a": NaN}') && throws('{"a": Infinity}') && throws('{"a": -Infinity}'));
+check('parse: a missing colon / comma / bracket is rejected', throws('{"a" 1}') && throws('{"a":1 "b":2}') && throws('[1,2') && throws('{"a":1'));
+check('parse: an unterminated string and a bad escape are rejected', throws('{"a":"x') && throws('{"a":"\\q"}') && throws('{"a":"\\u12G4"}'));
+check('parse: a raw control character inside a string is rejected', throws('{"a":"x\ny"}'));
+check('parse: a well-formed document with 30.0 keeps its literal', parseJSON('{"k": 30.0}').k.raw === '30.0');
 
 console.log(failures ? `\n${failures} FAILURE(S)` : '\nall parity checks passed');
 process.exit(failures ? 1 : 0);

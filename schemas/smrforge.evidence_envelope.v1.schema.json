@@ -309,17 +309,14 @@
       "type": "object"
     },
     "LeanSignature": {
-      "additionalProperties": true,
-      "description": "Ed25519 signature over bundle_sha256. Optional at the bundle level as a schema matter, but redaction KEEPS it (the seal is unchanged, so the original signature still verifies over a redacted copy); the schema validates its structure, not the signature's cryptographic validity.",
+      "additionalProperties": false,
+      "description": "Ed25519 signature over bundle_sha256. Optional at the bundle level as a schema matter, but redaction KEEPS it (the seal is unchanged, so the original signature still verifies over a redacted copy); the schema validates its structure, not the signature's cryptographic validity. The object carries only these four keys; any other key rides unsigned and is rejected.",
       "properties": {
         "alg": {
           "const": "ed25519"
         },
-        "identity": {
-          "enum": [
-            "demo",
-            "production"
-          ]
+        "message": {
+          "const": "bundle_sha256"
         },
         "public_key": {
           "pattern": "^[0-9a-f]{64}$",
@@ -333,7 +330,8 @@
       "required": [
         "alg",
         "public_key",
-        "signature"
+        "signature",
+        "message"
       ],
       "title": "LeanSignature",
       "type": "object"

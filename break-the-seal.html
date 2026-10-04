@@ -238,6 +238,19 @@
     </div>
   </section>
 
+  <section class="band" id="trust">
+    <p class="kicker">Trusting the key</p>
+    <h2>Don't take our word for the key</h2>
+    <p class="boundary">A pass proves the record is unaltered and signed by this key. That the key is
+      <em>SMRFORGE's</em> rests on one fingerprint, <code class="kbd">ed25519:cfb88804&hellip;d69b52c</code>. We
+      publish that fingerprint where we cannot quietly change it: at the
+      <a href="/.well-known/smrforge-trust-root">well-known endpoint</a> and the DNS TXT record above, and in the
+      <a href="https://github.com/SMRFORGE/website/commits/main/.well-known/smrforge-trust-root" rel="noopener">public
+      commit history</a> of the open-source site on GitHub, where every change to that file is a timestamped,
+      third-party-hosted commit you can audit. Cross-check the fingerprint against all three, and don't rely on
+      a single server's word, ours included.</p>
+  </section>
+
   <section class="band" id="boundary">
     <p class="kicker">Honest boundary</p>
     <h2>What this proves, and what it does not</h2>

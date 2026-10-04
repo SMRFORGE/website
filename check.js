@@ -30,7 +30,9 @@ function parseJSON(text) {
     if (c === 'n') { i += 4; return null; }
     return num();
   }
-  function obj() { const o = {}; i++; ws(); if (text[i] === '}') { i++; return o; } for (;;) { ws(); const k = str(); ws(); i++; o[k] = val(); ws(); if (text[i] === ',') { i++; continue; } i++; return o; } }
+  // reject duplicate object keys: stdlib-style last-wins would let this verifier attest one value while
+  // a first-wins reader shows another, both "verifying". Mirrors evidence_verify.py _reject_duplicate_keys.
+  function obj() { const o = {}, seen = new Set(); i++; ws(); if (text[i] === '}') { i++; return o; } for (;;) { ws(); const k = str(); if (seen.has(k)) throw new Error('duplicate key ' + JSON.stringify(k) + ' in bundle JSON (ambiguous; rejected)'); seen.add(k); ws(); i++; o[k] = val(); ws(); if (text[i] === ',') { i++; continue; } i++; return o; } }
   function arr() { const a = []; i++; ws(); if (text[i] === ']') { i++; return a; } for (;;) { a.push(val()); ws(); if (text[i] === ',') { i++; continue; } i++; return a; } }
   function str() { i++; let s = ''; for (;;) { const c = text[i++]; if (c === '"') return s; if (c === '\\') { const e = text[i++]; if (e === 'u') { s += String.fromCharCode(parseInt(text.slice(i, i + 4), 16)); i += 4; } else s += { '"': '"', '\\': '\\', '/': '/', b: '\b', f: '\f', n: '\n', r: '\r', t: '\t' }[e]; } else s += c; } }
   function num() { const m = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/.exec(text.slice(i)); i += m[0].length; return new NumLit(m[0]); }
@@ -182,45 +184,78 @@ function ed25519Verify(sig, msgStr, pub) {
 }
 
 // ---------- verify_bundle: returns a structured checklist so the UI can show each step ----------
+const _SECTIONS = ['inputs', 'result', 'provenance'];
+const _isObj = (x) => x !== null && typeof x === 'object' && !Array.isArray(x);
 function verifyBundle(bundle) {
   const checks = [];
   const add_ = (name, ok, detail) => checks.push({ name, ok, detail });
+  const done = () => ({ ok: checks.every(c => c.ok), checks });
 
   add_('Envelope schema recognised', bundle.schema === 'smrforge.evidence_envelope.v1', bundle.schema);
 
   const manifest = bundle.manifest || {}, sums = bundle.sha256sums || {};
 
+  // Manifest and sealed digest-list must be EXACTLY the three known sections. Without this an extra
+  // manifest section (or sums entry) rides unverified. Mirrors evidence_verify.py `sections`.
+  const secOk = _isObj(manifest) && _isObj(sums)
+    && _SECTIONS.every(s => s in manifest) && Object.keys(manifest).length === 3
+    && _SECTIONS.every(s => s in sums) && Object.keys(sums).length === 3;
+  add_('Manifest and digest-list are exactly {inputs, result, provenance}', secOk,
+       secOk ? '' : `manifest ${JSON.stringify(Object.keys(manifest).sort())}, sums ${JSON.stringify(Object.keys(sums).sort())}`);
+
+  // Redaction (lawful withholding) is a CLI-only feature: fail closed rather than crash on a bundle whose
+  // sections are withheld or malformed, so this demo never passes what it cannot fully check.
+  if ('redaction' in bundle) {
+    add_('Redacted bundle', false, 'redacted bundles are verified with the standalone CLI, not this in-browser demo');
+    return done();
+  }
+  if (!secOk || _SECTIONS.some(s => !_isObj(manifest[s]) || !('value' in manifest[s]))) {
+    add_('Section blocks are well-formed', false, 'a manifest section is missing, not an object, or carries no value');
+    return done();
+  }
+
   // Reject any key OUTSIDE the signed envelope shape -- top-level, or inside a manifest section block.
   // The seal binds only the three section digests, so such a key rides UNSIGNED: an intermediary could
   // staple an attacker-authored claim (e.g. a top-level "conclusion") onto a genuinely-signed bundle
-  // and this checker would otherwise show all-green. Mirrors smrf_verify / evidence-verifier.
+  // and this checker would otherwise show all-green. Mirrors smrf_verify / evidence-verifier (incl. the
+  // optional post-signing `timestamp` token).
   const allowedTop = new Set(['schema', 'result', 'reproducibility', 'manifest', 'sha256sums',
-                              'bundle_sha256', 'signature', 'host', 'redaction']);
+                              'bundle_sha256', 'signature', 'host', 'redaction', 'timestamp']);
   const extraTop = Object.keys(bundle).filter(k => !allowedTop.has(k)).sort();
   let extraBlk = [];
-  for (const side of ['inputs', 'result', 'provenance']) {
-    const blk = manifest[side] || {};
-    extraBlk = extraBlk.concat(Object.keys(blk).filter(k => k !== 'sha256' && k !== 'value').map(k => `${side}.${k}`));
+  for (const side of _SECTIONS) {
+    extraBlk = extraBlk.concat(Object.keys(manifest[side]).filter(k => k !== 'sha256' && k !== 'value').map(k => `${side}.${k}`));
   }
   extraBlk.sort();
   const noUnsigned = extraTop.length === 0 && extraBlk.length === 0;
   add_('No unsigned keys ride outside the signed shape', noUnsigned,
        noUnsigned ? '' : `unsigned: top-level ${JSON.stringify(extraTop)} block ${JSON.stringify(extraBlk)}`);
 
-  for (const side of ['inputs', 'result', 'provenance']) {
-    const blk = manifest[side] || {};
+  // `host` also rides unsigned; constrain its shape too (parity with evidence_verify.py `_HOST_KEYS`).
+  const HOST_KEYS = new Set(['python_version', 'python_impl', 'platform']);
+  const host = bundle.host;
+  const hostOk = host === undefined || (_isObj(host) && Object.keys(host).every(k => HOST_KEYS.has(k)));
+  add_('Host block (unsigned) carries only allowed keys', hostOk, hostOk ? '' : `host keys ${JSON.stringify(Object.keys(host || {}))}`);
+
+  for (const side of _SECTIONS) {
+    const blk = manifest[side];
     const rc = sha(canon(blk.value));
     const ok = blk.sha256 === sums[side] && rc === blk.sha256;
     add_(`${side} section matches its sealed fingerprint`, ok, ok ? blk.sha256 : `recomputed ${rc} ≠ sealed ${sums[side]}`);
   }
-  add_('Readable result equals the hashed result', canon(bundle.result) === canon(manifest.result?.value));
-  add_('Readable provenance equals the hashed provenance', canon(bundle.reproducibility) === canon(manifest.provenance?.value));
+  add_('Readable result equals the hashed result', canon(bundle.result) === canon(manifest.result.value));
+  add_('Readable provenance equals the hashed provenance', canon(bundle.reproducibility) === canon(manifest.provenance.value));
 
-  // the data-library pin must be a real content digest, not just consistently-sealed garbage (matches smrf_verify)
-  const _pv = (manifest.provenance && manifest.provenance.value) || {};
+  // the data-library pin must be a real content digest. A NAMED library with a null digest is a pin claim
+  // with no bytes behind it; only the honest "unpinned" marker may go digest-less. Parity with
+  // evidence_verify.py -- without this the browser passes a named/null pin the CLI rejects.
+  const _pv = manifest.provenance.value || {};
   const _dls = _pv.data_library_sha256, _dl = _pv.data_library;
-  const pinOk = (_dls == null || /^sha256:[0-9a-f]{64}$/.test(String(_dls))) && (_dl == null || (typeof _dl === 'string' && _dl.length > 0));
-  add_('Data-library pin is a well-formed digest', pinOk, pinOk ? '' : `not a sha256 digest: ${_dls}`);
+  let pinOk = true, pinDetail = '';
+  if (_dl != null && !(typeof _dl === 'string' && _dl.length > 0)) { pinOk = false; pinDetail = `data_library is not a non-empty string: ${_dl}`; }
+  else if (_dls == null) { if (_dl != null && _dl !== 'unpinned') { pinOk = false; pinDetail = `named library "${_dl}" has a null digest (only "unpinned" may)`; } }
+  else if (!/^sha256:[0-9a-f]{64}$/.test(String(_dls))) { pinOk = false; pinDetail = `not a sha256 digest: ${_dls}`; }
+  add_('Data-library pin is a well-formed digest', pinOk, pinDetail);
 
   const rb = sha(canon(sums));
   const sealOk = rb === bundle.bundle_sha256;
@@ -233,7 +268,7 @@ function verifyBundle(bundle) {
   else { sigOk = ed25519Verify(hexToBytes(sig.signature), rb, hexToBytes(PINNED_PUBKEY)); sigDetail = sigOk ? 'valid' : 'does not verify'; }
   add_('Ed25519 signature over the seal is valid', sigOk, sigDetail);
 
-  return { ok: checks.every(c => c.ok), checks };
+  return done();
 }
 
 // expose the pure core for a headless (Node) parity test

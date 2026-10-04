@@ -130,13 +130,13 @@
       </div>
     </div>
     <div>
-      <div class="receipt" role="img" aria-label="The sealed record: screening-grade k_eff 1.425506, signed by SMRFORGE's production key.">
+      <div class="receipt" role="img" aria-label="The sealed record: an OpenMC criticality result, k_eff 1.00522, signed by SMRFORGE's production key.">
         <div class="top"><span class="t">Sealed record</span><span class="dot"></span></div>
         <div class="mid">
-          <div class="k">1.425506<small>k_eff</small></div>
-          <span class="tag">smrf_nodal:nodal</span>
+          <div class="k">1.00522<small>k_eff &plusmn; 0.00060</small></div>
+          <span class="tag">physics:openmc</span>
           <div class="rows">
-            <div class="row"><span class="l">fidelity</span><span class="v">screening</span></div>
+            <div class="row"><span class="l">fidelity</span><span class="v">lab-escalation</span></div>
             <div class="row"><span class="l">signed by</span><span class="v">ed25519:cfb88804&hellip;d69b52c</span></div>
             <div class="row"><span class="l">frozen at</span><span class="v">cise-v1</span></div>
             <div class="row"><span class="l">verifier</span><span class="v">evidence-verifier v0.3.2</span></div>
@@ -144,8 +144,9 @@
         </div>
         <div class="foot"><span>SMRFORGE production key</span><span class="pass">SIGNED</span></div>
       </div>
-      <p class="cap">A screening-grade, illustrative number. The dare is about custody, not whether 1.425506
-        is physically right. See <a href="#boundary">what this proves</a> below.</p>
+      <p class="cap">An OpenMC criticality result on a homogeneous SMR slab (advisory, lab-escalation). The dare
+        is about custody, not whether 1.00522 is a validated absolute. See <a href="#boundary">what this
+        proves</a> below.</p>
     </div>
   </section>
 </div>
@@ -158,18 +159,21 @@
       <li>Get the verifier, a single standard-library-only file you can read in full:
         <span class="cmd">curl -O https://gitlab.com/smrforge/evidence-verifier/-/raw/v0.3.2/evidence_verify.py</span></li>
       <li>Get the sealed record:
-        <span class="cmd">curl -O https://gitlab.com/smrforge/smrforge/-/raw/cise-v1/packs/nodal-smr-193.reproduce-demo.bundle.json</span></li>
+        <span class="cmd">curl -O https://gitlab.com/smrforge/smrforge/-/raw/cise-v1/packs/openmc-criticality.reproduce-demo.bundle.json</span></li>
       <li>Cross-check our key out of band. The fingerprint the verifier prints must match
         <a href="/.well-known/smrforge-trust-root">smrforge.io/.well-known/smrforge-trust-root</a> and the DNS
         TXT record <code class="kbd">smrforge-trust-root.smrforge.io</code>.</li>
       <li>Run it, then try to beat it:
-        <span class="cmd">python evidence_verify.py verify nodal-smr-193.reproduce-demo.bundle.json</span>
-        It passes. Edit one digit of <code class="kbd">k_eff</code> and run again: it fails and names the broken
-        section. Your challenge is to make an edited copy it still reports as signed by our key.</li>
+        <span class="cmd">python evidence_verify.py verify openmc-criticality.reproduce-demo.bundle.json</span>
+        It passes. Change <code class="kbd">k_eff</code> to a different value and run again: it fails and names
+        the broken section. Your challenge is to make an edited copy it still reports as signed by our key.</li>
     </ol>
-    <p class="lead" style="margin-top:18px">Prefer zero install? The same verifier and seal run live on the
-      <a href="check.html">Check a bundle</a> page, on another signed SMRFORGE bundle. Change a digit and
-      watch it break, no download required.</p>
+    <p class="cap" style="margin-top:14px">These refs are frozen: the record at <code class="kbd">cise-v1</code>
+      (commit ca52239), the verifier at <code class="kbd">v0.3.2</code> (commit f5e31fc). The record's integrity
+      rests on its signature, not the URL, so bytes served under any other name simply fail to verify.</p>
+    <p class="lead" style="margin-top:18px">Prefer zero install? The same verifier runs live on the
+      <a href="check.html">Check a bundle</a> page, on this exact record. Change a digit and watch the seal
+      catch it, no download required.</p>
   </section>
 
   <section class="band">
@@ -178,9 +182,9 @@
     <ul class="rules">
       <li>Using the <b>unmodified</b> public verifier, pinned to our production key (fingerprint cross-checked
         from the two channels above), produce a record whose <b>k_eff is a genuinely different value</b> from
-        1.425506 and that the verifier still reports as a pass signed by the pinned key. The verifier's own
+        1.00522 and that the verifier still reports as a pass signed by the pinned key. The verifier's own
         printed verdict is the judge.</li>
-      <li><b>The same number written differently does not count.</b> 1.4255060 is the same value as 1.425506;
+      <li><b>The same number written differently does not count.</b> 1.0052200 is the same value as 1.00522;
         the verifier re-derives the number before hashing, so a reformat is not a changed result. A break has
         to move the value.</li>
       <li><b>Editing the verifier does not count.</b> Run it unchanged; you can read every line. The key is
@@ -225,12 +229,12 @@
   <section class="band">
     <p class="kicker">Submit</p>
     <h2>Report a break</h2>
-    <p class="lead">Open an issue with your altered record and the exact command and output of the unmodified
-      verifier reporting a pass. Think you found a genuine verifier or format flaw, not a reformatting of the
-      same number? Email <a href="mailto:chris@smrforge.io">chris@smrforge.io</a> first so we can fix it
-      before it is public.</p>
+    <p class="lead">Send your altered record and the exact command and output of the unmodified verifier
+      reporting a pass to <a href="mailto:chris@smrforge.io?subject=Break%20the%20Seal%20submission">chris@smrforge.io</a>.
+      If you think you found a genuine verifier or format flaw, not a reformatting of the same number, email
+      that first too, so we can fix it before it is public. Confirmed results are credited by name here.</p>
     <div class="ctas">
-      <a class="btn primary" href="https://gitlab.com/smrforge/evidence-verifier/-/issues" rel="noopener">Open an issue &rarr;</a>
+      <a class="btn primary" href="mailto:chris@smrforge.io?subject=Break%20the%20Seal%20submission">Send your break &rarr;</a>
     </div>
   </section>
 
@@ -238,10 +242,12 @@
     <p class="kicker">Honest boundary</p>
     <h2>What this proves, and what it does not</h2>
     <p class="boundary">A pass proves the record is unaltered, signed by SMRFORGE, and that the number
-      re-derives from the sealed inputs. It does not prove the number is physically correct. Whether 1.425506
-      is the right answer is a validation question, settled against experiment and the adequacy frameworks that
-      govern reactor analysis. This challenge is about custody: whether a computed number can be quietly
-      changed or forged on its way to a reviewer. It cannot.</p>
+      re-derives from the sealed inputs. It does not prove the number is physically correct. The sealed value
+      is an OpenMC multi-group eigenvalue on a homogeneous slab, advisory and lab-escalation grade; continuous
+      energy and heterogeneous geometry are the next escalation, and whether 1.00522 is the right answer is a
+      validation question, settled against experiment and the adequacy frameworks that govern reactor analysis.
+      This challenge is about custody: whether a computed number can be quietly changed or forged on its way to
+      a reviewer. It cannot.</p>
   </section>
 </div>
 

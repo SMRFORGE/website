@@ -15,28 +15,92 @@ const DEMO_PUBKEY   = '069aba87747dd9c1f46f24004eb79e05eb8f2e0f2c3adfdde60c1e2e0
 const PINNED_IS_DEMO = PINNED_PUBKEY === DEMO_PUBKEY;
 
 // ---------- raw-literal-preserving JSON parse (JSON.parse would collapse 30.0 -> 30) ----------
+// STRICT (RFC 8259): the parser throws a clean error on anything that is not JSON -- trailing garbage
+// after the document, a bad literal (`tru`, `nul`), NaN/Infinity, an unterminated string, a bad escape,
+// a raw control character, or a missing ':' / ',' / closing bracket -- instead of lax-advancing past it.
+// The verdict path surfaces a thrown error as a FAIL, so a malformed document can never half-parse into
+// something that then "verifies". Mirrors what Python's json.loads rejects (strict=True, no NaN).
 class NumLit { constructor(raw) { this.raw = raw; } }
+const _ESC = { '"': '"', '\\': '\\', '/': '/', b: '\b', f: '\f', n: '\n', r: '\r', t: '\t' };
 function parseJSON(text) {
+  if (typeof text !== 'string') throw new Error('bundle JSON is not text');
   let i = 0;
+  const bad = (what) => new Error(`invalid JSON: ${what} at offset ${i}`);
   const ws = () => { while (i < text.length && ' \t\n\r'.includes(text[i])) i++; };
+  const expect = (ch) => { ws(); if (text[i] !== ch) throw bad(`expected '${ch}'`); i++; };
+  const lit = (word, v) => { if (text.startsWith(word, i)) { i += word.length; return v; } throw bad('bad literal'); };
   function val() {
     ws();
+    if (i >= text.length) throw bad('unexpected end of input');
     const c = text[i];
     if (c === '{') return obj();
     if (c === '[') return arr();
     if (c === '"') return str();
-    if (c === 't') { i += 4; return true; }
-    if (c === 'f') { i += 5; return false; }
-    if (c === 'n') { i += 4; return null; }
+    if (c === 't') return lit('true', true);
+    if (c === 'f') return lit('false', false);
+    if (c === 'n') return lit('null', null);
     return num();
   }
   // reject duplicate object keys: stdlib-style last-wins would let this verifier attest one value while
   // a first-wins reader shows another, both "verifying". Mirrors evidence_verify.py _reject_duplicate_keys.
-  function obj() { const o = {}, seen = new Set(); i++; ws(); if (text[i] === '}') { i++; return o; } for (;;) { ws(); const k = str(); if (seen.has(k)) throw new Error('duplicate key ' + JSON.stringify(k) + ' in bundle JSON (ambiguous; rejected)'); seen.add(k); ws(); i++; o[k] = val(); ws(); if (text[i] === ',') { i++; continue; } i++; return o; } }
-  function arr() { const a = []; i++; ws(); if (text[i] === ']') { i++; return a; } for (;;) { a.push(val()); ws(); if (text[i] === ',') { i++; continue; } i++; return a; } }
-  function str() { i++; let s = ''; for (;;) { const c = text[i++]; if (c === '"') return s; if (c === '\\') { const e = text[i++]; if (e === 'u') { s += String.fromCharCode(parseInt(text.slice(i, i + 4), 16)); i += 4; } else s += { '"': '"', '\\': '\\', '/': '/', b: '\b', f: '\f', n: '\n', r: '\r', t: '\t' }[e]; } else s += c; } }
-  function num() { const m = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/.exec(text.slice(i)); i += m[0].length; return new NumLit(m[0]); }
-  return val();
+  function obj() {
+    const o = {}, seen = new Set();
+    i++; ws();
+    if (text[i] === '}') { i++; return o; }
+    for (;;) {
+      ws();
+      if (text[i] !== '"') throw bad('expected a string key');
+      const k = str();
+      if (seen.has(k)) throw new Error('duplicate key ' + JSON.stringify(k) + ' in bundle JSON (ambiguous; rejected)');
+      seen.add(k);
+      expect(':');
+      o[k] = val();
+      ws();
+      if (text[i] === ',') { i++; continue; }
+      if (text[i] === '}') { i++; return o; }
+      throw bad("expected ',' or '}'");
+    }
+  }
+  function arr() {
+    const a = [];
+    i++; ws();
+    if (text[i] === ']') { i++; return a; }
+    for (;;) {
+      a.push(val());
+      ws();
+      if (text[i] === ',') { i++; continue; }
+      if (text[i] === ']') { i++; return a; }
+      throw bad("expected ',' or ']'");
+    }
+  }
+  function str() {
+    i++; let s = '';
+    for (;;) {
+      if (i >= text.length) throw bad('unterminated string');
+      const c = text[i++];
+      if (c === '"') return s;
+      if (c === '\\') {
+        const e = text[i++];
+        if (e === 'u') {
+          const h = text.slice(i, i + 4);
+          if (!/^[0-9a-fA-F]{4}$/.test(h)) throw bad('bad \\u escape');
+          s += String.fromCharCode(parseInt(h, 16)); i += 4;
+        } else if (e in _ESC) s += _ESC[e];
+        else throw bad('bad escape');
+      } else if (c.charCodeAt(0) < 0x20) throw bad('raw control character in string');
+      else s += c;
+    }
+  }
+  function num() {
+    const m = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/.exec(text.slice(i));
+    if (!m) throw bad('unexpected token');     // also rejects NaN / Infinity / leading '+' / '.5'
+    i += m[0].length;
+    return new NumLit(m[0]);
+  }
+  const v = val();
+  ws();
+  if (i < text.length) throw bad('trailing data after the JSON document');
+  return v;
 }
 
 // ---------- Python-compatible canon: json.dumps(sort_keys=True, separators=(",",":"), ensure_ascii=True) ----------
@@ -186,6 +250,16 @@ function ed25519Verify(sig, msgStr, pub) {
 // ---------- verify_bundle: returns a structured checklist so the UI can show each step ----------
 const _SECTIONS = ['inputs', 'result', 'provenance'];
 const _isObj = (x) => x !== null && typeof x === 'object' && !Array.isArray(x);
+// Shape constants, restated 1:1 from smrf_verify/verify.py so the browser and the CLI reject the same
+// things (the parity test in tests/verify.parity.mjs holds them together).
+const _RESULT_REQUIRED = ['schema', 'schema_version', 'result', 'fidelity', 'verdict'];
+const _SHA256_RE = /^sha256:[0-9a-f]{64}$/;
+const _SIG_KEYS = new Set(['alg', 'public_key', 'signature', 'message']);
+const _HOST_KEYS = new Set(['python_version', 'python_impl', 'platform']);
+const _TIMESTAMP_KEYS = new Set(['format', 'tsa', 'token']);
+const _TIMESTAMP_TOKEN_MAX = 200000;   // a base64 RFC 3161 token is a few KB; cap to reject a stapled blob
+const _REDACTION_SCHEMA = 'smrforge.evidence_envelope.redaction.v1';
+const _REDACTION_KEYS = new Set(['schema', 'withheld', 'reason', 'parent_bundle_sha256', 'caveats']);
 function verifyBundle(bundle) {
   const checks = [];
   const add_ = (name, ok, detail) => checks.push({ name, ok, detail });
@@ -204,8 +278,27 @@ function verifyBundle(bundle) {
        secOk ? '' : `manifest ${JSON.stringify(Object.keys(manifest).sort())}, sums ${JSON.stringify(Object.keys(sums).sort())}`);
 
   // Redaction (lawful withholding) is a CLI-only feature: fail closed rather than crash on a bundle whose
-  // sections are withheld or malformed, so this demo never passes what it cannot fully check.
+  // sections are withheld or malformed, so this demo never passes what it cannot fully check. The
+  // (unsigned) record is still held to the CLI's shape first (S5 parity: key allowlist, `reason` a
+  // string, `caveats` a list of strings) so a malformed record is named as such, not just "redacted".
   if ('redaction' in bundle) {
+    const red = bundle.redaction;
+    const redProblems = [];
+    if (!_isObj(red)) redProblems.push('redaction is not a JSON object');
+    else {
+      const extra = Object.keys(red).filter(k => !_REDACTION_KEYS.has(k)).sort();
+      if (extra.length) redProblems.push(`unexpected keys (unsigned): ${JSON.stringify(extra)}`);
+      if (red.schema !== _REDACTION_SCHEMA) redProblems.push(`schema is not ${_REDACTION_SCHEMA}`);
+      const wh = red.withheld;
+      if (!Array.isArray(wh) || wh.length === 0 || !wh.every(w => typeof w === 'string' && _SECTIONS.includes(w)))
+        redProblems.push('withheld must be a non-empty list of sections');
+      if ('reason' in red && typeof red.reason !== 'string') redProblems.push('reason is not a string');
+      if ('caveats' in red && !(Array.isArray(red.caveats) && red.caveats.every(c => typeof c === 'string')))
+        redProblems.push('caveats is not a list of strings');
+      if ('parent_bundle_sha256' in red && typeof red.parent_bundle_sha256 !== 'string')
+        redProblems.push('parent_bundle_sha256 is not a string');
+    }
+    add_('Redaction record (unsigned) is well-formed', redProblems.length === 0, redProblems.join('; '));
     add_('Redacted bundle', false, 'redacted bundles are verified with the standalone CLI, not this in-browser demo');
     return done();
   }
@@ -231,11 +324,39 @@ function verifyBundle(bundle) {
   add_('No unsigned keys ride outside the signed shape', noUnsigned,
        noUnsigned ? '' : `unsigned: top-level ${JSON.stringify(extraTop)} block ${JSON.stringify(extraBlk)}`);
 
-  // `host` also rides unsigned; constrain its shape too (parity with evidence_verify.py `_HOST_KEYS`).
-  const HOST_KEYS = new Set(['python_version', 'python_impl', 'platform']);
+  // `host` also rides unsigned; constrain its shape too (parity with evidence_verify.py `_check_host`):
+  // only the allowed keys, and every VALUE a string (S4). A non-string value (e.g. an object carrying a
+  // "conclusion") is an unsigned claim smuggled under an allowed key.
   const host = bundle.host;
-  const hostOk = host === undefined || (_isObj(host) && Object.keys(host).every(k => HOST_KEYS.has(k)));
-  add_('Host block (unsigned) carries only allowed keys', hostOk, hostOk ? '' : `host keys ${JSON.stringify(Object.keys(host || {}))}`);
+  let hostOk = true, hostDetail = '';
+  if (host != null) {
+    if (!_isObj(host)) { hostOk = false; hostDetail = 'host is not a JSON object'; }
+    else {
+      const extra = Object.keys(host).filter(k => !_HOST_KEYS.has(k)).sort();
+      const nonStr = Object.keys(host).filter(k => _HOST_KEYS.has(k) && typeof host[k] !== 'string').sort();
+      if (extra.length) { hostOk = false; hostDetail = `unexpected host keys (unsigned): ${JSON.stringify(extra)}`; }
+      else if (nonStr.length) { hostOk = false; hostDetail = `host values must be strings: ${JSON.stringify(nonStr)}`; }
+    }
+  }
+  add_('Host block (unsigned) carries only allowed keys with string values', hostOk, hostDetail);
+
+  // `timestamp` (optional, unsigned) is an embedded RFC 3161 token added AFTER signing. Its cryptographic
+  // validity is checked separately (tools/verify_timestamp.py); here it is held to a strict SHAPE so it
+  // cannot carry an unsigned claim or a stapled blob. Parity with evidence_verify.py `_check_timestamp`.
+  const ts = bundle.timestamp;
+  let tsOk = true, tsDetail = '';
+  if (ts != null) {
+    if (!_isObj(ts)) { tsOk = false; tsDetail = 'timestamp is not a JSON object'; }
+    else {
+      const extra = Object.keys(ts).filter(k => !_TIMESTAMP_KEYS.has(k)).sort();
+      const nonStr = Object.keys(ts).filter(k => _TIMESTAMP_KEYS.has(k) && typeof ts[k] !== 'string').sort();
+      if (extra.length) { tsOk = false; tsDetail = `unexpected timestamp keys (unsigned): ${JSON.stringify(extra)}`; }
+      else if (nonStr.length) { tsOk = false; tsDetail = `timestamp values must be strings: ${JSON.stringify(nonStr)}`; }
+      else if ('format' in ts && ts.format !== 'rfc3161') { tsOk = false; tsDetail = `timestamp.format must be 'rfc3161' (got ${JSON.stringify(ts.format)})`; }
+      else if (typeof ts.token === 'string' && ts.token.length > _TIMESTAMP_TOKEN_MAX) { tsOk = false; tsDetail = `timestamp.token is too large (${ts.token.length} > ${_TIMESTAMP_TOKEN_MAX})`; }
+    }
+  }
+  add_('Timestamp block (unsigned, optional) has the RFC 3161 shape', tsOk, tsDetail);
 
   for (const side of _SECTIONS) {
     const blk = manifest[side];
@@ -243,28 +364,56 @@ function verifyBundle(bundle) {
     const ok = blk.sha256 === sums[side] && rc === blk.sha256;
     add_(`${side} section matches its sealed fingerprint`, ok, ok ? blk.sha256 : `recomputed ${rc} ≠ sealed ${sums[side]}`);
   }
+  // the embedded result core must be a result.v1 record: an object carrying every required field. A core
+  // with no `verdict` (or no `schema`) is not a result, however well it hashes. Parity with
+  // evidence_verify.py `_RESULT_REQUIRED`.
+  const core = bundle.result;
+  const missing = _isObj(core) ? _RESULT_REQUIRED.filter(k => !(k in core)) : _RESULT_REQUIRED.slice();
+  add_('Result core carries every required result.v1 field', missing.length === 0,
+       _isObj(core) ? (missing.length ? `missing ${JSON.stringify(missing)}` : '') : 'result core is not a JSON object');
   add_('Readable result equals the hashed result', canon(bundle.result) === canon(manifest.result.value));
   add_('Readable provenance equals the hashed provenance', canon(bundle.reproducibility) === canon(manifest.provenance.value));
 
-  // the data-library pin must be a real content digest. A NAMED library with a null digest is a pin claim
-  // with no bytes behind it; only the honest "unpinned" marker may go digest-less. Parity with
+  // the data-library pin must be a real content digest. Whenever a library is NAMED (any non-empty
+  // string, INCLUDING the honest "unpinned" marker, which the engine emits WITH a real digest), the
+  // digest MUST be a well-formed `sha256:<64 lowercase hex>`. A null/missing/malformed digest is a pin
+  // claim with no bytes behind it (S6; the former unpinned+null exception is gone). Parity with
   // evidence_verify.py -- without this the browser passes a named/null pin the CLI rejects.
   const _pv = manifest.provenance.value || {};
   const _dls = _pv.data_library_sha256, _dl = _pv.data_library;
   let pinOk = true, pinDetail = '';
   if (_dl != null && !(typeof _dl === 'string' && _dl.length > 0)) { pinOk = false; pinDetail = `data_library is not a non-empty string: ${_dl}`; }
-  else if (_dls == null) { if (_dl != null && _dl !== 'unpinned') { pinOk = false; pinDetail = `named library "${_dl}" has a null digest (only "unpinned" may)`; } }
-  else if (!/^sha256:[0-9a-f]{64}$/.test(String(_dls))) { pinOk = false; pinDetail = `not a sha256 digest: ${_dls}`; }
+  else if (typeof _dl === 'string' && !(typeof _dls === 'string' && _SHA256_RE.test(_dls))) { pinOk = false; pinDetail = `named library "${_dl}" has no well-formed digest: ${_dls}`; }
+  else if (_dls != null && !(typeof _dls === 'string' && _SHA256_RE.test(_dls))) { pinOk = false; pinDetail = `not a sha256 digest: ${_dls}`; }
   add_('Data-library pin is a well-formed digest', pinOk, pinDetail);
 
   const rb = sha(canon(sums));
   const sealOk = rb === bundle.bundle_sha256;
   add_('Bundle seal covers the whole fingerprint list', sealOk, sealOk ? rb : `recomputed ${rb} ≠ ${bundle.bundle_sha256}`);
 
+  // The seal binds ONLY bundle_sha256, so every other key in the signature block rides UNSIGNED: an
+  // intermediary could staple `"attestation": "APPROVED BY ..."` next to a genuine signature and the
+  // Ed25519 check would still pass. S1: the block's keys must be a subset of {alg, public_key, signature,
+  // message} with alg/public_key/signature present. S2: `message` must be exactly "bundle_sha256", so the
+  // block itself states what was signed and cannot be re-labelled.
   const sig = bundle.signature;
+  let sigShapeOk = true, sigShapeDetail = '';
+  if (!_isObj(sig)) { sigShapeOk = false; sigShapeDetail = 'signature is not a JSON object'; }
+  else {
+    const extra = Object.keys(sig).filter(k => !_SIG_KEYS.has(k)).sort();
+    const absent = ['alg', 'public_key', 'signature'].filter(k => !(k in sig));
+    if (extra.length) { sigShapeOk = false; sigShapeDetail = `unsigned key in signature block: ${JSON.stringify(extra)}`; }
+    else if (absent.length) { sigShapeOk = false; sigShapeDetail = `signature block missing ${JSON.stringify(absent)}`; }
+  }
+  add_('Signature block carries only {alg, public_key, signature, message}', sigShapeOk, sigShapeDetail);
+  const msgOk = _isObj(sig) && sig.message === 'bundle_sha256';
+  add_('Signature message is bound to bundle_sha256', msgOk,
+       msgOk ? '' : `signature.message must be "bundle_sha256" (got ${_isObj(sig) ? JSON.stringify(sig.message) : 'no block'})`);
+
   let sigOk = false, sigDetail = '';
-  if (!sig || sig.alg !== 'ed25519') sigDetail = 'no ed25519 signature';
+  if (!_isObj(sig) || sig.alg !== 'ed25519') sigDetail = 'no ed25519 signature';
   else if (sig.public_key !== PINNED_PUBKEY) sigDetail = 'not under the pinned key';
+  else if (typeof sig.signature !== 'string' || !/^[0-9a-f]{128}$/.test(sig.signature)) sigDetail = 'signature is not 64 hex bytes';
   else { sigOk = ed25519Verify(hexToBytes(sig.signature), rb, hexToBytes(PINNED_PUBKEY)); sigDetail = sigOk ? 'valid' : 'does not verify'; }
   add_('Ed25519 signature over the seal is valid', sigOk, sigDetail);
 

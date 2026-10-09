@@ -138,8 +138,8 @@
           <div class="rows">
             <div class="row"><span class="l">fidelity</span><span class="v">lab-escalation</span></div>
             <div class="row"><span class="l">signed by</span><span class="v">ed25519:cfb88804&hellip;d69b52c</span></div>
-            <div class="row"><span class="l">frozen at</span><span class="v">cise-v1</span></div>
-            <div class="row"><span class="l">verifier</span><span class="v">evidence-verifier v0.3.3</span></div>
+            <div class="row"><span class="l">frozen at</span><span class="v">cise-v2</span></div>
+            <div class="row"><span class="l">verifier</span><span class="v">evidence-verifier v0.3.4</span></div>
           </div>
         </div>
         <div class="foot"><span>SMRFORGE production key</span><span class="pass">SIGNED</span></div>
@@ -157,9 +157,9 @@
     <h2>Try it in 60 seconds</h2>
     <ol class="steps">
       <li>Get the verifier, a single standard-library-only file you can read in full:
-        <span class="cmd">curl -O https://gitlab.com/smrforge/evidence-verifier/-/raw/v0.3.3/evidence_verify.py</span></li>
+        <span class="cmd">curl -O https://gitlab.com/smrforge/evidence-verifier/-/raw/v0.3.4/evidence_verify.py</span></li>
       <li>Get the sealed record:
-        <span class="cmd">curl -O https://gitlab.com/smrforge/smrforge/-/raw/cise-v1/packs/openmc-criticality.reproduce-demo.bundle.json</span></li>
+        <span class="cmd">curl -O https://gitlab.com/smrforge/smrforge/-/raw/cise-v2/packs/openmc-criticality.reproduce-demo.bundle.json</span></li>
       <li>Cross-check our key out of band. The fingerprint the verifier prints must match
         <a href="/.well-known/smrforge-trust-root">smrforge.io/.well-known/smrforge-trust-root</a> and the DNS
         TXT record <code class="kbd">smrforge-trust-root.smrforge.io</code>.</li>
@@ -168,9 +168,12 @@
         It passes. Change <code class="kbd">k_eff</code> to a different value and run again: it fails and names
         the broken section. Your challenge is to make an edited copy it still reports as signed by our key.</li>
     </ol>
-    <p class="cap" style="margin-top:14px">These refs are frozen: the record at <code class="kbd">cise-v1</code>
-      (commit ca52239) and the verifier at the protected tag <code class="kbd">v0.3.3</code>. The record's
-      integrity rests on its signature, not the URL, so bytes served under any other name simply fail to verify.</p>
+    <p class="cap" style="margin-top:14px">These refs are frozen: the record at <code class="kbd">cise-v2</code>
+      (commit e9c562a) and the verifier at the protected tag <code class="kbd">v0.3.4</code>. The record's
+      integrity rests on its signature, not the URL, so bytes served under any other name simply fail to verify.
+      <code class="kbd">cise-v2</code> supersedes <code class="kbd">cise-v1</code>: the same sealed record
+      (same <code class="kbd">bundle_sha256</code>, same signature) with a retired unsigned diagnostic block
+      removed, so it verifies under the current verifier; the earlier snapshot now fails on that block alone.</p>
     <p class="lead" style="margin-top:18px">Prefer zero install? The same verifier runs live on the
       <a href="check.html">Check a bundle</a> page, on this exact record. Change a digit and watch the seal
       catch it, no download required.</p>

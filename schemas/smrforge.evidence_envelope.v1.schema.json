@@ -2,7 +2,26 @@
   "$defs": {
     "DirectoryEnvelope": {
       "additionalProperties": true,
-      "description": "Directory-envelope binding: the top-level object written as ``evidence_envelope.json`` at the root of a bundle directory.\n\nThe ``subject`` is a free-form dict carrying the case-specific payload\n(certification verdict, gateway claims, handoff manifest, ...). Subjects\nare themselves schema-tagged via the legacy schema names, so consumers\ncan route on either ``envelope_kind`` (preferred) or\n``subject[\"schema\"]`` (legacy compat).",
+      "description": "Directory-envelope binding: the top-level object written as ``evidence_envelope.json`` at the root of a bundle directory.\n\nThe ``subject`` is a free-form dict carrying the case-specific payload\n(certification verdict, gateway claims, handoff manifest, ...). Subjects\nare themselves schema-tagged via the legacy schema names, so consumers\ncan route on either ``envelope_kind`` (preferred) or\n``subject[\"schema\"]`` (legacy compat).\n\nThis binding is OPEN (``additionalProperties: true``, SPEC 3.7: a detached signature covers the whole document), so it MUST NOT be able to rescue a lean-shaped document that the closed ``LeanBundle`` binding rejects: the ``not`` clause makes the two ``oneOf`` arms disjoint by excluding any document that carries a lean seal key (``manifest``, ``sha256sums`` or ``bundle_sha256``). A directory envelope never carries those keys (its integrity list is ``sha256sums_sha256`` over the sibling ``sha256sums.txt``). Without this clause a lean bundle dressed with ``envelope_kind``/``producer``/``sha256sums_sha256`` and an unsigned extra key (e.g. the retired ``host``) would match this arm alone and pass ``oneOf``.",
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "bundle_sha256"
+            ]
+          },
+          {
+            "required": [
+              "manifest"
+            ]
+          },
+          {
+            "required": [
+              "sha256sums"
+            ]
+          }
+        ]
+      },
       "properties": {
         "artifacts": {
           "items": {
@@ -185,7 +204,8 @@
       "type": "object"
     },
     "LeanManifest": {
-      "description": "Per-section seal: each of inputs/result/provenance carries a SHA-256 digest plus (unless redacted) its value.",
+      "additionalProperties": false,
+      "description": "Per-section seal: each of inputs/result/provenance carries a SHA-256 digest plus (unless redacted) its value. CLOSED: exactly the three sections (SPEC 2.1.2). The seal commits to the three digests only, so a fourth section would ride UNSIGNED on a verifying bundle; a conforming verifier MUST reject it, and so does this schema.",
       "properties": {
         "inputs": {
           "$ref": "#/$defs/LeanSection"
@@ -342,7 +362,8 @@
       "type": "object"
     },
     "LeanSection": {
-      "description": "One sealed manifest section: a SHA-256 digest plus (unless redacted) the value it seals.",
+      "additionalProperties": false,
+      "description": "One sealed manifest section: a SHA-256 digest plus (unless redacted) the value it seals. CLOSED: exactly ``sha256`` and ``value`` (SPEC 2.1.1). Only ``value`` is under the digest, so any other key in the block (a note, a verdict) would ride UNSIGNED; a conforming verifier MUST reject it, and so does this schema.",
       "properties": {
         "sha256": {
           "$ref": "#/$defs/Sha256Digest"
@@ -356,7 +377,8 @@
       "type": "object"
     },
     "LeanSha256Sums": {
-      "description": "Roll-up of the three section digests.",
+      "additionalProperties": false,
+      "description": "Roll-up of the three section digests. CLOSED: exactly inputs/result/provenance (SPEC 2.1.2). ``bundle_sha256`` is the digest of this object's canonical form, so an extra key here would break the seal on a genuine bundle and ride unsigned on a forged one; a conforming verifier MUST reject it, and so does this schema.",
       "properties": {
         "inputs": {
           "$ref": "#/$defs/Sha256Digest"
@@ -511,7 +533,7 @@
   },
   "$id": "https://smrforge.io/schemas/smrforge.evidence_envelope.v1.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "The 'smrforge.evidence_envelope.v1' format has two serializations under this one schema identity: the directory envelope (a bundle directory whose root holds ``evidence_envelope.json``) and the lean single-JSON bundle (the whole envelope in one ``*.bundle.json`` document, as shipped by ``smrforge reproduce``). A document conforms if it matches exactly one binding; the two are disjoint by their required-field sets (a directory envelope has ``envelope_kind``/``producer``/``sha256sums_sha256``; a lean bundle has ``manifest``/``sha256sums``/``bundle_sha256``).",
+  "description": "The 'smrforge.evidence_envelope.v1' format has two serializations under this one schema identity: the directory envelope (a bundle directory whose root holds ``evidence_envelope.json``) and the lean single-JSON bundle (the whole envelope in one ``*.bundle.json`` document, as shipped by ``smrforge reproduce``). A document conforms if it matches exactly one binding; the two are disjoint by their required-field sets (a directory envelope has ``envelope_kind``/``producer``/``sha256sums_sha256``; a lean bundle has ``manifest``/``sha256sums``/``bundle_sha256``), and the directory arm additionally EXCLUDES any document carrying a lean seal key, so the open directory binding can never rescue a lean-shaped document that the closed lean binding rejects.",
   "oneOf": [
     {
       "$ref": "#/$defs/DirectoryEnvelope"

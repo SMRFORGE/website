@@ -257,7 +257,8 @@ const _SHA256_RE = /^sha256:[0-9a-f]{64}$/;
 const _SIG_KEYS = new Set(['alg', 'public_key', 'signature', 'message']);
 // ADR-041: both unsigned records are CLOSED and every key REQUIRED. `timestamp` is exactly {format, token};
 // `token` must be strict base64 whose first decoded byte is 0x30 (the DER SEQUENCE tag every RFC 3161
-// TimeStampResp starts with), so the only unsigned bytes it can carry are an opaque blob, never text. The
+// TimeStampResp starts with). That is a SHAPE check only: it pins one byte, and a base64-alphabet token can
+// still be legible in the raw file (bounded and unrendered -- this page never prints it -- not opaque). The
 // former `tsa` string is retired (the TSA's identity is inside the token; no verifier read it). `redaction`
 // is exactly {schema, withheld, parent_bundle_sha256}: the former free-text `reason` / `caveats` are gone.
 const _TIMESTAMP_KEYS = new Set(['format', 'token']);

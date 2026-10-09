@@ -341,7 +341,9 @@ function verifyBundle(bundle) {
   // Parity with evidence_verify.py `_timestamp_problems`.
   const ts = bundle.timestamp;
   let tsOk = true, tsDetail = 'no timestamp present';
-  if (ts != null) {
+  // PRESENT means it must be an object: `"timestamp": null` is a malformed record, not an absent one (the
+  // schema types it as an object; smrf_verify / evidence-verifier 0.3.6 reject it -- parity). Key test, not `!= null`.
+  if ('timestamp' in bundle) {
     if (!_isObj(ts)) { tsOk = false; tsDetail = 'timestamp is not a JSON object'; }
     else {
       const extra = Object.keys(ts).filter(k => !_TIMESTAMP_KEYS.has(k)).sort();

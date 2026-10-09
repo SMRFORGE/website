@@ -201,6 +201,20 @@ const tsD = fresh(); tsD.timestamp = { ...goodTs, token: 'MI' + 'A'.repeat(20000
 check('timestamp: an oversize token (> 200000 chars) is rejected', /too large/.test(chk(verifyBundle(tsD), /Timestamp block/).detail));
 const tsE = fresh(); tsE.timestamp = 'stapled';
 check('timestamp: a non-object timestamp is rejected', chk(verifyBundle(tsE), /Timestamp block/).ok === false);
+// present-but-null records (evidence-verifier 0.3.6 parity): a PRESENT key that is not an object is a malformed
+// record, not an absent one -- the Python verifiers used to read null as absent; check.js used `!= null` for timestamp
+const tsNull = fresh(); tsNull.timestamp = null;
+const tsNullRes = verifyBundle(tsNull);
+check('null timestamp: rejected as a malformed record, not read as absent', tsNullRes.ok === false && chk(tsNullRes, /Timestamp block/).ok === false && sigOnly(tsNullRes));
+const redNull = fresh(); redNull.redaction = null;
+check('null redaction: rejected as a malformed record', chk(verifyBundle(redNull), /Redaction record/).ok === false);
+// signature hex is exactly ^[0-9a-f]{128}$ (the Python verifiers' bytes.fromhex used to accept upper case / whitespace)
+const sigUp = fresh(); sigUp.signature.signature = sigUp.signature.signature.toUpperCase();
+check('uppercase signature hex: rejected', verifyBundle(sigUp).ok === false && chk(verifyBundle(sigUp), /Ed25519 signature/).ok === false);
+const sigWs = fresh(); sigWs.signature.signature = sigWs.signature.signature.match(/.{32}/g).join(' ');
+check('whitespace-separated signature hex: rejected', chk(verifyBundle(sigWs), /Ed25519 signature/).ok === false);
+const tsNl = fresh(); tsNl.timestamp = { ...goodTs, token: goodTs.token + '\n' };
+check('timestamp token + trailing newline: rejected (whole-string pattern)', chk(verifyBundle(tsNl), /Timestamp block/).ok === false);
 
 // result core: every result.v1 required field must be present
 for (const field of ['schema', 'schema_version', 'result', 'fidelity', 'verdict']) {

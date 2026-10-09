@@ -128,18 +128,30 @@ const s4c = fresh(); s4c.host = 'Linux';
 check('ADR-040: a non-object host is rejected the same way', chk(verifyBundle(s4c), /No unsigned keys/).ok === false);
 check('ADR-040: no "Host block" check line remains in the checklist', verifyBundle(fresh()).checks.every((c) => !/Host block/.test(c.name)));
 
-// S5: redaction field types (reason a string; caveats a list of strings)
-const s5a = fresh(); s5a.redaction = { schema: 'smrforge.evidence_envelope.redaction.v1', withheld: ['inputs'], reason: { conclusion: 'approved' } };
+// S5 (superseded by ADR-041): the redaction record is exactly {schema, withheld, parent_bundle_sha256},
+// all required and prose-free; `reason` / `caveats` are rejected whatever their type.
+const redOk = () => ({ schema: 'smrforge.evidence_envelope.redaction.v1', withheld: ['inputs'], parent_bundle_sha256: fresh().bundle_sha256 });
+const s5a = fresh(); s5a.redaction = { ...redOk(), reason: { conclusion: 'approved' } };
 const s5aRes = verifyBundle(s5a);
-check('S5: a non-string redaction.reason is rejected by the redaction shape check',
-  s5aRes.ok === false && chk(s5aRes, /Redaction record/).ok === false);
-const s5b = fresh(); s5b.redaction = { schema: 'smrforge.evidence_envelope.redaction.v1', withheld: ['inputs'], caveats: 'approved' };
-check('S5: a non-list redaction.caveats is rejected', chk(verifyBundle(s5b), /Redaction record/).ok === false);
-const s5c = fresh(); s5c.redaction = { schema: 'smrforge.evidence_envelope.redaction.v1', withheld: ['inputs'], caveats: ['ok', 7] };
-check('S5: a redaction.caveats list with a non-string entry is rejected', chk(verifyBundle(s5c), /Redaction record/).ok === false);
-const s5ok = fresh(); s5ok.redaction = { schema: 'smrforge.evidence_envelope.redaction.v1', withheld: ['inputs'], reason: 'export control', caveats: ['inputs withheld'] };
+check('ADR-041: a (mistyped) redaction.reason is rejected as an unexpected key',
+  s5aRes.ok === false && chk(s5aRes, /Redaction record/).ok === false && /unexpected keys.*reason/.test(chk(s5aRes, /Redaction record/).detail));
+const s5a2 = fresh(); s5a2.redaction = { ...redOk(), reason: 'WITHHELD AT NRC DIRECTION; RESULT ACCEPTED' };
+check('ADR-041: the self-verified attack -- a well-typed free-text redaction.reason -- is rejected as an unexpected key',
+  /unexpected keys.*reason/.test(chk(verifyBundle(s5a2), /Redaction record/).detail));
+const s5b = fresh(); s5b.redaction = { ...redOk(), caveats: 'approved' };
+check('ADR-041: redaction.caveats is rejected (removed from the format)', /unexpected keys.*caveats/.test(chk(verifyBundle(s5b), /Redaction record/).detail));
+const s5c = fresh(); s5c.redaction = { ...redOk(), caveats: ['ok', 7] };
+check('ADR-041: a redaction.caveats list is rejected too', /unexpected keys.*caveats/.test(chk(verifyBundle(s5c), /Redaction record/).detail));
+const s5d = fresh(); s5d.redaction = { schema: 'smrforge.evidence_envelope.redaction.v1', withheld: ['inputs'] };
+check('ADR-041: a redaction record without parent_bundle_sha256 is rejected (required)',
+  /missing required keys.*parent_bundle_sha256/.test(chk(verifyBundle(s5d), /Redaction record/).detail));
+const s5e = fresh(); s5e.redaction = { ...redOk(), parent_bundle_sha256: 'approved' };
+check('ADR-041: a malformed parent_bundle_sha256 is rejected', /not a well-formed sha256/.test(chk(verifyBundle(s5e), /Redaction record/).detail));
+const s5f = fresh(); s5f.redaction = { ...redOk(), parent_bundle_sha256: 'sha256:' + '0'.repeat(64) };
+check('ADR-041: a parent_bundle_sha256 that is not this bundle\'s seal is rejected', /does not match/.test(chk(verifyBundle(s5f), /Redaction record/).detail));
+const s5ok = fresh(); s5ok.redaction = redOk();
 const s5okRes = verifyBundle(s5ok);
-check('S5 control: a well-typed redaction record passes the shape check (and still fails closed as CLI-only)',
+check('ADR-041 control: the prose-free three-key redaction record passes the shape check (and still fails closed as CLI-only)',
   chk(s5okRes, /Redaction record/).ok === true && s5okRes.ok === false);
 
 // S6: the unpinned+null exception is gone -- "unpinned" needs a real digest like any other name
@@ -154,19 +166,39 @@ const s6c = fresh();
 for (const pv of [s6c.manifest.provenance.value, s6c.reproducibility]) { pv.data_library_sha256 = 'sha256:' + 'G'.repeat(64); }
 check('S6: a malformed (non-hex) digest is rejected', chk(verifyBundle(s6c), /Data-library pin/).ok === false);
 
-// timestamp shape: keys subset of {format, tsa, token}, all strings, format rfc3161, token <= 200000 chars
-const goodTs = { format: 'rfc3161', tsa: 'https://freetsa.org/tsr', token: 'aGVsbG8=' };
+// timestamp shape (ADR-041): exactly {format, token}, both required, format rfc3161, token strict-base64 DER
+// (first decoded byte 0x30 -> base64 'MI'), <= 200000 chars. `tsa` is retired. The token is NOT verified here.
+const goodTs = { format: 'rfc3161', token: 'MIIBAgMEBQ==' };
 const tsOk = fresh(); tsOk.timestamp = { ...goodTs };
-check('timestamp control: a well-formed RFC 3161 timestamp block still PASSES', verifyBundle(tsOk).ok === true);
+const tsOkRes = verifyBundle(tsOk);
+check('timestamp control: a well-formed {format, token} RFC 3161 timestamp block still PASSES', tsOkRes.ok === true);
+check('timestamp: the pass line says shape only, NOT verified here',
+  /NOT verified here/.test(chk(tsOkRes, /Timestamp block/).name) && /NOT verified here/.test(chk(tsOkRes, /Timestamp block/).detail));
+const tsAttack = fresh(); tsAttack.timestamp = { tsa: 'REVIEWED AND ACCEPTED BY THE US NRC', token: '***APPROVED***' };
+const tsAttackRes = verifyBundle(tsAttack);
+check('ADR-041: the self-verified timestamp attack (prose tsa + prose token) now FAILS while the signature still verifies',
+  tsAttackRes.ok === false && chk(tsAttackRes, /Timestamp block/).ok === false && sigOnly(tsAttackRes));
+const tsTsa = fresh(); tsTsa.timestamp = { ...goodTs, tsa: 'https://freetsa.org/tsr' };
+check('ADR-041: the retired tsa key is rejected as an unexpected key', /unexpected timestamp keys.*tsa/.test(chk(verifyBundle(tsTsa), /Timestamp block/).detail));
+const tsNoTok = fresh(); tsNoTok.timestamp = { format: 'rfc3161' };
+check('ADR-041: a timestamp without token is rejected (required)', /missing required keys.*token/.test(chk(verifyBundle(tsNoTok), /Timestamp block/).detail));
+const tsNoFmt = fresh(); tsNoFmt.timestamp = { token: goodTs.token };
+check('ADR-041: a timestamp without format is rejected (required)', /missing required keys.*format/.test(chk(verifyBundle(tsNoFmt), /Timestamp block/).detail));
+const tsText = fresh(); tsText.timestamp = { format: 'rfc3161', token: 'QVBQUk9WRUQgQlkgVEhFIFVTIE5SQw==' };
+check('ADR-041: a token that is base64 of text (not DER) is rejected', /not a strict-base64 DER token/.test(chk(verifyBundle(tsText), /Timestamp block/).detail));
+const tsPlace = fresh(); tsPlace.timestamp = { format: 'rfc3161', token: 'MIIE PLACEHOLDER-base64' };
+check('ADR-041: the old spaced placeholder token is rejected', /not a strict-base64 DER token/.test(chk(verifyBundle(tsPlace), /Timestamp block/).detail));
+const tsPad = fresh(); tsPad.timestamp = { format: 'rfc3161', token: 'MIIBAgMEBQ=' };
+check('ADR-041: bad base64 padding is rejected', /not a strict-base64 DER token/.test(chk(verifyBundle(tsPad), /Timestamp block/).detail));
 const tsA = fresh(); tsA.timestamp = { ...goodTs, conclusion: 'APPROVED' };
 const tsARes = verifyBundle(tsA);
 check('timestamp: an extra (unsigned) key is rejected', tsARes.ok === false && chk(tsARes, /Timestamp block/).ok === false && sigOnly(tsARes));
-const tsB = fresh(); tsB.timestamp = { ...goodTs, tsa: { url: 'x' } };
+const tsB = fresh(); tsB.timestamp = { ...goodTs, token: { url: 'x' } };
 check('timestamp: a non-string value is rejected', chk(verifyBundle(tsB), /Timestamp block/).ok === false);
 const tsC = fresh(); tsC.timestamp = { ...goodTs, format: 'pgp' };
 check('timestamp: a format other than rfc3161 is rejected', chk(verifyBundle(tsC), /Timestamp block/).ok === false);
-const tsD = fresh(); tsD.timestamp = { ...goodTs, token: 'A'.repeat(200001) };
-check('timestamp: an oversize token (> 200000 chars) is rejected', chk(verifyBundle(tsD), /Timestamp block/).ok === false);
+const tsD = fresh(); tsD.timestamp = { ...goodTs, token: 'MI' + 'A'.repeat(200002) };
+check('timestamp: an oversize token (> 200000 chars) is rejected', /too large/.test(chk(verifyBundle(tsD), /Timestamp block/).detail));
 const tsE = fresh(); tsE.timestamp = 'stapled';
 check('timestamp: a non-object timestamp is rejected', chk(verifyBundle(tsE), /Timestamp block/).ok === false);
 

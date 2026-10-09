@@ -144,7 +144,7 @@
     },
     "LeanBundle": {
       "additionalProperties": false,
-      "description": "Lean single-JSON binding: the whole envelope in one ``*.bundle.json`` document (the form SMRForge ships from ``smrforge reproduce``). The seal is carried in-line: a per-section ``manifest`` (inputs/result/provenance, each a SHA-256 digest plus its value), a ``sha256sums`` roll-up, and a ``bundle_sha256`` over the sealed digest-list. Redaction withholds a section's ``value`` (keeping its digest) and drops the corresponding readable top-level copy -- ``result`` for a withheld result, ``reproducibility`` for a withheld provenance -- while KEEPING the signature, which still verifies over the unchanged seal. So ``result`` and ``reproducibility`` are required only when the bundle is not redacted (no ``redaction`` block). The top-level key set is CLOSED (``additionalProperties: false``, ADR-040): the Ed25519 signature binds only ``bundle_sha256``, so any key outside ``schema``/``result``/``reproducibility``/``manifest``/``sha256sums``/``bundle_sha256``/``signature`` plus the optional unsigned ``redaction`` (applied after signing, shape-constrained) and ``timestamp`` (self-authenticating RFC 3161 token, shape-constrained) would ride UNSIGNED on a verifying bundle; a conforming verifier MUST reject it. The former unsigned ``host`` block is retired: the minting runtime is recorded ONLY in the signed ``provenance.toolchain``.",
+      "description": "Lean single-JSON binding: the whole envelope in one ``*.bundle.json`` document (the form SMRForge ships from ``smrforge reproduce``). The seal is carried in-line: a per-section ``manifest`` (inputs/result/provenance, each a SHA-256 digest plus its value), a ``sha256sums`` roll-up, and a ``bundle_sha256`` over the sealed digest-list. Redaction withholds a section's ``value`` (keeping its digest) and drops the corresponding readable top-level copy -- ``result`` for a withheld result, ``reproducibility`` for a withheld provenance -- while KEEPING the signature, which still verifies over the unchanged seal. So ``result`` and ``reproducibility`` are required only when the bundle is not redacted (no ``redaction`` block). The top-level key set is CLOSED (``additionalProperties: false``, ADR-040): the Ed25519 signature binds only ``bundle_sha256``, so any key outside ``schema``/``result``/``reproducibility``/``manifest``/``sha256sums``/``bundle_sha256``/``signature`` plus the optional unsigned ``redaction`` (applied after signing; closed and prose-free, ADR-041) and ``timestamp`` (an RFC 3161 token; closed to ``{format, token}``, the token an opaque strict-base64 DER blob, NOT verified by this binding) would ride UNSIGNED on a verifying bundle; a conforming verifier MUST reject it. The former unsigned ``host`` block is retired: the minting runtime is recorded ONLY in the signed ``provenance.toolchain``.",
       "if": {
         "not": {
           "required": [
@@ -168,7 +168,7 @@
         },
         "redaction": {
           "$ref": "#/$defs/LeanRedaction",
-          "description": "Present on a docket-safe redacted derivative (smrforge.evidence_envelope.redaction.v1): names the withheld sections and pins the parent's bundle_sha256. Its presence relaxes the result/reproducibility requirement, since a withheld section's readable copy is dropped. Unsigned (applied after signing), so its shape is closed."
+          "description": "Present on a docket-safe redacted derivative (smrforge.evidence_envelope.redaction.v1): names the withheld sections and pins the parent's bundle_sha256 (REQUIRED; MUST equal this bundle's own seal). Its presence relaxes the result/reproducibility requirement, since a withheld section's readable copy is dropped. Unsigned (applied after signing), so its shape is closed and prose-free (ADR-041): a PASS attests that the present sections are the signed original's and the absent sections remain digest-pinned, and says nothing about who withheld them or why."
         },
         "reproducibility": {
           "$ref": "#/$defs/LeanReproducibility",
@@ -191,7 +191,7 @@
         },
         "timestamp": {
           "$ref": "#/$defs/LeanTimestamp",
-          "description": "OPTIONAL embedded RFC 3161 trusted-timestamp token, added AFTER signing by a Timestamp Authority (so it cannot live inside the signed manifest). Unsigned by the bundle key but self-authenticating: the TSA signs it and it binds bundle_sha256, which IS signed. Its cryptographic validity is a separate check; this binding constrains only its shape."
+          "description": "OPTIONAL embedded RFC 3161 trusted-timestamp token, added AFTER signing by a Timestamp Authority (so it cannot live inside the signed manifest). Unsigned by the bundle key. This binding constrains only its shape (ADR-041: exactly {format, token}, the token strict-base64 DER); its cryptographic validity is a SEPARATE RFC 3161 check, and an envelope verifier MUST NOT report the timestamp as verified. Until that step runs the token is an unverified claim of time."
         }
       },
       "required": [
@@ -239,20 +239,11 @@
     },
     "LeanRedaction": {
       "additionalProperties": false,
-      "description": "The unsigned redaction record (smrforge.evidence_envelope.redaction.v1). A machine record of WHICH sealed sections are withheld, nothing else: exactly these keys, so no conclusion, note or other unsigned claim can ride it on a bundle that still verifies.",
+      "description": "The unsigned redaction record (smrforge.evidence_envelope.redaction.v1). A machine record of WHICH sealed sections are withheld, nothing else: exactly these three keys, all REQUIRED (ADR-041), so no conclusion, note or other unsigned claim can ride it on a bundle that still verifies. It carries no free-text field: a constant schema, an enum list, and a digest that MUST equal this bundle's own bundle_sha256 (a verifier checks the equality; the schema checks the form). The former `reason` / `caveats` strings are removed from the format. The record is a declaration by whoever derived the copy, not an attestation by the signer.",
       "properties": {
-        "caveats": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
         "parent_bundle_sha256": {
-          "description": "The bundle_sha256 of the unredacted parent (the seal is unchanged by redaction, so it equals this bundle's own bundle_sha256).",
-          "type": "string"
-        },
-        "reason": {
-          "type": "string"
+          "$ref": "#/$defs/Sha256Digest",
+          "description": "The bundle_sha256 of the unredacted parent. The seal is unchanged by redaction, so it MUST equal this bundle's own bundle_sha256; a conforming verifier rejects any other value."
         },
         "schema": {
           "const": "smrforge.evidence_envelope.redaction.v1"
@@ -272,7 +263,8 @@
       },
       "required": [
         "schema",
-        "withheld"
+        "withheld",
+        "parent_bundle_sha256"
       ],
       "title": "LeanRedaction",
       "type": "object"
@@ -452,19 +444,21 @@
     },
     "LeanTimestamp": {
       "additionalProperties": false,
-      "description": "An embedded RFC 3161 timestamp token: a constrained object of strings. ``format`` is the literal ``rfc3161``; ``token`` is the base64 DER token (capped so a stapled blob cannot ride). Shape only -- cryptographic validity is a separate ASN.1/CMS check.",
+      "description": "An embedded RFC 3161 timestamp token: exactly ``{format, token}``, both REQUIRED (ADR-041). ``format`` is the literal ``rfc3161``; ``token`` is the strict-base64 DER TimeStampResp (correct padding, first decoded byte 0x30 = the DER SEQUENCE tag, so the pattern starts ``MI``), capped so a stapled blob cannot ride. The record carries no free-text field; the TSA's identity is inside the token's certificate chain (the former unsigned ``tsa`` string is retired). Shape only: an envelope verifier MUST NOT report the timestamp as verified -- until an RFC 3161 verification step (ASN.1/CMS/X.509 against a pinned TSA CA) runs, the token is an unverified claim of time.",
       "properties": {
         "format": {
           "const": "rfc3161"
         },
         "token": {
           "maxLength": 200000,
-          "type": "string"
-        },
-        "tsa": {
+          "pattern": "^MI[A-Za-z0-9+/]{2}(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
           "type": "string"
         }
       },
+      "required": [
+        "format",
+        "token"
+      ],
       "title": "LeanTimestamp",
       "type": "object"
     },

@@ -124,8 +124,8 @@
       "type": "object"
     },
     "LeanBundle": {
-      "additionalProperties": true,
-      "description": "Lean single-JSON binding: the whole envelope in one ``*.bundle.json`` document (the form SMRForge ships from ``smrforge reproduce``). The seal is carried in-line: a per-section ``manifest`` (inputs/result/provenance, each a SHA-256 digest plus its value), a ``sha256sums`` roll-up, and a ``bundle_sha256`` over the sealed digest-list. Redaction withholds a section's ``value`` (keeping its digest) and drops the corresponding readable top-level copy -- ``result`` for a withheld result, ``reproducibility`` for a withheld provenance -- while KEEPING the signature, which still verifies over the unchanged seal. So ``result`` and ``reproducibility`` are required only when the bundle is not redacted (no ``redaction`` block). ``additionalProperties: true`` keeps the form forward-compatible: the diagnostic ``host`` block (outside the signed manifest), the ``redaction`` marker, and future keys are permitted.",
+      "additionalProperties": false,
+      "description": "Lean single-JSON binding: the whole envelope in one ``*.bundle.json`` document (the form SMRForge ships from ``smrforge reproduce``). The seal is carried in-line: a per-section ``manifest`` (inputs/result/provenance, each a SHA-256 digest plus its value), a ``sha256sums`` roll-up, and a ``bundle_sha256`` over the sealed digest-list. Redaction withholds a section's ``value`` (keeping its digest) and drops the corresponding readable top-level copy -- ``result`` for a withheld result, ``reproducibility`` for a withheld provenance -- while KEEPING the signature, which still verifies over the unchanged seal. So ``result`` and ``reproducibility`` are required only when the bundle is not redacted (no ``redaction`` block). The top-level key set is CLOSED (``additionalProperties: false``, ADR-040): the Ed25519 signature binds only ``bundle_sha256``, so any key outside ``schema``/``result``/``reproducibility``/``manifest``/``sha256sums``/``bundle_sha256``/``signature`` plus the optional unsigned ``redaction`` (applied after signing, shape-constrained) and ``timestamp`` (self-authenticating RFC 3161 token, shape-constrained) would ride UNSIGNED on a verifying bundle; a conforming verifier MUST reject it. The former unsigned ``host`` block is retired: the minting runtime is recorded ONLY in the signed ``provenance.toolchain``.",
       "if": {
         "not": {
           "required": [
@@ -148,8 +148,8 @@
           "$ref": "#/$defs/LeanManifest"
         },
         "redaction": {
-          "description": "Present on a docket-safe redacted derivative (smrforge.evidence_envelope.redaction.v1): names the withheld sections and pins the parent's bundle_sha256. Its presence relaxes the result/reproducibility requirement, since a withheld section's readable copy is dropped.",
-          "type": "object"
+          "$ref": "#/$defs/LeanRedaction",
+          "description": "Present on a docket-safe redacted derivative (smrforge.evidence_envelope.redaction.v1): names the withheld sections and pins the parent's bundle_sha256. Its presence relaxes the result/reproducibility requirement, since a withheld section's readable copy is dropped. Unsigned (applied after signing), so its shape is closed."
         },
         "reproducibility": {
           "$ref": "#/$defs/LeanReproducibility",
@@ -169,6 +169,10 @@
         },
         "signature": {
           "$ref": "#/$defs/LeanSignature"
+        },
+        "timestamp": {
+          "$ref": "#/$defs/LeanTimestamp",
+          "description": "OPTIONAL embedded RFC 3161 trusted-timestamp token, added AFTER signing by a Timestamp Authority (so it cannot live inside the signed manifest). Unsigned by the bundle key but self-authenticating: the TSA signs it and it binds bundle_sha256, which IS signed. Its cryptographic validity is a separate check; this binding constrains only its shape."
         }
       },
       "required": [
@@ -213,6 +217,46 @@
       "title": "LeanManifest",
       "type": "object"
     },
+    "LeanRedaction": {
+      "additionalProperties": false,
+      "description": "The unsigned redaction record (smrforge.evidence_envelope.redaction.v1). A machine record of WHICH sealed sections are withheld, nothing else: exactly these keys, so no conclusion, note or other unsigned claim can ride it on a bundle that still verifies.",
+      "properties": {
+        "caveats": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "parent_bundle_sha256": {
+          "description": "The bundle_sha256 of the unredacted parent (the seal is unchanged by redaction, so it equals this bundle's own bundle_sha256).",
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "schema": {
+          "const": "smrforge.evidence_envelope.redaction.v1"
+        },
+        "withheld": {
+          "description": "The sealed sections whose value is withheld (their digests stay pinned). Non-empty.",
+          "items": {
+            "enum": [
+              "inputs",
+              "result",
+              "provenance"
+            ]
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "schema",
+        "withheld"
+      ],
+      "title": "LeanRedaction",
+      "type": "object"
+    },
     "LeanReproducibility": {
       "additionalProperties": true,
       "description": "The reproducibility contract for a lean bundle. Appears both as the top-level ``reproducibility`` (readable) and as ``manifest.provenance.value`` (signed); the two MUST agree.",
@@ -227,7 +271,22 @@
         },
         "data": {
           "description": "Residual run-scoped signed facts that are neither the standard reproducibility keys nor lineage (e.g. pack_id, temperature). Present only when a card recorded such facts.",
-          "type": "object"
+          "type": "object",
+          "properties": {
+            "data_library_subset": {
+              "description": "OPTIONAL. The exact data-library files this run read, as [relpath, sha256:<64hex>] rows -- the small, verifiable subset a reviewer fetches and byte-checks to reproduce ONE run without staging the whole library. Each digest follows the NORMATIVE digest rule; each row's membership is checked against the published epoch manifest (whose manifest_digest equals data_library_sha256).",
+              "type": "array",
+              "items": {
+                "type": "array",
+                "prefixItems": [
+                  { "type": "string", "minLength": 1 },
+                  { "$ref": "#/$defs/Sha256Digest" }
+                ],
+                "minItems": 2,
+                "maxItems": 2
+              }
+            }
+          }
         },
         "data_library_sha256": {
           "$ref": "#/$defs/Sha256Digest",
@@ -256,9 +315,18 @@
           ],
           "type": "object"
         },
+        "produced_by": {
+          "description": "WHO produced/reproduced the sealed number: 'smrforge-open-engine' when SMRFORGE's own open engine derived it (so `smrforge reproduce` re-derives it), or 'external:<code>' (e.g. 'external:OpenMC-0.15.3', 'external:MCNP6.2') when the result was computed by an out-of-tree engine and merely PACKAGED here. Prevents an externally-supplied number from being read as open-engine-derived.",
+          "minLength": 1,
+          "type": "string"
+        },
         "reproduce": {},
         "rng_seed": {
           "type": "integer"
+        },
+        "toolchain": {
+          "$ref": "#/$defs/LeanToolchain",
+          "description": "The runtime toolchain that minted the bundle, SIGNED (ADR-040). Advisory on the consumer side: a reviewer on a different toolchain is expected and the result core re-derives regardless; certify reports a difference as a note, never a mismatch. Absent only on bundles sealed before the axis existed (v0.13.0)."
         }
       },
       "required": [
@@ -310,7 +378,7 @@
     },
     "LeanSignature": {
       "additionalProperties": false,
-      "description": "Ed25519 signature over bundle_sha256. Optional at the bundle level as a schema matter, but redaction KEEPS it (the seal is unchanged, so the original signature still verifies over a redacted copy); the schema validates its structure, not the signature's cryptographic validity. The object carries only these four keys; any other key rides unsigned and is rejected.",
+      "description": "Ed25519 signature over bundle_sha256. Optional at the bundle level as a schema matter, but redaction KEEPS it (the seal is unchanged, so the original signature still verifies over a redacted copy); the schema validates its structure, not the signature's cryptographic validity. The block is CLOSED: the seal binds only bundle_sha256, so any other key in this object would ride unsigned (a false-attestation channel). Exactly {alg, public_key, signature, message}; message is the constant 'bundle_sha256' naming what was signed. Origin (demo vs production) is a property of the key the verifier pins, never a field in the bundle.",
       "properties": {
         "alg": {
           "const": "ed25519"
@@ -334,6 +402,85 @@
         "message"
       ],
       "title": "LeanSignature",
+      "type": "object"
+    },
+    "LeanSolver": {
+      "additionalProperties": false,
+      "description": "The EXTERNAL solver a plugin actually invoked in this run (e.g. OpenMC), as the solver reports ITSELF: ``version`` from its own version attribute, ``build`` from its own build self-report (for OpenMC the version line, git SHA and compile options printed by ``openmc -v``). ``build`` is omitted when the solver reports none. Never populated from a human-typed value. For as-received externally computed results (``produced_by: external:*``) the toolchain describes the packaging runtime and this object is whatever the packaging card declares; the distinction is carried by ``produced_by``.",
+      "properties": {
+        "build": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ],
+      "title": "LeanSolver",
+      "type": "object"
+    },
+    "LeanTimestamp": {
+      "additionalProperties": false,
+      "description": "An embedded RFC 3161 timestamp token: a constrained object of strings. ``format`` is the literal ``rfc3161``; ``token`` is the base64 DER token (capped so a stapled blob cannot ride). Shape only -- cryptographic validity is a separate ASN.1/CMS check.",
+      "properties": {
+        "format": {
+          "const": "rfc3161"
+        },
+        "token": {
+          "maxLength": 200000,
+          "type": "string"
+        },
+        "tsa": {
+          "type": "string"
+        }
+      },
+      "title": "LeanTimestamp",
+      "type": "object"
+    },
+    "LeanToolchain": {
+      "additionalProperties": false,
+      "description": "The minting runtime, folded into the SIGNED provenance so it is tamper-evident (ADR-040): interpreter version and implementation, OS family (``platform``), CPU instruction set (``machine``, e.g. ``x86_64`` / ``AMD64`` / ``arm64`` -- with libm, what can move a last-bit float on the pure-Python engine), the immutable OCI digest of the engine image when a containerized runtime declares one, and the external solver's self-report when a plugin invoked one. Producers from v0.14.0 always write ``machine``; it is optional here only so bundles sealed before then validate until re-minted. This is the ONLY record of the minting runtime: the unsigned top-level ``host`` block that used to duplicate it is retired and rejected.",
+      "properties": {
+        "image_digest": {
+          "description": "An immutable OCI image digest reference, ``<ref>@sha256:<64 hex>``; a mutable tag is not a pin and is refused at capture.",
+          "pattern": "^\\S+@sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "machine": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "platform": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "python_impl": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "python_version": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "solver": {
+          "$ref": "#/$defs/LeanSolver"
+        }
+      },
+      "required": [
+        "python_version",
+        "python_impl",
+        "platform"
+      ],
+      "title": "LeanToolchain",
       "type": "object"
     },
     "ProducerBlock": {

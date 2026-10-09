@@ -255,10 +255,16 @@ const _isObj = (x) => x !== null && typeof x === 'object' && !Array.isArray(x);
 const _RESULT_REQUIRED = ['schema', 'schema_version', 'result', 'fidelity', 'verdict'];
 const _SHA256_RE = /^sha256:[0-9a-f]{64}$/;
 const _SIG_KEYS = new Set(['alg', 'public_key', 'signature', 'message']);
-const _TIMESTAMP_KEYS = new Set(['format', 'tsa', 'token']);
+// ADR-041: both unsigned records are CLOSED and every key REQUIRED. `timestamp` is exactly {format, token};
+// `token` must be strict base64 whose first decoded byte is 0x30 (the DER SEQUENCE tag every RFC 3161
+// TimeStampResp starts with), so the only unsigned bytes it can carry are an opaque blob, never text. The
+// former `tsa` string is retired (the TSA's identity is inside the token; no verifier read it). `redaction`
+// is exactly {schema, withheld, parent_bundle_sha256}: the former free-text `reason` / `caveats` are gone.
+const _TIMESTAMP_KEYS = new Set(['format', 'token']);
 const _TIMESTAMP_TOKEN_MAX = 200000;   // a base64 RFC 3161 token is a few KB; cap to reject a stapled blob
+const _TIMESTAMP_TOKEN_RE = /^MI[A-Za-z0-9+/]{2}(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
 const _REDACTION_SCHEMA = 'smrforge.evidence_envelope.redaction.v1';
-const _REDACTION_KEYS = new Set(['schema', 'withheld', 'reason', 'parent_bundle_sha256', 'caveats']);
+const _REDACTION_KEYS = new Set(['schema', 'withheld', 'parent_bundle_sha256']);
 function verifyBundle(bundle) {
   const checks = [];
   const add_ = (name, ok, detail) => checks.push({ name, ok, detail });
@@ -278,8 +284,9 @@ function verifyBundle(bundle) {
 
   // Redaction (lawful withholding) is a CLI-only feature: fail closed rather than crash on a bundle whose
   // sections are withheld or malformed, so this demo never passes what it cannot fully check. The
-  // (unsigned) record is still held to the CLI's shape first (S5 parity: key allowlist, `reason` a
-  // string, `caveats` a list of strings) so a malformed record is named as such, not just "redacted".
+  // (unsigned) record is still held to the CLI's shape first (ADR-041: exactly {schema, withheld,
+  // parent_bundle_sha256}, all required, prose-free; the parent digest well-formed and equal to the seal)
+  // so a malformed record is named as such, not just "redacted".
   if ('redaction' in bundle) {
     const red = bundle.redaction;
     const redProblems = [];
@@ -287,15 +294,16 @@ function verifyBundle(bundle) {
     else {
       const extra = Object.keys(red).filter(k => !_REDACTION_KEYS.has(k)).sort();
       if (extra.length) redProblems.push(`unexpected keys (unsigned): ${JSON.stringify(extra)}`);
+      const missing = [..._REDACTION_KEYS].filter(k => !(k in red)).sort();
+      if (missing.length) redProblems.push(`missing required keys: ${JSON.stringify(missing)}`);
       if (red.schema !== _REDACTION_SCHEMA) redProblems.push(`schema is not ${_REDACTION_SCHEMA}`);
       const wh = red.withheld;
       if (!Array.isArray(wh) || wh.length === 0 || !wh.every(w => typeof w === 'string' && _SECTIONS.includes(w)))
         redProblems.push('withheld must be a non-empty list of sections');
-      if ('reason' in red && typeof red.reason !== 'string') redProblems.push('reason is not a string');
-      if ('caveats' in red && !(Array.isArray(red.caveats) && red.caveats.every(c => typeof c === 'string')))
-        redProblems.push('caveats is not a list of strings');
-      if ('parent_bundle_sha256' in red && typeof red.parent_bundle_sha256 !== 'string')
-        redProblems.push('parent_bundle_sha256 is not a string');
+      if ('parent_bundle_sha256' in red && !(typeof red.parent_bundle_sha256 === 'string' && _SHA256_RE.test(red.parent_bundle_sha256)))
+        redProblems.push('parent_bundle_sha256 is not a well-formed sha256:<64 hex> digest');
+      else if ('parent_bundle_sha256' in red && red.parent_bundle_sha256 !== bundle.bundle_sha256)
+        redProblems.push("parent_bundle_sha256 does not match this bundle's seal");
     }
     add_('Redaction record (unsigned) is well-formed', redProblems.length === 0, redProblems.join('; '));
     add_('Redacted bundle', false, 'redacted bundles are verified with the standalone CLI, not this in-browser demo');
@@ -325,23 +333,29 @@ function verifyBundle(bundle) {
   add_('No unsigned keys ride outside the signed shape', noUnsigned,
        noUnsigned ? '' : `unsigned: top-level ${JSON.stringify(extraTop)} block ${JSON.stringify(extraBlk)}`);
 
-  // `timestamp` (optional, unsigned) is an embedded RFC 3161 token added AFTER signing. Its cryptographic
-  // validity is checked separately (tools/verify_timestamp.py); here it is held to a strict SHAPE so it
-  // cannot carry an unsigned claim or a stapled blob. Parity with evidence_verify.py `_check_timestamp`.
+  // `timestamp` (optional, unsigned) is an embedded RFC 3161 token added AFTER signing. ADR-041: exactly
+  // {format, token}, both required, the token strict-base64 DER -- held to that closed SHAPE so it cannot
+  // carry an unsigned claim or a stapled blob. This page does NOT verify the token (RFC 3161 is ASN.1/CMS/
+  // X.509 against a pinned TSA CA: tools/verify_timestamp.py); a PASS here says nothing about time.
+  // Parity with evidence_verify.py `_timestamp_problems`.
   const ts = bundle.timestamp;
-  let tsOk = true, tsDetail = '';
+  let tsOk = true, tsDetail = 'no timestamp present';
   if (ts != null) {
     if (!_isObj(ts)) { tsOk = false; tsDetail = 'timestamp is not a JSON object'; }
     else {
       const extra = Object.keys(ts).filter(k => !_TIMESTAMP_KEYS.has(k)).sort();
+      const missing = [..._TIMESTAMP_KEYS].filter(k => !(k in ts)).sort();
       const nonStr = Object.keys(ts).filter(k => _TIMESTAMP_KEYS.has(k) && typeof ts[k] !== 'string').sort();
       if (extra.length) { tsOk = false; tsDetail = `unexpected timestamp keys (unsigned): ${JSON.stringify(extra)}`; }
+      else if (missing.length) { tsOk = false; tsDetail = `timestamp is missing required keys: ${JSON.stringify(missing)}`; }
       else if (nonStr.length) { tsOk = false; tsDetail = `timestamp values must be strings: ${JSON.stringify(nonStr)}`; }
-      else if ('format' in ts && ts.format !== 'rfc3161') { tsOk = false; tsDetail = `timestamp.format must be 'rfc3161' (got ${JSON.stringify(ts.format)})`; }
-      else if (typeof ts.token === 'string' && ts.token.length > _TIMESTAMP_TOKEN_MAX) { tsOk = false; tsDetail = `timestamp.token is too large (${ts.token.length} > ${_TIMESTAMP_TOKEN_MAX})`; }
+      else if (ts.format !== 'rfc3161') { tsOk = false; tsDetail = `timestamp.format must be 'rfc3161' (got ${JSON.stringify(ts.format)})`; }
+      else if (ts.token.length > _TIMESTAMP_TOKEN_MAX) { tsOk = false; tsDetail = `timestamp.token is too large (${ts.token.length} > ${_TIMESTAMP_TOKEN_MAX})`; }
+      else if (!_TIMESTAMP_TOKEN_RE.test(ts.token)) { tsOk = false; tsDetail = "timestamp.token is not a strict-base64 DER token (must decode to an RFC 3161 SEQUENCE: base64 starting 'MI', correct padding, no other characters)"; }
+      else { tsDetail = 'timestamp present: shape checked only, NOT verified here -- an unverified claim of time until tools/verify_timestamp.py (openssl, pinned TSA CA) runs'; }
     }
   }
-  add_('Timestamp block (unsigned, optional) has the RFC 3161 shape', tsOk, tsDetail);
+  add_('Timestamp block (unsigned, optional) has the closed RFC 3161 shape -- shape only, NOT verified here', tsOk, tsDetail);
 
   for (const side of _SECTIONS) {
     const blk = manifest[side];

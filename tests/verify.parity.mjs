@@ -5,14 +5,18 @@
 //  1. RFC-8032 hardening (2026-09-06): the genuine embedded bundle verifies, a malleable signature (s+L)
 //     is REJECTED, and a non-canonical point encoding (y>=p) is rejected.
 //  2. Admissibility parity with evidence_verify.py v0.3.2 (2026-10-03): the browser verifier must not PASS
-//     what the CLI (the challenge judge) rejects -- duplicate keys, a stapled top-level/host key, an extra
+//     what the CLI (the challenge judge) rejects -- duplicate keys, a stapled top-level key, an extra
 //     manifest section, or a named data-library with a null digest -- and altering the sealed number must
 //     fail the hash-chain while the signature stays valid (the central "Break the Seal" invariant).
 //  3. Parity-hardening S1-S6 + timestamp/result-core shape (evidence-verifier v0.3.3, 2026-10-04): a
-//     stapled signature-block key, a bad signature.message, a non-string host value, a wrong-typed
-//     redaction field, unpinned+null digest, a malformed timestamp block, a result core missing a required
-//     field, and a malformed JSON document (trailing data, bad literal, NaN) must all FAIL -- while a
-//     well-formed timestamp and the genuine bundle still PASS.
+//     stapled signature-block key, a bad signature.message, a wrong-typed redaction field, unpinned+null
+//     digest, a malformed timestamp block, a result core missing a required field, and a malformed JSON
+//     document (trailing data, bad literal, NaN) must all FAIL -- while a well-formed timestamp and the
+//     genuine bundle still PASS.
+//  4. ADR-040 (2026-10-09): the unsigned top-level `host` block is RETIRED. The genuine embedded bundle
+//     carries none, and a host block of ANY shape (the old well-formed triple included) is rejected as an
+//     unsigned top-level key, in lock-step with smrf_verify -- the minting runtime is read only from the
+//     signed provenance.toolchain.
 import { BUNDLE_TEXT, parseJSON, verifyBundle } from '../check.js';
 
 let failures = 0;
@@ -79,9 +83,10 @@ const pinRes = verifyBundle(pin);
 check('a named data-library with a null digest is flagged by the pin check',
   pinRes.ok === false && chk(pinRes, /Data-library pin/).ok === false);
 
-const hostB = fresh(); hostB.host.injected = 'attacker note';
+const hostB = fresh(); hostB.host = { injected: 'attacker note' };
 const hostRes = verifyBundle(hostB);
-check('an extra (unsigned) host key is rejected', hostRes.ok === false && chk(hostRes, /Host block/).ok === false);
+check('an unsigned host key is rejected (the host block itself is retired, ADR-040)',
+  hostRes.ok === false && chk(hostRes, /No unsigned keys/).ok === false);
 
 const red = fresh(); red.redaction = { schema: 'smrforge.evidence_envelope.redaction.v1', withheld: ['inputs'] };
 check('a redacted bundle fails closed in the browser (CLI-only feature)', verifyBundle(red).ok === false);
@@ -108,10 +113,20 @@ check('S2: a signature.message other than "bundle_sha256" is rejected',
 const s2b = fresh(); delete s2b.signature.message;
 check('S2: a missing signature.message is rejected', chk(verifyBundle(s2b), /Signature message is bound/).ok === false);
 
-// S4: host values must be strings (an object under an allowed key is still an unsigned claim)
-const s4 = fresh(); s4.host.platform = { conclusion: 'approved for operation' };
+// S4 (retired by ADR-040): `host` is no longer an allowed unsigned surface at all. The exact triple the
+// retired producer wrote (python_version / python_impl / platform) is an unsigned duplicate of the signed
+// provenance.toolchain, so it fails as an unexpected top-level key while the signature still verifies --
+// the same verdict smrf_verify gives (conformance vector invalid/unsigned_host_block.json).
+check('ADR-040: the genuine embedded bundle carries no host block', !('host' in fresh()));
+const s4 = fresh(); s4.host = { python_version: '3.12.0rc3', python_impl: 'CPython', platform: 'Windows' };
 const s4Res = verifyBundle(s4);
-check('S4: a non-string host value is rejected', s4Res.ok === false && chk(s4Res, /Host block/).ok === false && sigOnly(s4Res));
+check('ADR-040: the retired well-formed host triple is rejected as an unsigned top-level key (signature still verifies)',
+  s4Res.ok === false && chk(s4Res, /No unsigned keys/).ok === false && sigOnly(s4Res));
+const s4b = fresh(); s4b.host = { platform: { conclusion: 'approved for operation' } };
+check('ADR-040: a host block smuggling a non-string claim is rejected the same way', chk(verifyBundle(s4b), /No unsigned keys/).ok === false);
+const s4c = fresh(); s4c.host = 'Linux';
+check('ADR-040: a non-object host is rejected the same way', chk(verifyBundle(s4c), /No unsigned keys/).ok === false);
+check('ADR-040: no "Host block" check line remains in the checklist', verifyBundle(fresh()).checks.every((c) => !/Host block/.test(c.name)));
 
 // S5: redaction field types (reason a string; caveats a list of strings)
 const s5a = fresh(); s5a.redaction = { schema: 'smrforge.evidence_envelope.redaction.v1', withheld: ['inputs'], reason: { conclusion: 'approved' } };

@@ -255,7 +255,6 @@ const _isObj = (x) => x !== null && typeof x === 'object' && !Array.isArray(x);
 const _RESULT_REQUIRED = ['schema', 'schema_version', 'result', 'fidelity', 'verdict'];
 const _SHA256_RE = /^sha256:[0-9a-f]{64}$/;
 const _SIG_KEYS = new Set(['alg', 'public_key', 'signature', 'message']);
-const _HOST_KEYS = new Set(['python_version', 'python_impl', 'platform']);
 const _TIMESTAMP_KEYS = new Set(['format', 'tsa', 'token']);
 const _TIMESTAMP_TOKEN_MAX = 200000;   // a base64 RFC 3161 token is a few KB; cap to reject a stapled blob
 const _REDACTION_SCHEMA = 'smrforge.evidence_envelope.redaction.v1';
@@ -311,9 +310,11 @@ function verifyBundle(bundle) {
   // The seal binds only the three section digests, so such a key rides UNSIGNED: an intermediary could
   // staple an attacker-authored claim (e.g. a top-level "conclusion") onto a genuinely-signed bundle
   // and this checker would otherwise show all-green. Mirrors smrf_verify / evidence-verifier (incl. the
-  // optional post-signing `timestamp` token).
+  // optional post-signing `timestamp` token). The former unsigned `host` block is RETIRED (ADR-040): it
+  // duplicated the sealed provenance.toolchain as editable free text, so it is now rejected here like any
+  // other unsigned top-level key -- the minting runtime is read from the signed side only.
   const allowedTop = new Set(['schema', 'result', 'reproducibility', 'manifest', 'sha256sums',
-                              'bundle_sha256', 'signature', 'host', 'redaction', 'timestamp']);
+                              'bundle_sha256', 'signature', 'redaction', 'timestamp']);
   const extraTop = Object.keys(bundle).filter(k => !allowedTop.has(k)).sort();
   let extraBlk = [];
   for (const side of _SECTIONS) {
@@ -323,22 +324,6 @@ function verifyBundle(bundle) {
   const noUnsigned = extraTop.length === 0 && extraBlk.length === 0;
   add_('No unsigned keys ride outside the signed shape', noUnsigned,
        noUnsigned ? '' : `unsigned: top-level ${JSON.stringify(extraTop)} block ${JSON.stringify(extraBlk)}`);
-
-  // `host` also rides unsigned; constrain its shape too (parity with evidence_verify.py `_check_host`):
-  // only the allowed keys, and every VALUE a string (S4). A non-string value (e.g. an object carrying a
-  // "conclusion") is an unsigned claim smuggled under an allowed key.
-  const host = bundle.host;
-  let hostOk = true, hostDetail = '';
-  if (host != null) {
-    if (!_isObj(host)) { hostOk = false; hostDetail = 'host is not a JSON object'; }
-    else {
-      const extra = Object.keys(host).filter(k => !_HOST_KEYS.has(k)).sort();
-      const nonStr = Object.keys(host).filter(k => _HOST_KEYS.has(k) && typeof host[k] !== 'string').sort();
-      if (extra.length) { hostOk = false; hostDetail = `unexpected host keys (unsigned): ${JSON.stringify(extra)}`; }
-      else if (nonStr.length) { hostOk = false; hostDetail = `host values must be strings: ${JSON.stringify(nonStr)}`; }
-    }
-  }
-  add_('Host block (unsigned) carries only allowed keys with string values', hostOk, hostDetail);
 
   // `timestamp` (optional, unsigned) is an embedded RFC 3161 token added AFTER signing. Its cryptographic
   // validity is checked separately (tools/verify_timestamp.py); here it is held to a strict SHAPE so it

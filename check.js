@@ -266,6 +266,123 @@ const _TIMESTAMP_TOKEN_MAX = 200000;   // a base64 RFC 3161 token is a few KB; c
 const _TIMESTAMP_TOKEN_RE = /^MI[A-Za-z0-9+/]{2}(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
 const _REDACTION_SCHEMA = 'smrforge.evidence_envelope.redaction.v1';
 const _REDACTION_KEYS = new Set(['schema', 'withheld', 'parent_bundle_sha256']);
+// ADR-042: `provenance.derived_from` (SEALED, inside manifest.provenance.value) is the OPTIONAL list of
+// cross-bundle links binding this bundle to the upstream bundle(s) whose sealed result it consumed. Each
+// link is a CLOSED record of FACTS checkable OFFLINE: the upstream's seal (`bundle_sha256`), the digest
+// triple it is the digest of (`sha256sums`), what was consumed (`consumed`: which of this bundle's own
+// sealed inputs, WHERE in the upstream's result core (an RFC 6901 pointer), and that value's digest), and
+// a `role` label. A link NEVER carries a verdict about the upstream (`verified`, `origin`, ...) -- origin
+// is the walking verifier's call, never a sealed field. SHAPE-checked here (a malformed or decorative link
+// is a verdict FAIL, like a malformed timestamp); the links are WALKED only by the CLI (`verify --chain`).
+// Restated 1:1 from smrf_verify/verify.py `derived_from_link_problems` / `derived_from_problems`.
+const _DERIVED_FROM_KEYS = new Set(['bundle_sha256', 'sha256sums', 'consumed', 'role']);
+const _DERIVED_FROM_CONSUMED_KEYS = new Set(['input', 'path', 'sha256']);
+// named explicitly so the rejection SAYS why: a verdict label inside a sealed link is the false-attestation
+// class moved inside the seal (an unexpected key is rejected regardless; these get the pointed message)
+const _DERIVED_FROM_VERDICT_KEYS = new Set(['verified', 'integrity', 'origin', 'state', 'verdict', 'certified',
+                                           'integrity_ok', 'origin_ok', 'chain']);
+const _MAX_DERIVED_FROM_LINKS = 64;
+// `role` and `consumed.input` are IDENTIFIERS (an input key, a role slug), never prose: one bounded token...
+const _DERIVED_FROM_LABEL_RE = /^[A-Za-z0-9][A-Za-z0-9_.:/-]{0,127}$/;
+// ...and never a verdict smuggled into the token itself (`role: "NRC-ACCEPTED:origin-VERIFIED"` passes the
+// identifier shape yet reads, sealed, as an attestation nobody made). A label CONTAINING any of these
+// (case-insensitive) is rejected outright; the walking verifier is the only party that says `verified`.
+const _DERIVED_FROM_VERDICT_TOKENS = ['verified', 'accepted', 'approved', 'certified', 'origin', 'valid', 'pass', 'trusted'];
+const _verdictTokenIn = (label) => { const low = label.toLowerCase(); return _DERIVED_FROM_VERDICT_TOKENS.find(t => low.includes(t)) || null; };
+// `consumed.path` is an RFC 6901 JSON pointer into the upstream RESULT CORE ("" = the whole core). SYNTAX
+// only, as in smrf_verify: a list index that is not canonical ASCII decimal (`/01`) is a well-formed pointer
+// that simply does not RESOLVE -- that is the walker's call (smrf_verify.chain.resolve_pointer), not a shape
+// FAIL here, so the browser and the CLI keep the same single-bundle verdict.
+const _JSON_POINTER_RE = /^(?:\/(?:[^/~]|~[01])*)*$/;
+const _MAX_JSON_POINTER_LEN = 1024;
+const _isDigest = (v) => typeof v === 'string' && _SHA256_RE.test(v);
+const _pyRepr = (v) => (v === undefined ? 'absent' : JSON.stringify(v instanceof NumLit ? v.raw : v));
+
+// Every way ONE `derived_from` link fails the closed ADR-042 shape (empty list = well-formed). All OFFLINE:
+// the closed key set (a verdict label named as such), every digest `sha256:<64 lowercase hex>`, `sha256sums`
+// exactly the three sections, `bundle_sha256 == sha(canon(sha256sums))` (self-consistent: the same equality
+// the seal itself is held to), the closed `consumed` triple, an identifier-shaped `role`, and no link to
+// this bundle's OWN seal. Parity with smrf_verify `derived_from_link_problems`.
+function derivedFromLinkProblems(link, ownSeal) {
+  if (!_isObj(link)) return [`is not a JSON object (got ${Array.isArray(link) ? 'list' : typeof link})`];
+  const problems = [];
+  const extra = Object.keys(link).filter(k => !_DERIVED_FROM_KEYS.has(k));
+  const verdicts = extra.filter(k => _DERIVED_FROM_VERDICT_KEYS.has(k)).sort();
+  if (verdicts.length) problems.push(`carries a verdict field ${JSON.stringify(verdicts)}: a sealed link records FACTS only -- origin/integrity of the upstream are the walking verifier's call, never a sealed field`);
+  const other = extra.filter(k => !_DERIVED_FROM_VERDICT_KEYS.has(k)).sort();
+  if (other.length) problems.push(`has unexpected keys: ${JSON.stringify(other)}`);
+  const missing = [..._DERIVED_FROM_KEYS].filter(k => !(k in link)).sort();
+  if (missing.length) problems.push(`is missing required keys: ${JSON.stringify(missing)}`);
+  const target = link.bundle_sha256;
+  if ('bundle_sha256' in link && !_isDigest(target)) problems.push(`bundle_sha256 is not a well-formed sha256:<64 hex> digest: ${_pyRepr(target)}`);
+  const sums = link.sha256sums;
+  let sumsOk = false;
+  if ('sha256sums' in link) {
+    if (!_isObj(sums)) problems.push(`sha256sums is not a JSON object (got ${Array.isArray(sums) ? 'list' : typeof sums})`);
+    else if (Object.keys(sums).length !== _SECTIONS.length || !_SECTIONS.every(s => s in sums)) {
+      const ks = new Set(Object.keys(sums));
+      const sym = [..._SECTIONS.filter(s => !ks.has(s)), ...[...ks].filter(k => !_SECTIONS.includes(k))].sort();
+      problems.push(`sha256sums has unexpected/missing sections: ${JSON.stringify(sym)}`);
+    } else if (!_SECTIONS.every(s => _isDigest(sums[s]))) problems.push('sha256sums values must each be a well-formed sha256:<64 hex> digest');
+    else sumsOk = true;
+  }
+  if (sumsOk && _isDigest(target)) {
+    const recomputed = sha(canon(sums));
+    if (recomputed !== target) problems.push(`bundle_sha256 ${target} != sha(canon(sha256sums)) ${recomputed} (the link is not self-consistent: it does not name the seal of the triple it carries)`);
+  }
+  if (ownSeal != null && target === ownSeal) problems.push("links to this bundle's own seal (a self-reference)");
+  const consumed = link.consumed;
+  if ('consumed' in link) {
+    if (!_isObj(consumed)) problems.push(`consumed is not a JSON object (got ${Array.isArray(consumed) ? 'list' : typeof consumed})`);
+    else {
+      const cExtra = Object.keys(consumed).filter(k => !_DERIVED_FROM_CONSUMED_KEYS.has(k)).sort();
+      if (cExtra.length) problems.push(`consumed has unexpected keys: ${JSON.stringify(cExtra)}`);
+      const cMissing = [..._DERIVED_FROM_CONSUMED_KEYS].filter(k => !(k in consumed)).sort();
+      if (cMissing.length) problems.push(`consumed is missing required keys: ${JSON.stringify(cMissing)}`);
+      const inp = consumed.input;
+      if ('input' in consumed && !(typeof inp === 'string' && _DERIVED_FROM_LABEL_RE.test(inp))) problems.push(`consumed.input must be a bounded identifier (an input key): ${_pyRepr(inp)}`);
+      else if ('input' in consumed && _verdictTokenIn(inp)) problems.push(`consumed.input ${JSON.stringify(inp)} carries a verdict token (${JSON.stringify(_verdictTokenIn(inp))}): a sealed link records FACTS only -- origin/integrity of the upstream are the walking verifier's call, never a sealed label`);
+      const path = consumed.path;
+      // code-point length ([...s]), as Python's len(): a UTF-16 count would split the two verifiers on astral text
+      if ('path' in consumed && !(typeof path === 'string' && [...path].length <= _MAX_JSON_POINTER_LEN && _JSON_POINTER_RE.test(path)))
+        problems.push('consumed.path must be a bounded RFC 6901 JSON pointer into the upstream result core');
+      if ('sha256' in consumed && !_isDigest(consumed.sha256)) problems.push(`consumed.sha256 is not a well-formed sha256:<64 hex> digest: ${_pyRepr(consumed.sha256)}`);
+    }
+  }
+  const role = link.role;
+  if ('role' in link && !(typeof role === 'string' && _DERIVED_FROM_LABEL_RE.test(role))) problems.push(`role must be a bounded identifier, not prose: ${_pyRepr(role)}`);
+  else if ('role' in link && _verdictTokenIn(role)) problems.push(`role ${JSON.stringify(role)} carries a verdict token (${JSON.stringify(_verdictTokenIn(role))}): a sealed link records FACTS only -- origin/integrity of the upstream are the walking verifier's call, never a sealed label`);
+  return problems;
+}
+// Every problem with a sealed `derived_from` value, each prefixed `derived_from`. A non-list, an EMPTY list
+// (a chain claim with no links would walk to a vacuous pass -- omit the key instead) and an over-long list
+// are rejected whole. Parity with smrf_verify `derived_from_problems`.
+function derivedFromProblems(links, ownSeal) {
+  if (!Array.isArray(links)) return [`derived_from is not a JSON list (got ${links === null ? 'null' : typeof links})`];
+  if (links.length === 0) return ['derived_from is an empty list (a chain claim with no links); omit the key instead'];
+  if (links.length > _MAX_DERIVED_FROM_LINKS) return [`derived_from has too many links (${links.length} > ${_MAX_DERIVED_FROM_LINKS})`];
+  return links.flatMap((link, i) => derivedFromLinkProblems(link, ownSeal).map(p => `derived_from[${i}] ${p}`));
+}
+// The sealed chain claim's SHAPE-check and state (ADR-042), the sibling of the timestamp state -- parity with
+// smrf_verify `_chain_state` / `sealed_provenance`:
+//   'none'              -- the sealed provenance carries no `derived_from` (also the fail-closed value for a
+//                          bundle with no readable manifest)
+//   'declared-unwalked' -- well-formed links are sealed; they were NOT walked here (a separate verdict)
+//   'malformed'         -- `derived_from` is present but fails its shape rule; always a failing check
+//   'unknown'           -- the provenance section is withheld, so any link in it is INVISIBLE: never a silent
+//                          'none' (a redacted downstream must not read as chain-free)
+// `ownSeal` is this bundle's RECOMPUTED seal (sha(canon(sha256sums))), so a self-reference is caught even
+// when the readable bundle_sha256 was edited.
+function chainCheck(bundle) {
+  const manifest = _isObj(bundle) ? bundle.manifest : null;
+  const blk = _isObj(manifest) ? manifest.provenance : null;
+  if (!_isObj(blk)) return { state: 'none', problems: [] };
+  if (!('value' in blk)) return { state: 'unknown', problems: [] };
+  const pv = blk.value;
+  if (!_isObj(pv) || !('derived_from' in pv)) return { state: 'none', problems: [] };
+  const problems = derivedFromProblems(pv.derived_from, sha(canon(bundle.sha256sums === undefined ? null : bundle.sha256sums)));
+  return { state: problems.length ? 'malformed' : 'declared-unwalked', problems };
+}
 function verifyBundle(bundle) {
   const checks = [];
   const add_ = (name, ok, detail, advisory = false) => checks.push({ name, ok, detail, advisory });
@@ -273,7 +390,13 @@ function verifyBundle(bundle) {
   // as a checked claim of time: "absent" | "present-unverified" | "malformed" (SPEC.md 2.1.6). Declared
   // here, not in the timestamp block below, so the early `return done()` paths still carry a defined value.
   let tsState = 'absent';
-  const done = () => ({ ok: checks.every(c => c.ok), checks, timestamp: tsState });
+  // The SEALED `derived_from` chain claim's state (ADR-042), the timestamp state's sibling: "none" |
+  // "declared-unwalked" | "malformed" | "unknown". SHAPE only -- the links are never walked here (this
+  // page verifies ONE bundle; the walk is `smrf_verify ... --chain`, a separate claim with its own verdict),
+  // so `ok: true` on this bundle says NOTHING about its upstreams. Declared here so the early-return paths
+  // carry a defined value; set from `chainCheck` on every path that reads the manifest.
+  let chainState = 'none';
+  const done = () => ({ ok: checks.every(c => c.ok), checks, timestamp: tsState, chain: chainState });
 
   add_('Envelope schema recognised', bundle.schema === 'smrforge.evidence_envelope.v1', bundle.schema);
 
@@ -311,6 +434,9 @@ function verifyBundle(bundle) {
         redProblems.push("parent_bundle_sha256 does not match this bundle's seal");
     }
     add_('Redaction record (unsigned) is well-formed', redProblems.length === 0, redProblems.join('; '));
+    // name the chain state even on the fail-closed path: a redacted downstream whose provenance is withheld
+    // reports 'unknown' (its links are invisible), never a silent 'none'. Parity with smrf_verify _chain_state.
+    chainState = chainCheck(bundle).state;
     add_('Redacted bundle', false, 'redacted bundles are verified with the standalone CLI, not this in-browser demo');
     return done();
   }
@@ -401,6 +527,25 @@ function verifyBundle(bundle) {
   else if (_dls != null && !(typeof _dls === 'string' && _SHA256_RE.test(_dls))) { pinOk = false; pinDetail = `not a sha256 digest: ${_dls}`; }
   add_('Data-library pin is a well-formed digest', pinOk, pinDetail);
 
+  // ADR-042: a sealed `derived_from` is held to its closed, offline-checkable link shape. A present-but-
+  // malformed chain claim FAILS the verdict (as a malformed timestamp does): a link that is not self-
+  // consistent, carries a verdict label, or points at this very seal is not a binding. Well-formed links
+  // are NOT walked here -- the state-dependent name says so, so a declared chain is never a bare green
+  // tick, and a bundle with NO chain claim shows no "shape checked" line. Parity with smrf_verify
+  // `derived_from_problems` + `_chain_state`.
+  const chain = chainCheck(bundle);
+  chainState = chain.state;
+  const chainOk = chainState !== 'malformed';
+  const chainName = chainState === 'declared-unwalked'
+    ? 'Chain claim (sealed derived_from) present: link shape checked only, NOT walked here'
+    : chainState === 'malformed' ? 'Chain claim (sealed derived_from) is malformed'
+    : 'Chain claim (sealed derived_from): none present';
+  const chainDetail = chainState === 'declared-unwalked'
+    ? `${_pv.derived_from.length} upstream link(s) sealed: self-consistent and verdict-free, but the upstream bundle(s) were NOT checked here -- this verdict says nothing about them until the CLI walks the chain (verify --chain)`
+    : chainState === 'malformed' ? chain.problems.join('; ') : 'no derived_from present';
+  // advisory:true -> the renderer shows the detail even on a PASS, so "NOT walked here" is visible
+  add_(chainName, chainOk, chainDetail, true);
+
   const rb = sha(canon(sums));
   const sealOk = rb === bundle.bundle_sha256;
   add_('Bundle seal covers the whole fingerprint list', sealOk, sealOk ? rb : `recomputed ${rb} ≠ ${bundle.bundle_sha256}`);
@@ -435,7 +580,7 @@ function verifyBundle(bundle) {
 }
 
 // expose the pure core for a headless (Node) parity test
-export { BUNDLE_TEXT, parseJSON, canon, verifyBundle, NumLit, PINNED_IS_DEMO, sha256hex, sha512 };
+export { BUNDLE_TEXT, parseJSON, canon, sha, verifyBundle, NumLit, PINNED_IS_DEMO, sha256hex, sha512 };
 
 // ======================================================================================
 // UI wiring -- runs only in a browser; a Node import of the functions above skips all of this

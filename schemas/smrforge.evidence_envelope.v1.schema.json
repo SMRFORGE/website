@@ -305,6 +305,15 @@
           "description": "NORMATIVE DIGEST RULE: MUST be a lowercase 'sha256:<64 hex>' digest binding the data actually used; a conforming verifier MUST reject any other value."
         },
         "deterministic": {},
+        "derived_from": {
+          "description": "OPTIONAL (ADR-042). Present only on a bundle whose result consumed the SEALED result of one or more SEPARATE upstream bundles (Form B cross-bundle chaining; `lineage` is Form A, in-process composition within one seal). A non-empty, bounded list of CLOSED link records carrying FACTS a verifier checks OFFLINE; never a verdict about the upstream. A present-but-malformed value is a verdict FAIL. The links are walked only by a chain verifier (`verify --chain`), a separate claim from this bundle's own verdict.",
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/LeanDerivedFromLink"
+          }
+        },
         "engine": {
           "type": "string"
         },
@@ -351,6 +360,57 @@
         "reproduce"
       ],
       "title": "LeanReproducibility",
+      "type": "object"
+    },
+    "LeanDerivedFromLink": {
+      "additionalProperties": false,
+      "description": "One sealed cross-bundle link (ADR-042). CLOSED: exactly bundle_sha256 / sha256sums / consumed / role, all REQUIRED. `bundle_sha256` MUST equal the digest of the canonical form of `sha256sums` (the upstream's seal over its own digest-triple; sealing the whole triple lets the link survive a redaction of the upstream's inputs or provenance). `consumed` names WHICH of this bundle's own sealed inputs (`input`) came from WHERE in the upstream's result core (`path`, an RFC 6901 pointer) and the digest of that value (`sha256`), which MUST equal the digest of the sealed input it names. A link carries no verdict field (`verified`, `integrity`, `origin`, ...): origin is decided by the verifier that walks the chain, never asserted by a sealed field; a conforming verifier MUST reject any other key.",
+      "properties": {
+        "bundle_sha256": {
+          "$ref": "#/$defs/Sha256Digest"
+        },
+        "sha256sums": {
+          "$ref": "#/$defs/LeanSha256Sums"
+        },
+        "consumed": {
+          "additionalProperties": false,
+          "properties": {
+            "input": {
+              "description": "The key, in this bundle's own sealed `inputs`, whose value is the consumed upstream value.",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/-]{0,127}$",
+              "type": "string"
+            },
+            "path": {
+              "description": "RFC 6901 JSON pointer to the consumed value inside the upstream's sealed result core (\"\" = the whole core).",
+              "maxLength": 1024,
+              "pattern": "^(?:/(?:[^/~]|~[01])*)*$",
+              "type": "string"
+            },
+            "sha256": {
+              "$ref": "#/$defs/Sha256Digest",
+              "description": "Digest of the canonical form of the consumed value; equals the digest of this bundle's sealed input named by `input` AND of the value at `path` in the upstream result."
+            }
+          },
+          "required": [
+            "input",
+            "path",
+            "sha256"
+          ],
+          "type": "object"
+        },
+        "role": {
+          "description": "An identifier for what the consumed value is to this step (e.g. few-group-xs); a bounded token, never prose.",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/-]{0,127}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "bundle_sha256",
+        "sha256sums",
+        "consumed",
+        "role"
+      ],
+      "title": "LeanDerivedFromLink",
       "type": "object"
     },
     "LeanSection": {

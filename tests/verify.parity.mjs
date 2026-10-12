@@ -17,7 +17,12 @@
 //     carries none, and a host block of ANY shape (the old well-formed triple included) is rejected as an
 //     unsigned top-level key, in lock-step with smrf_verify -- the minting runtime is read only from the
 //     signed provenance.toolchain.
-import { BUNDLE_TEXT, parseJSON, verifyBundle } from '../check.js';
+//  5. ADR-042 (2026-10-12): the SEALED `provenance.derived_from` chain claim is SHAPE-checked in lock-step
+//     with smrf_verify `derived_from_link_problems` (closed keys, self-consistent bundle_sha256 ==
+//     sha(canon(sha256sums)), no self-seal, no verdict field or verdict token, bounded identifiers, an RFC
+//     6901 pointer, <= 64 links) and the result carries a `chain` state ('none' | 'declared-unwalked' |
+//     'malformed' | 'unknown'). The links are NEVER walked here (single-bundle verifier).
+import { BUNDLE_TEXT, parseJSON, verifyBundle, canon, sha } from '../check.js';
 
 let failures = 0;
 const check = (name, cond) => { console.log(`${cond ? 'ok  ' : 'FAIL'}  ${name}`); if (!cond) failures++; };
@@ -241,6 +246,123 @@ check('parse: a missing colon / comma / bracket is rejected', throws('{"a" 1}') 
 check('parse: an unterminated string and a bad escape are rejected', throws('{"a":"x') && throws('{"a":"\\q"}') && throws('{"a":"\\u12G4"}'));
 check('parse: a raw control character inside a string is rejected', throws('{"a":"x\ny"}'));
 check('parse: a well-formed document with 30.0 keeps its literal', parseJSON('{"k": 30.0}').k.raw === '30.0');
+
+// --- 5. ADR-042: sealed `derived_from` chain claim -- shape-check + `chain` state, parity with smrf_verify ---
+// The claim lives INSIDE the sealed provenance, so splicing a link into the production-signed bundle
+// necessarily breaks the provenance section digest (we cannot re-seal under the production key). The
+// Ed25519 signature still verifies (the seal itself is untouched) and ONLY the provenance-section row and
+// the chain row may differ between variants: the chain row's verdict and the `chain` state are what is
+// under test, exactly as smrf_verify's `derived_from_problems` / `_chain_state` judge them.
+const chainRow = (res) => chk(res, /Chain claim/);
+const upSums = { inputs: 'sha256:' + '1'.repeat(64), result: 'sha256:' + '2'.repeat(64), provenance: 'sha256:' + '3'.repeat(64) };
+const upSeal = sha(canon(upSums));
+const goodLink = () => ({
+  bundle_sha256: upSeal, sha256sums: { ...upSums },
+  consumed: { input: 'few_group', path: '/result/physics:homogenization/few_group', sha256: 'sha256:' + 'a'.repeat(64) },
+  role: 'few-group-xs',
+});
+const withChain = (links) => { const b = fresh(); b.manifest.provenance.value.derived_from = links; b.reproducibility.derived_from = links; return b; };
+const sigAndSealOnly = (res) => sigOnly(res) && chk(res, /Bundle seal covers/).ok === true;
+
+check('ADR-042: the genuine embedded bundle seals no derived_from -> chain state "none"', verifyBundle(fresh()).chain === 'none');
+check('ADR-042: ...and its chain row is a "none present" line, not a green "shape checked" line',
+  chainRow(verifyBundle(fresh())).ok === true && /none present/.test(chainRow(verifyBundle(fresh())).name) && !/shape checked/.test(chainRow(verifyBundle(fresh())).name));
+check('ADR-042: every state/verdict word the tests key on is absent from the genuine checklist row names',
+  verifyBundle(fresh()).checks.every((c) => !/Chain claim.*(malformed|walked)/.test(c.name)));
+
+const okChain = verifyBundle(withChain([goodLink()]));
+check('ADR-042 control: a well-formed self-consistent link PASSES the chain shape check', chainRow(okChain).ok === true);
+check('ADR-042 control: ...and reports chain state "declared-unwalked" (never a bare true / verified)', okChain.chain === 'declared-unwalked');
+check('ADR-042 control: the pass line says NOT walked here (name and detail)',
+  /NOT walked here/.test(chainRow(okChain).name) && /NOT checked here/.test(chainRow(okChain).detail) && chainRow(okChain).advisory === true);
+check('ADR-042 control: splicing the link breaks only the provenance digest (signature + seal still verify; the browser cannot re-seal)',
+  okChain.ok === false && sigAndSealOnly(okChain) && chk(okChain, /provenance section matches/).ok === false
+    && okChain.checks.filter((c) => !c.ok).every((c) => /provenance section matches|Readable provenance/.test(c.name)));
+check('ADR-042 control: the whole-core pointer "" and a "~0"/"~1" escaped pointer are well-formed',
+  chainRow(verifyBundle(withChain([{ ...goodLink(), consumed: { ...goodLink().consumed, path: '' } }]))).ok === true
+    && chainRow(verifyBundle(withChain([{ ...goodLink(), consumed: { ...goodLink().consumed, path: '/a~0b/c~1d/0' } }]))).ok === true);
+
+// the invalids: each must FAIL the chain row, report chain "malformed", and leave the signature verifying
+const badChain = (name, links, re) => {
+  const res = verifyBundle(withChain(links));
+  check(`ADR-042: ${name}`, res.ok === false && chainRow(res).ok === false && res.chain === 'malformed' && sigOnly(res) && re.test(chainRow(res).detail));
+};
+const bad = (patch) => [{ ...goodLink(), ...patch }];
+const badConsumed = (patch) => [{ ...goodLink(), consumed: { ...goodLink().consumed, ...patch } }];
+badChain('bundle_sha256 != sha(canon(sha256sums)) (not self-consistent) is rejected OFFLINE',
+  bad({ bundle_sha256: 'sha256:' + '0'.repeat(64) }), /not self-consistent/);
+badChain('a tampered sha256sums (bundle_sha256 left as-is) is rejected the same way',
+  bad({ sha256sums: { ...upSums, result: 'sha256:' + '4'.repeat(64) } }), /not self-consistent/);
+badChain('a link carrying `verified: true` is rejected as a sealed verdict field',
+  bad({ verified: true }), /carries a verdict field \["verified"\]/);
+badChain('a link carrying `origin`/`chain` labels is named as a verdict field, not just an extra key',
+  bad({ origin: 'smrforge', chain: 'verified' }), /carries a verdict field \["chain","origin"\]/);
+badChain('an extra (non-verdict) key is rejected (closed record)',
+  bad({ note: 'reviewed' }), /unexpected keys: \["note"\]/);
+badChain('a missing required key is rejected',
+  [(() => { const l = goodLink(); delete l.role; return l; })()], /missing required keys: \["role"\]/);
+badChain('a verdict token inside `role` ("NRC-ACCEPTED:origin-VERIFIED" passes the identifier shape) is rejected',
+  bad({ role: 'NRC-ACCEPTED:origin-VERIFIED' }), /role .* carries a verdict token/);
+badChain('a verdict token inside `role` is matched case-insensitively ("Approved-xs")',
+  bad({ role: 'Approved-xs' }), /verdict token \("approved"\)/);
+badChain('a verdict token inside `consumed.input` is rejected',
+  badConsumed({ input: 'few_group_verified' }), /consumed\.input .* carries a verdict token/);
+badChain('prose in `role` (spaces) is rejected as not an identifier',
+  bad({ role: 'accepted by the NRC' }), /role must be a bounded identifier/);
+badChain('an over-long role (> 128 chars) is rejected',
+  bad({ role: 'r'.repeat(129) }), /role must be a bounded identifier/);
+badChain('a consumed.path that is not an RFC 6901 pointer (no leading "/") is rejected',
+  badConsumed({ path: 'result/k_eff' }), /consumed\.path must be a bounded RFC 6901 JSON pointer/);
+badChain('a consumed.path with a bad escape ("~2") is rejected',
+  badConsumed({ path: '/result/~2' }), /consumed\.path must be a bounded RFC 6901 JSON pointer/);
+badChain('an over-long consumed.path (> 1024 chars) is rejected',
+  badConsumed({ path: '/' + 'x'.repeat(1024) }), /consumed\.path must be a bounded RFC 6901 JSON pointer/);
+badChain('a malformed consumed.sha256 is rejected',
+  badConsumed({ sha256: 'sha256:' + 'G'.repeat(64) }), /consumed\.sha256 is not a well-formed/);
+badChain('an extra key inside consumed is rejected',
+  badConsumed({ verified: true }), /consumed has unexpected keys: \["verified"\]/);
+badChain('a missing consumed key is rejected',
+  [(() => { const l = goodLink(); delete l.consumed.sha256; return l; })()], /consumed is missing required keys: \["sha256"\]/);
+badChain('an upper-case / non-hex bundle_sha256 is rejected',
+  bad({ bundle_sha256: 'sha256:' + 'A'.repeat(64) }), /bundle_sha256 is not a well-formed/);
+badChain('sha256sums with an extra section is rejected',
+  bad({ sha256sums: { ...upSums, host: 'sha256:' + '5'.repeat(64) } }), /unexpected\/missing sections: \["host"\]/);
+badChain('a link that is not an object is rejected',
+  ['sha256:' + '0'.repeat(64)], /is not a JSON object/);
+badChain('an EMPTY derived_from list is rejected (omit the key instead)',
+  [], /empty list/);
+badChain('too many links (> 64) is rejected whole',
+  Array.from({ length: 65 }, () => goodLink()), /too many links \(65 > 64\)/);
+// a self-reference: the link's bundle_sha256 is this bundle's OWN (recomputed) seal
+const selfSums = fresh().sha256sums;
+badChain('a link to this bundle\'s own seal (self-reference) is rejected',
+  bad({ bundle_sha256: sha(canon(selfSums)), sha256sums: { ...selfSums } }), /own seal/);
+// non-list / null derived_from
+for (const [what, v] of [['null', null], ['an object', { bundle_sha256: upSeal }], ['a string', 'sha256:' + '0'.repeat(64)]]) {
+  const res = verifyBundle(withChain(v));
+  check(`ADR-042: derived_from that is ${what} (not a list) is rejected`, res.ok === false && chainRow(res).ok === false && res.chain === 'malformed' && /not a JSON list/.test(chainRow(res).detail));
+}
+// NOT a shape FAIL (parity): a non-canonical list index ("/01") is a syntactically valid RFC 6901 pointer that
+// merely does not RESOLVE -- smrf_verify's shape check passes it and only chain.resolve_pointer refuses it at
+// walk time. Rejecting it here would make the browser FAIL a bundle the CLI passes (a verdict split).
+const idxRes = verifyBundle(withChain(badConsumed({ path: '/result/items/01' })));
+check('ADR-042 parity: a non-canonical pointer index ("/01") passes the SHAPE check (it is the walker\'s call, as in smrf_verify)',
+  chainRow(idxRes).ok === true && idxRes.chain === 'declared-unwalked');
+
+// `chain` state on the fail-closed redaction path: a withheld provenance hides any link -> 'unknown', never
+// a silent 'none'; a redaction that leaves the provenance readable reports the sealed claim's real state.
+const redProv = fresh(); redProv.redaction = { ...redOk(), withheld: ['provenance'] }; delete redProv.manifest.provenance.value; delete redProv.reproducibility;
+const redProvRes = verifyBundle(redProv);
+check('ADR-042: a withheld provenance reports chain "unknown" (links invisible), not "none"', redProvRes.ok === false && redProvRes.chain === 'unknown');
+const redIn = fresh(); redIn.redaction = redOk();
+check('ADR-042: a redaction that keeps the provenance readable still reports chain "none" on the genuine bundle', verifyBundle(redIn).chain === 'none');
+const redInChain = withChain([goodLink()]); redInChain.redaction = redOk();
+check('ADR-042: ...and "declared-unwalked" when it seals a well-formed link', verifyBundle(redInChain).chain === 'declared-unwalked');
+const redInBad = withChain(bad({ verified: true })); redInBad.redaction = redOk();
+check('ADR-042: ...and "malformed" when the sealed link carries a verdict field', verifyBundle(redInBad).chain === 'malformed');
+// existing states unchanged by the new field
+const chainTs = withChain([goodLink()]); chainTs.timestamp = { ...goodTs };
+check('ADR-042: the timestamp state is untouched by a chain claim', okChain.timestamp === 'absent' && verifyBundle(chainTs).timestamp === 'present-unverified');
 
 console.log(failures ? `\n${failures} FAILURE(S)` : '\nall parity checks passed');
 process.exit(failures ? 1 : 0);

@@ -268,8 +268,12 @@ const _REDACTION_SCHEMA = 'smrforge.evidence_envelope.redaction.v1';
 const _REDACTION_KEYS = new Set(['schema', 'withheld', 'parent_bundle_sha256']);
 function verifyBundle(bundle) {
   const checks = [];
-  const add_ = (name, ok, detail) => checks.push({ name, ok, detail });
-  const done = () => ({ ok: checks.every(c => c.ok), checks });
+  const add_ = (name, ok, detail, advisory = false) => checks.push({ name, ok, detail, advisory });
+  // The unsigned RFC 3161 timestamp's state, surfaced in the result so a consumer can never read a PASS
+  // as a checked claim of time: "absent" | "present-unverified" | "malformed" (SPEC.md 2.1.6). Declared
+  // here, not in the timestamp block below, so the early `return done()` paths still carry a defined value.
+  let tsState = 'absent';
+  const done = () => ({ ok: checks.every(c => c.ok), checks, timestamp: tsState });
 
   add_('Envelope schema recognised', bundle.schema === 'smrforge.evidence_envelope.v1', bundle.schema);
 
@@ -341,6 +345,7 @@ function verifyBundle(bundle) {
   // Parity with evidence_verify.py `_timestamp_problems`.
   const ts = bundle.timestamp;
   let tsOk = true, tsDetail = 'no timestamp present';
+  let tsName = 'Timestamp block: none present (unsigned, optional)';
   // PRESENT means it must be an object: `"timestamp": null` is a malformed record, not an absent one (the
   // schema types it as an object; smrf_verify / evidence-verifier 0.3.6 reject it -- parity). Key test, not `!= null`.
   if ('timestamp' in bundle) {
@@ -357,8 +362,15 @@ function verifyBundle(bundle) {
       else if (!_TIMESTAMP_TOKEN_RE.test(ts.token)) { tsOk = false; tsDetail = "timestamp.token is not a strict-base64 DER token (must decode to an RFC 3161 SEQUENCE: base64 starting 'MI', correct padding, no other characters)"; }
       else { tsDetail = 'timestamp present: shape checked only, NOT verified here -- an unverified claim of time until tools/verify_timestamp.py (openssl, pinned TSA CA) runs'; }
     }
+    // state-dependent name + state enum so a PRESENT (but unverified) token is never shown as a bare green
+    // tick, and a bundle with NO timestamp no longer shows a green "shape checked" line (the old bug).
+    tsState = tsOk ? 'present-unverified' : 'malformed';
+    tsName = tsOk
+      ? 'Timestamp block present: shape checked only, NOT verified here (unsigned, optional)'
+      : 'Timestamp block (unsigned, optional) is malformed';
   }
-  add_('Timestamp block (unsigned, optional) has the closed RFC 3161 shape -- shape only, NOT verified here', tsOk, tsDetail);
+  // advisory:true -> the renderer shows this check's detail even on a PASS, so "NOT verified here" is visible
+  add_(tsName, tsOk, tsDetail, true);
 
   for (const side of _SECTIONS) {
     const blk = manifest[side];
@@ -532,7 +544,7 @@ function renderVerdict(ok, checks, tampered) {
     : `<span class="v-mark">✗</span> BROKEN — you changed the record, and the seal caught it.`;
 
   document.getElementById('check-list').innerHTML = checks.map(c =>
-    `<li class="chk ${c.ok ? 'ok' : 'bad'}"><span class="chk-mark">${c.ok ? '✓' : '✗'}</span><span class="chk-name">${c.name}</span>${c.detail && !c.ok ? `<span class="chk-detail">${c.detail}</span>` : ''}</li>`
+    `<li class="chk ${c.ok ? 'ok' : 'bad'}"><span class="chk-mark">${c.ok ? '✓' : '✗'}</span><span class="chk-name">${c.name}</span>${c.detail && (!c.ok || c.advisory) ? `<span class="chk-detail">${c.detail}</span>` : ''}</li>`
   ).join('');
 
   const note = document.getElementById('tamper-note');

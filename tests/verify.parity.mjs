@@ -174,6 +174,13 @@ const tsOkRes = verifyBundle(tsOk);
 check('timestamp control: a well-formed {format, token} RFC 3161 timestamp block still PASSES', tsOkRes.ok === true);
 check('timestamp: the pass line says shape only, NOT verified here',
   /NOT verified here/.test(chk(tsOkRes, /Timestamp block/).name) && /NOT verified here/.test(chk(tsOkRes, /Timestamp block/).detail));
+// the result now carries a `timestamp` state (parity with smrf_verify classify_bundle): a string that
+// names the negative, never a bare boolean a UI could render as a green "timestamp OK".
+check('timestamp field: the genuine (no-timestamp) bundle reports absent, not a green shape line',
+  verifyBundle(fresh()).timestamp === 'absent' && /none/.test(chk(verifyBundle(fresh()), /Timestamp block/).name)
+    && !/shape/.test(chk(verifyBundle(fresh()), /Timestamp block/).name));
+check('timestamp field: a present well-formed token reports present-unverified (never a bare true)',
+  tsOkRes.timestamp === 'present-unverified');
 const tsAttack = fresh(); tsAttack.timestamp = { tsa: 'REVIEWED AND ACCEPTED BY THE US NRC', token: '***APPROVED***' };
 const tsAttackRes = verifyBundle(tsAttack);
 check('ADR-041: the self-verified timestamp attack (prose tsa + prose token) now FAILS while the signature still verifies',
@@ -206,6 +213,7 @@ check('timestamp: a non-object timestamp is rejected', chk(verifyBundle(tsE), /T
 const tsNull = fresh(); tsNull.timestamp = null;
 const tsNullRes = verifyBundle(tsNull);
 check('null timestamp: rejected as a malformed record, not read as absent', tsNullRes.ok === false && chk(tsNullRes, /Timestamp block/).ok === false && sigOnly(tsNullRes));
+check('timestamp field: a malformed record reports the "malformed" state', tsNullRes.timestamp === 'malformed');
 const redNull = fresh(); redNull.redaction = null;
 check('null redaction: rejected as a malformed record', chk(verifyBundle(redNull), /Redaction record/).ok === false);
 // signature hex is exactly ^[0-9a-f]{128}$ (the Python verifiers' bytes.fromhex used to accept upper case / whitespace)

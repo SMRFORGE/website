@@ -369,40 +369,24 @@ const chainTs = withChain([goodLink()]); chainTs.timestamp = { ...goodTs };
 check('ADR-042: the timestamp state is untouched by a chain claim', okChain.timestamp === 'absent' && verifyBundle(chainTs).timestamp === 'present-unverified');
 
 // --- 6. ADR-044: small-order / RFC 8032 5.1.3 hardening ---
-const SMALL_ORDER = [
-  '0100000000000000000000000000000000000000000000000000000000000000',
-  'ecffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f',
-  '0000000000000000000000000000000000000000000000000000000000000000',
-  '0000000000000000000000000000000000000000000000000000000000000080',
-  'c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a',
-  'c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac03fa',
-  '26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc05',
-  '26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc85',
-];
-// identity public key + R=identity + S=0 verifies ANY message under the cofactorless equation -> must reject
-const ident = SMALL_ORDER[0];
-const universalForgery = hexToBytes(ident + '00'.repeat(32));
-check('ADR-044: identity-key universal forgery is REJECTED',
-  ed25519Verify(universalForgery, 'any message at all', hexToBytes(ident)) === false);
-// a small-order R under the genuine pinned key (any S<L) -> reject
-const genuinePub = hexToBytes(fresh().signature.public_key);
-let soR = 0;
-for (const h of SMALL_ORDER) {
-  const sig = hexToBytes(h + '01' + '00'.repeat(31));
-  if (ed25519Verify(sig, 'msg', genuinePub) === false) soR++;
+// Drive the SAME canonical KAT file the Python verifiers assert against (vendored byte-identical from
+// smrforge-export), so the browser and the CLI reject exactly the same inputs. ed25519Verify takes the
+// message as a string and UTF-8 encodes it; every KAT message is ASCII, so hex -> char-string round-trips.
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+const _here = dirname(fileURLToPath(import.meta.url));
+const _kat = JSON.parse(readFileSync(join(_here, 'ed25519_small_order_vectors.json'), 'utf8'));
+check('ADR-044: KAT file is the canonical schema', _kat.schema === 'smrforge.ed25519_kat.v1');
+const hexToStr = (h) => String.fromCharCode(...(h.match(/../g) || []).map((x) => parseInt(x, 16)));
+let katOk = 0, katBad = 0;
+for (const v of _kat.vectors) {
+  const want = v.expect === 'accept';
+  const got = ed25519Verify(hexToBytes(v.signature), hexToStr(v.message_hex), hexToBytes(v.public_key));
+  if (got === want) katOk++; else { katBad++; console.log(`     KAT MISMATCH ${v.id}: want ${v.expect}, got ${got}`); }
 }
-check('ADR-044: a small-order R is REJECTED for all 8 points', soR === 8);
-// non-canonical x=0 with sign bit set (identity and (0,-1)) -> decode throws -> verify returns false,
-// whether the bad encoding is used as the public key or as R.
-const x0hex = ['0100000000000000000000000000000000000000000000000000000000000080',   // identity, signbit
-               'ecffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff']; // (0,-1), signbit
-let x0rej = 0;
-for (const h of x0hex) {
-  if (ed25519Verify(hexToBytes('00'.repeat(64)), 'm', hexToBytes(h)) === false) x0rej++;        // as pubkey
-  if (ed25519Verify(hexToBytes(h + '00'.repeat(32)), 'm', genuinePub) === false) x0rej++;       // as R
-}
-check('ADR-044: non-canonical x=0/signbit encodings rejected as key and as R', x0rej === 4);
-// and the genuine bundle is UNAFFECTED by the hardening
+check(`ADR-044: all ${_kat.vectors.length} canonical KAT vectors match (CLI parity)`, katBad === 0 && katOk === _kat.vectors.length);
+// and the genuine embedded bundle is UNAFFECTED by the hardening
 check('ADR-044: the genuine embedded bundle still verifies after hardening', verifyBundle(fresh()).ok === true);
 
 console.log(failures ? `\n${failures} FAILURE(S)` : '\nall parity checks passed');

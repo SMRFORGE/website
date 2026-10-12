@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMRFORGE — Work with us</title>
+  <meta name="description" content="How to work with SMRFORGE: scoped engagements that turn your reactor-physics number into a sealed, verifiable, re-runnable confirmation your reviewer can check offline — independent confirmatory analysis, evidence packaging, pre-submission V&V, and pipeline integration.">
+  <link rel="icon" href="images/smrforge_logo_white_transparent.png" type="image/png">
+  <link rel="canonical" href="https://smrforge.io/engagements.html">
+  <meta property="og:title" content="SMRFORGE — Work with us">
+  <meta property="og:description" content="Bring us a number a reviewer won't take on faith. We hand it back sealed, verifiable offline, and re-derivable from scratch.">
+  <meta property="og:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
+  <meta property="og:url" content="https://smrforge.io/engagements.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#0b2035; --surface:#10293f; --surface-2:#143149; --line:#1f3f5a; --line-soft:#193449;
+    --ink:#e6eef3; --muted:#93adbf; --faint:#62829b;
+    --cyan:#4cd3e8; --cyan-2:#7ae3f2; --amber:#f2a33a; --amber-soft:rgba(242,163,58,.14);
+    --lichen:#9fd67a;
+    --disp:"Archivo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+    --body:"Public Sans",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .sheet{max-width:940px;margin:0 auto;padding:clamp(22px,4vw,40px) clamp(20px,4vw,44px) 40px}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan)}
+  a{color:var(--cyan);text-decoration:none} a:hover{text-decoration:underline}
+
+  /* masthead + nav */
+  .mast{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+    padding-bottom:16px;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:.6rem}
+  .brand img{height:40px;width:auto;display:block}
+  .brand .wm{font-family:var(--disp);font-weight:800;font-size:1.3rem;letter-spacing:.03em;color:var(--ink)}
+  .brand .wm b{color:var(--cyan)}
+  nav{font-family:var(--mono);font-size:.74rem;letter-spacing:.04em;display:flex;gap:16px;flex-wrap:wrap}
+  nav a{color:var(--muted)} nav a:hover{color:var(--cyan);text-decoration:none}
+
+  h1{font-family:var(--disp);font-weight:800;font-size:clamp(2rem,5vw,3rem);line-height:1.04;
+    letter-spacing:-.015em;margin:1.4rem 0 0;text-wrap:balance}
+  .lede{font-size:1.08rem;color:var(--ink);max-width:60ch;margin:1.1rem 0 0}
+  .lede b{font-weight:600}
+  h2{font-family:var(--disp);font-weight:800;font-size:clamp(1.3rem,2.6vw,1.7rem);margin:0 0 .5rem;letter-spacing:-.01em}
+  section{margin-top:40px}
+
+  /* flagship */
+  .flagship{border:2px solid var(--amber);background:var(--surface);border-radius:4px;padding:22px clamp(18px,3vw,26px)}
+  .flagship .fl{font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+  .flagship h3{font-family:var(--disp);font-weight:700;font-size:1.3rem;margin:.3rem 0 .5rem}
+  .flagship p{margin:0;color:var(--muted);max-width:64ch}
+  .flow{margin:16px 0 0;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+  @media(max-width:640px){.flow{grid-template-columns:1fr}}
+  .flow .s{background:var(--bg);padding:13px 15px}
+  .flow .s .l{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .flow .s .v{color:var(--ink);font-size:.92rem;margin-top:.15rem}
+  .cta{display:inline-block;margin-top:1.1rem;font-family:var(--mono);font-size:.84rem;letter-spacing:.04em;text-transform:uppercase;
+    background:var(--cyan);color:#06202f;font-weight:600;padding:.7rem 1.1rem;border-radius:3px}
+  .cta:hover{background:var(--cyan-2);text-decoration:none}
+
+  /* more types */
+  .types{margin:14px 0 0;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+  @media(max-width:640px){.types{grid-template-columns:1fr}}
+  .type{background:var(--bg);padding:16px 17px;display:flex;flex-direction:column;gap:.3rem}
+  .type .tl{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan)}
+  .type .tn{font-family:var(--disp);font-weight:700;font-size:1.02rem;color:var(--ink);letter-spacing:-.005em}
+  .type .td{color:var(--muted);font-size:.88rem}
+
+  /* steps */
+  .steps{margin:14px 0 0;display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+  .step{background:var(--bg);padding:14px 16px;display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:baseline}
+  .step .n{font-family:var(--disp);font-weight:800;font-size:1.1rem;color:var(--amber);min-width:1.4rem}
+  .step .sn{font-family:var(--disp);font-weight:700;color:var(--ink)}
+  .step .sd{color:var(--muted);font-size:.9rem}
+
+  /* honesty note */
+  .note{margin-top:18px;border:1px solid var(--line);border-left:3px solid var(--amber);background:var(--amber-soft);
+    border-radius:0 4px 4px 0;padding:16px 18px;color:var(--ink);font-size:.95rem;max-width:72ch}
+  .note b{font-weight:600}
+
+  footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:.74rem;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="mast">
+    <div class="brand"><img src="images/smrforge-logo.png" alt="SMRFORGE"><span class="wm">SMR<b>FORGE</b></span></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="proof-layer.html">Proof Layer</a>
+      <a href="check.html">Check a bundle</a>
+      <a href="break-the-seal.html">Break the Seal</a>
+      <a href="info-sheet.html">Info sheet</a>
+    </nav>
+  </div>
+
+  <header>
+    <p class="kicker">Work with us</p>
+    <h1>Bring us a number a reviewer won&rsquo;t take on faith.</h1>
+    <p class="lede"><b>Your physicists own the physics.</b> Most of our work starts as a scoped engagement:
+      we produce the evidence with you, and you leave with sealed bundles a reviewer can <b>verify offline</b>
+      and <b>re-derive from scratch</b> on the free, open engine. We don&rsquo;t compute your reactor &mdash;
+      we make its numbers checkable. For an SMR developer heading to the NRC, or a team that needs an
+      independent confirmation before a submission, that&rsquo;s the work.</p>
+  </header>
+
+  <section>
+    <div class="flagship">
+      <span class="fl">Flagship engagement</span>
+      <h3>Independent confirmatory analysis</h3>
+      <p>Send us your criticality or shutdown-margin number. We re-derive it on the open engine and OpenMC and
+        hand back a signed, reproducible confirmation your reviewer can re-run &mdash; a second opinion that
+        checks itself, not one they have to trust.</p>
+      <div class="flow">
+        <div class="s"><div class="l">You send</div><div class="v">a k_eff / shutdown margin</div></div>
+        <div class="s"><div class="l">We return</div><div class="v">a sealed, re-runnable bundle</div></div>
+        <div class="s"><div class="l">Your reviewer</div><div class="v">re-derives it, offline</div></div>
+      </div>
+      <a class="cta" href="mailto:support@smrforge.io?subject=Confirmatory%20analysis">Bring us a number &rarr;</a>
+    </div>
+  </section>
+
+  <section>
+    <h2>More ways to engage</h2>
+    <div class="types">
+      <div class="type">
+        <span class="tl">Packaging</span>
+        <span class="tn">Evidence packaging</span>
+        <span class="td">A number from your own code or tools &mdash; shipped as a sealed, verifiable, reproducible
+          bundle so it travels to a reviewer intact.</span>
+      </div>
+      <div class="type">
+        <span class="tl">V&amp;V</span>
+        <span class="tn">Pre-submission V&amp;V</span>
+        <span class="td">Code verification, a V&amp;V matrix, and the benchmark evidence a regulator reads &mdash;
+          stood up, sealed, and re-runnable.</span>
+      </div>
+      <div class="type">
+        <span class="tl">Integration</span>
+        <span class="tn">Pipeline integration</span>
+        <span class="td">Wire the engine into your &mdash; or a lab&rsquo;s &mdash; pipeline over the local
+          MCP and REST surface, so sealing a result is one call in a workflow you already run.</span>
+      </div>
+    </div>
+    <p class="lede" style="font-size:.95rem;color:var(--muted);max-width:72ch">Lab collaborations and academic
+      partnerships welcome &mdash; we&rsquo;ll scope the work to fit.</p>
+  </section>
+
+  <section>
+    <h2>How an engagement works</h2>
+    <p class="lede" style="margin-top:0">From your number to a reviewer&rsquo;s re-run.</p>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><span><span class="sn">Bring a number.</span>
+        <span class="sd">Your k_eff, shutdown margin, or a result from any code.</span></span></div>
+      <div class="step"><span class="n">2</span><span><span class="sn">We re-derive it.</span>
+        <span class="sd">On the open engine, escalated to OpenMC where it has to hold up.</span></span></div>
+      <div class="step"><span class="n">3</span><span><span class="sn">You get a sealed bundle.</span>
+        <span class="sd">Signed, with the data pinned, the toolchain recorded, and the lineage you can walk end to end.</span></span></div>
+      <div class="step"><span class="n">4</span><span><span class="sn">Your reviewer re-runs it.</span>
+        <span class="sd">Offline, with a checker that imports none of our physics. <a href="check.html">Try the checker</a>.</span></span></div>
+    </div>
+    <div class="note">
+      <b>What the seal proves, and what it doesn&rsquo;t.</b> A sealed bundle proves the number is unaltered and
+      can be re-derived from its own recorded inputs &mdash; custody, not correctness. SMRFORGE results are
+      screening-to-reference grade and <b>advisory</b>, honestly labeled on every result; a confirmation makes a
+      number <em>checkable</em>, it is not a certification and nobody should license a reactor on it alone.
+    </div>
+  </section>
+
+  <footer>
+    <span>SMRFORGE &middot; reactor physics you can prove</span>
+    <span><a href="https://gitlab.com/smrforge">gitlab.com/smrforge</a> &middot; <a href="mailto:support@smrforge.io">support@smrforge.io</a> &middot; <a href="https://smrforge.io">smrforge.io</a></span>
+  </footer>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

@@ -16,133 +16,263 @@
   <meta name="twitter:title" content="Break the Seal — SMRFORGE">
   <meta name="twitter:description" content="We published a signed reactor calculation. Alter the number and get it past our open verifier. We don't think you can. Prove us wrong.">
   <meta name="twitter:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
+  <link rel="preload" as="image" href="images/smrforge_logo_white_transparent.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
-  <style>
-    /* SMRFORGE house system (prussian ground, glacier-cyan identity, amber "checked", lichen pass, clay fail) */
-    :root{
-      --bg:#0b2035; --bg-2:#0e2640; --surface:#10293f; --surface-2:#143149;
-      --line:#1f3f5a; --line-soft:#193449;
-      --ink:#e6eef3; --muted:#93adbf; --faint:#62829b;
-      --cyan:#4cd3e8; --cyan-2:#7ae3f2; --cyan-soft:rgba(76,211,232,.11);
-      --amber:#f2a33a; --amber-soft:rgba(242,163,58,.14);
-      --lichen:#9fd67a; --clay:#e0704f;
-      --disp:"Archivo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
-      --body:"Public Sans",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
-      --mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,Menlo,monospace;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.62;-webkit-font-smoothing:antialiased}
-    .wrap{max-width:1120px;margin:0 auto;padding:0 clamp(18px,4vw,40px)}
-    a{color:var(--ink)}
-    :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:2px}
-    .kicker{font-family:var(--mono);font-size:.73rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan)}
-    /* header */
-    header{display:flex;justify-content:space-between;align-items:center;padding:20px clamp(18px,4vw,40px);border-bottom:1px solid var(--line)}
-    .brand{display:flex;align-items:center;gap:.7rem;font-family:var(--disp);font-weight:800;font-size:1.5rem;letter-spacing:.03em}
-    .brand .wm{line-height:1;color:var(--ink)}
-    .brand .logo{height:52px;width:auto;display:block}
-    .brand b{color:var(--cyan)}
-    nav{display:flex;gap:26px;font-family:var(--mono);font-size:.8rem;text-transform:uppercase;letter-spacing:.06em}
-    nav a{color:var(--muted);text-decoration:none}nav a:hover{color:var(--ink)}
-    .ghost{border:1px solid var(--line);padding:.5rem .85rem;color:var(--ink)!important}
-    .ghost:hover{border-color:var(--cyan)}
-    @media(max-width:760px){nav a:not(.ghost){display:none}}
-    /* hero */
-    .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(30px,5vw,64px);align-items:center;padding:clamp(44px,7vw,88px) 0 clamp(30px,5vw,56px)}
-    @media(max-width:900px){.hero{grid-template-columns:1fr;gap:38px}}
-    .problem{font-family:var(--mono);font-size:.86rem;color:var(--muted);margin:0 0 1rem;letter-spacing:.01em}
-    h1{font-family:var(--disp);font-weight:800;font-size:clamp(2.6rem,6vw,4.3rem);line-height:1.0;letter-spacing:-.015em;margin:0;text-wrap:balance}
-    h1 .u{color:var(--amber);text-decoration:underline;text-decoration-thickness:.08em;text-underline-offset:.12em;text-decoration-color:rgba(242,163,58,.55)}
-    .desc{font-size:1.12rem;color:var(--ink);max-width:46ch;margin:1.35rem 0 0}
-    .desc b{font-weight:600}
-    .ctas{display:flex;gap:14px;flex-wrap:wrap;margin-top:1.9rem}
-    .btn{font-family:var(--mono);font-size:.85rem;letter-spacing:.04em;text-transform:uppercase;padding:.78rem 1.2rem;text-decoration:none;transition:background .14s,border-color .14s,color .14s}
-    .btn.primary{background:var(--cyan);color:#06202f;font-weight:600}
-    .btn.primary:hover{background:var(--cyan-2)}
-    .btn.line{border:1px solid var(--line);color:var(--ink)}
-    .btn.line:hover{border-color:var(--cyan);color:var(--cyan)}
-    /* the lifted object: the sealed record, as a receipt */
-    .receipt{background:var(--surface);border:1px solid var(--line);border-top:2px solid var(--cyan);border-radius:4px;box-shadow:0 28px 64px -30px rgba(2,10,20,.9),0 0 0 1px rgba(76,211,232,.06);overflow:hidden;font-family:var(--mono)}
-    .receipt .top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface-2)}
-    .receipt .top .t{font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-    .receipt .top .dot{width:9px;height:9px;border-radius:50%;background:var(--lichen);box-shadow:0 0 8px rgba(159,214,122,.6)}
-    .receipt .mid{padding:20px 18px}
-    .receipt .k{font-size:2.15rem;color:var(--ink);letter-spacing:.01em;font-variant-numeric:tabular-nums}
-    .receipt .k small{color:var(--muted);font-size:.9rem;margin-left:.4rem}
-    .receipt .tag{display:inline-block;margin-top:.4rem;font-size:.72rem;color:var(--lichen);border:1px solid rgba(159,214,122,.4);padding:.06rem .5rem;border-radius:3px;letter-spacing:.04em}
-    .receipt .rows{border-top:1px dashed var(--line);margin-top:16px;padding-top:14px;display:grid;gap:8px}
-    .receipt .row{display:flex;justify-content:space-between;gap:12px;font-size:.8rem}
-    .receipt .row .l{color:var(--faint);letter-spacing:.04em;white-space:nowrap}
-    .receipt .row .v{color:var(--muted);text-align:right;word-break:break-all}
-    .receipt .foot{border-top:1px solid var(--line);padding:12px 18px;display:flex;justify-content:space-between;font-size:.74rem;color:var(--faint);background:var(--surface-2)}
-    .receipt .foot .pass{color:var(--lichen);letter-spacing:.06em}
-    .cap{font-family:var(--mono);font-size:.72rem;color:var(--faint);margin:12px 2px 0;line-height:1.55}
-    .cap a{color:var(--muted)}.cap a:hover{color:var(--cyan)}
-    /* sections */
-    section.band{padding:clamp(44px,6vw,78px) 0;border-top:1px solid var(--line)}
-    section.band h2{font-family:var(--disp);font-weight:700;font-size:clamp(1.7rem,3.4vw,2.5rem);letter-spacing:-.01em;margin:.3rem 0 .4rem;text-wrap:balance}
-    section.band .lead{color:var(--muted);max-width:62ch;margin:0 0 26px;font-size:1.05rem}
-    ol.steps{counter-reset:s;list-style:none;padding:0;margin:0}
-    ol.steps li{position:relative;padding:0 0 18px 44px;color:var(--ink)}
-    ol.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:-2px;width:28px;height:28px;border-radius:50%;background:var(--cyan);color:#06202f;font-family:var(--mono);font-weight:600;font-size:.9rem;display:flex;align-items:center;justify-content:center}
-    .cmd{display:block;font-family:var(--mono);font-size:.8rem;color:var(--cyan);background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:10px 12px;margin:7px 0 0;white-space:pre-wrap;word-break:break-all}
-    code.kbd{font-family:var(--mono);color:var(--cyan);background:var(--cyan-soft);padding:.08em .4em;border-radius:3px;word-break:break-all}
-    ul.rules{margin:0;padding-left:1.1em;max-width:70ch} ul.rules li{margin:0 0 12px;color:var(--muted)} ul.rules li b{color:var(--ink);font-weight:600}
-    table.rewards{width:100%;border-collapse:collapse;font-size:.95rem;max-width:72ch}
-    table.rewards td{border-top:1px solid var(--line-soft);padding:13px 10px;vertical-align:top;color:var(--muted)}
-    table.rewards td:first-child{font-family:var(--mono);color:var(--cyan);white-space:nowrap;padding-right:18px}
-    .two{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line)}
-    @media(max-width:700px){.two{grid-template-columns:1fr}}
-    .col{padding:22px 22px;border-left:1px solid var(--line)}
-    .col:first-child{border-left:0}
-    @media(max-width:700px){.col{border-left:0;border-top:1px solid var(--line)}.col:first-child{border-top:0}}
-    .col h3{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;margin:0 0 12px}
-    .col.yes h3{color:var(--lichen)} .col.no h3{color:var(--clay)}
-    .col ul{margin:0;padding-left:1.05em} .col li{margin:0 0 9px;color:var(--muted);font-size:.95rem}
-    .boundary{border-left:3px solid var(--amber);padding:4px 0 4px 18px;color:var(--muted);max-width:66ch}
-    footer{border-top:1px solid var(--line);padding:22px 0 46px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:.78rem;color:var(--faint)}
-    footer a{color:var(--muted);text-decoration:none}footer a:hover{color:var(--cyan)}
-  </style>
+<style>
+  /* ---- SMRFORGE design system (homepage sets it; this page follows) ----
+       ground: prussian navy · identity: glacier cyan (commands, links, kickers)
+       signal: amber — the ONE warm accent; on this page it marks the thing being attacked: the sealed record
+       verdicts: lichen = pass, clay = fail · hairline grids (1px --line) instead of card shadows */
+  :root{
+    --bg:#0b2035; --bg-2:#0e2640; --surface:#10293f; --surface-2:#143149;
+    --line:#1f3f5a; --line-soft:#193449;
+    --ink:#e6eef3; --muted:#93adbf; --faint:#62829b;
+    --cyan:#4cd3e8; --cyan-2:#7ae3f2; --cyan-soft:rgba(76,211,232,.11);
+    --amber:#f2a33a; --amber-soft:rgba(242,163,58,.14);
+    --lichen:#9fd67a; --clay:#e0704f;
+    --disp:"Archivo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+    --body:"Public Sans",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,Menlo,monospace;
+    --gutter:clamp(16px,4vw,40px);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:84px}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.62;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 var(--gutter)}
+  a{color:var(--ink)}
+  :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:2px}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin:0 0 .6rem}
+  .kicker.warm{color:var(--amber)}
+  code,.code{font-family:var(--mono);font-size:.9em;color:var(--cyan)}
+  code.kbd{background:var(--cyan-soft);padding:.08em .4em;border-radius:3px;overflow-wrap:anywhere}
+
+  /* --- section rhythm: one pattern, used everywhere --- */
+  .sec{padding:clamp(56px,7vw,96px) 0;border-top:1px solid var(--line)}
+  .sec-head{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(20px,4vw,56px);align-items:end;margin-bottom:clamp(28px,4vw,44px)}
+  @media(max-width:820px){.sec-head{grid-template-columns:1fr;gap:14px}}
+  .sec h2{font-family:var(--disp);font-weight:700;font-size:clamp(1.75rem,3.6vw,2.6rem);line-height:1.08;letter-spacing:-.015em;margin:0;text-wrap:balance}
+  .sec .lead{margin:0;color:var(--muted);font-size:1.05rem;max-width:56ch}
+  .sec .lead b{color:var(--ink);font-weight:600}
+  .sec .lead a{color:var(--cyan);text-decoration:none}
+  .sec .lead a:hover{text-decoration:underline}
+
+  /* --- hairline grid: cells on a 1px line background --- */
+  .grid{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+  .grid>*{background:var(--bg);padding:clamp(20px,2.6vw,28px) clamp(18px,2.4vw,26px);min-width:0}
+  .grid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid.c4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .grid.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  @media(max-width:860px){.grid.c4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:720px){.grid.c3,.grid.c2{grid-template-columns:1fr}}
+  @media(max-width:480px){.grid.c4{grid-template-columns:1fr}}
+  .cell .cmd{font-family:var(--mono);font-size:.78rem;color:var(--cyan);letter-spacing:.02em;word-break:break-word}
+  .cell h3{font-family:var(--disp);font-weight:700;font-size:1.22rem;margin:.55rem 0 .45rem;letter-spacing:-.005em}
+  .cell p{margin:0;color:var(--muted);font-size:.95rem}
+  .cell p a{color:var(--cyan);text-decoration:none}
+  .cell p a:hover{text-decoration:underline}
+  .cell p b{color:var(--ink);font-weight:600}
+
+  /* --- buttons --- */
+  .btn{display:inline-block;font-family:var(--mono);font-size:.84rem;letter-spacing:.04em;text-transform:uppercase;
+    padding:.78rem 1.2rem;text-decoration:none;border-radius:3px;transition:background .14s,border-color .14s,color .14s}
+  .btn.primary{background:var(--cyan);color:#06202f;font-weight:600}
+  .btn.primary:hover{background:var(--cyan-2)}
+  .btn.line{border:1px solid var(--line);color:var(--ink)}
+  .btn.line:hover{border-color:var(--cyan);color:var(--cyan)}
+  .btn.warm{border:1px solid rgba(242,163,58,.5);color:var(--amber)}
+  .btn.warm:hover{border-color:var(--amber);background:var(--amber-soft)}
+  .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:1.8rem}
+
+  /* --- header --- */
+  header.site{position:sticky;top:0;z-index:10;background:rgba(11,32,53,.92);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line)}
+  header.site .bar{display:flex;justify-content:space-between;align-items:center;gap:16px;
+    max-width:1120px;margin:0 auto;padding:14px var(--gutter)}
+  .brand{display:flex;align-items:center;gap:.65rem;font-family:var(--disp);font-weight:800;font-size:1.35rem;letter-spacing:.03em;text-decoration:none}
+  .brand .wm{line-height:1;color:var(--ink)}
+  .brand .logo{height:44px;width:auto;display:block}
+  .brand b{color:var(--cyan)}
+  nav.main{display:flex;gap:22px;align-items:center;font-family:var(--mono);font-size:.76rem;text-transform:uppercase;letter-spacing:.06em}
+  nav.main a{color:var(--muted);text-decoration:none;white-space:nowrap}
+  nav.main a:hover{color:var(--ink)}
+  nav.main a[aria-current="page"]{color:var(--cyan)}
+  nav.main .ghost{border:1px solid var(--line);padding:.5rem .85rem;color:var(--ink);border-radius:3px}
+  nav.main .ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+  @media(max-width:900px){nav.main{gap:14px}nav.main a.sub{display:none}}
+  @media(max-width:560px){nav.main a:not(.ghost){display:none}.brand .logo{height:38px}}
+
+  /* --- hero --- */
+  .hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(30px,5vw,64px);
+    align-items:center;padding:clamp(48px,7vw,96px) 0 clamp(36px,5vw,64px)}
+  @media(max-width:900px){.hero{grid-template-columns:1fr;gap:38px}}
+  .problem{font-family:var(--mono);font-size:.84rem;color:var(--muted);margin:0 0 1rem;letter-spacing:.01em}
+  h1{font-family:var(--disp);font-weight:800;font-size:clamp(2.5rem,6.2vw,4.4rem);
+    line-height:.98;letter-spacing:-.02em;margin:0;text-wrap:balance}
+  h1 .u{color:var(--amber);text-decoration:underline;text-decoration-thickness:.08em;
+    text-underline-offset:.12em;text-decoration-color:rgba(242,163,58,.55)}
+  .desc{font-size:1.12rem;color:var(--ink);max-width:44ch;margin:1.4rem 0 0}
+  .desc b{font-weight:600}
+  .tagline{font-family:var(--disp);font-weight:700;font-size:1.15rem;margin:1.1rem 0 0;color:var(--ink)}
+  .tagline .cx{color:var(--amber)}
+  .facts{display:flex;gap:10px 22px;flex-wrap:wrap;margin-top:1.6rem;font-family:var(--mono);font-size:.74rem;color:var(--faint);letter-spacing:.03em}
+  .facts span b{color:var(--muted);font-weight:500}
+
+  /* --- the one lifted object: the sealed record under attack (amber-topped) --- */
+  .receipt{background:var(--surface);border:1px solid var(--line);border-top:2px solid var(--amber);border-radius:4px;
+    box-shadow:0 28px 64px -30px rgba(2,10,20,.9),0 0 0 1px rgba(242,163,58,.08);overflow:hidden;font-family:var(--mono);min-width:0}
+  .receipt .top{display:flex;justify-content:space-between;align-items:center;gap:10px;
+    padding:11px 16px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+  .receipt .top .t{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .receipt .top .t em{font-style:normal;color:var(--amber)}
+  .receipt .top .dot{width:9px;height:9px;border-radius:50%;background:var(--lichen);box-shadow:0 0 8px rgba(159,214,122,.6);flex:none}
+  .receipt .mid{padding:20px 18px}
+  .receipt .k{font-size:clamp(1.7rem,4vw,2.2rem);color:var(--ink);letter-spacing:.01em;font-variant-numeric:tabular-nums;line-height:1.1}
+  .receipt .k small{color:var(--muted);font-size:.9rem;margin-left:.4rem}
+  .receipt .tag{display:inline-block;margin-top:.55rem;font-size:.7rem;color:var(--lichen);
+    border:1px solid rgba(159,214,122,.4);padding:.06rem .5rem;border-radius:3px;letter-spacing:.04em}
+  .receipt .rows{border-top:1px dashed var(--line);margin-top:16px;padding-top:14px;display:grid;gap:8px}
+  .receipt .row{display:flex;justify-content:space-between;gap:12px;font-size:.8rem}
+  .receipt .row .l{color:var(--faint);letter-spacing:.04em;flex:none}
+  .receipt .row .v{color:var(--muted);text-align:right;overflow-wrap:anywhere}
+  .receipt .row .v.ok{color:var(--amber)}
+  .receipt .foot{border-top:1px solid var(--line);padding:11px 18px;display:flex;justify-content:space-between;gap:12px;
+    font-size:.74rem;color:var(--faint);background:var(--surface-2)}
+  .receipt .foot .pass{color:var(--lichen);letter-spacing:.06em}
+  .cap{font-size:.8rem;color:var(--faint);margin:12px 2px 0;font-family:var(--mono);line-height:1.5}
+  .cap a{color:var(--muted)}
+  .cap a:hover{color:var(--cyan)}
+
+  /* --- the challenge: numbered steps as grid cells --- */
+  .step .sn{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+  .step h3{font-family:var(--disp);font-weight:700;font-size:1.15rem;margin:.5rem 0 .45rem;letter-spacing:-.005em}
+  .step p{margin:0;color:var(--muted);font-size:.93rem}
+  .step p a{color:var(--cyan);text-decoration:none}
+  .step p a:hover{text-decoration:underline}
+  .step .cmd{display:block;font-family:var(--mono);font-size:.76rem;color:var(--cyan);background:var(--surface);border:1px solid var(--line);
+    border-radius:4px;padding:9px 11px;margin:10px 0 0;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.5}
+  .step .cmd .p{color:var(--faint)}
+  .frozen{margin:18px 0 0;padding:16px clamp(18px,2.4vw,24px);border:1px solid var(--line);background:var(--surface);border-radius:4px;
+    display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:start}
+  @media(max-width:720px){.frozen{grid-template-columns:1fr;gap:8px}}
+  .frozen .fk{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);padding-top:4px}
+  .frozen p{margin:0;color:var(--muted);font-size:.9rem;max-width:80ch}
+  .frozen p b{color:var(--ink);font-weight:600}
+  .frozen .refs{display:flex;gap:8px 20px;flex-wrap:wrap;margin:0 0 10px;font-family:var(--mono);font-size:.76rem;color:var(--faint)}
+  .frozen .refs b{color:var(--ink);font-weight:500}
+  .zero{margin:22px 0 0;color:var(--muted);font-size:1.02rem;max-width:62ch}
+  .zero a{color:var(--cyan);text-decoration:none}
+  .zero a:hover{text-decoration:underline}
+  .zero b{color:var(--ink);font-weight:600}
+
+  /* --- rules --- */
+  .rule .rn{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .rule h3{font-family:var(--disp);font-weight:700;font-size:1.08rem;margin:.5rem 0 .4rem;letter-spacing:-.005em}
+  .rule p{margin:0;color:var(--muted);font-size:.92rem}
+  .rule.counts{background:linear-gradient(var(--amber-soft),var(--amber-soft)) var(--bg)}
+  .rule.counts .rn,.rule.counts h3{color:var(--amber)}
+  .rule.counts p{color:var(--ink)}
+
+  /* --- rewards + verdict columns --- */
+  .reward .rk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
+  .reward h3{font-family:var(--disp);font-weight:700;font-size:1.15rem;margin:.5rem 0 .4rem}
+  .reward p{margin:0;color:var(--muted);font-size:.93rem}
+  .reward p a{color:var(--cyan);text-decoration:none}
+  .col h3{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;margin:0 0 12px;font-weight:500}
+  .col.yes h3{color:var(--lichen)} .col.no h3{color:var(--clay)}
+  .col ul{list-style:none;margin:0;padding:0;display:grid;gap:.55rem}
+  .col li{color:var(--muted);font-size:.94rem;padding-left:1.3rem;position:relative}
+  .col.yes li::before{content:"\2713";position:absolute;left:0;color:var(--lichen);font-family:var(--mono)}
+  .col.no li::before{content:"\00d7";position:absolute;left:0;color:var(--clay);font-family:var(--mono)}
+
+  /* --- submit --- */
+  .submit{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:0;border:1px solid var(--line);border-top:2px solid var(--amber);background:var(--surface)}
+  @media(max-width:820px){.submit{grid-template-columns:1fr}}
+  .submit .sm{padding:26px clamp(20px,3vw,34px);display:flex;flex-direction:column;gap:.8rem;align-items:flex-start}
+  .submit .sm .en{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+  .submit .sm h3{font-family:var(--disp);font-weight:800;font-size:1.5rem;margin:0;letter-spacing:-.01em}
+  .submit .sm p{margin:0;color:var(--muted);font-size:.97rem;max-width:58ch}
+  .submit .sm p a{color:var(--cyan);text-decoration:none}
+  .submit .sf{border-left:1px solid var(--line);background:var(--surface-2);padding:22px clamp(18px,2.4vw,28px);display:flex;flex-direction:column;justify-content:center;gap:14px}
+  @media(max-width:820px){.submit .sf{border-left:0;border-top:1px solid var(--line)}}
+  .submit .fs{display:flex;flex-direction:column;gap:2px}
+  .submit .fs .s{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+  .submit .fs b{font-family:var(--mono);color:var(--ink);font-size:.9rem;font-weight:500}
+
+  /* --- trust + boundary --- */
+  .trust p{margin:0;color:var(--muted);max-width:70ch;font-size:1rem}
+  .trust p a{color:var(--cyan);text-decoration:none}
+  .trust p a:hover{text-decoration:underline}
+  .chan .ck{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
+  .chan h3{font-family:var(--disp);font-weight:700;font-size:1.08rem;margin:.5rem 0 .4rem}
+  .chan p{margin:0;color:var(--muted);font-size:.92rem;overflow-wrap:anywhere}
+  .chan p a{color:var(--cyan);text-decoration:none}
+  .chan p a:hover{text-decoration:underline}
+  .fp{margin:0 0 18px;font-family:var(--mono);font-size:.8rem;color:var(--faint)}
+  .fp b{color:var(--amber);font-weight:500}
+  .note{margin:0;padding:18px 22px;border-left:3px solid var(--amber);background:var(--amber-soft);
+    color:var(--ink);font-size:.97rem;max-width:76ch;border-radius:0 4px 4px 0}
+  .note b{font-weight:600}
+  .fine{font-size:.84rem;color:var(--faint);margin:14px 0 0;max-width:64ch}
+
+  /* --- footer --- */
+  footer{border-top:1px solid var(--line);padding:22px 0 46px;display:flex;justify-content:space-between;
+    flex-wrap:wrap;gap:12px;font-family:var(--mono);font-size:.74rem;color:var(--faint)}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--cyan)}
+</style>
 </head>
 <body>
-<header>
-  <div class="brand"><img class="logo" src="images/smrforge_logo_white_transparent.png" alt="SMRFORGE mark"><span class="wm">SMR<b>FORGE</b></span></div>
-  <nav>
-    <a href="proof-layer.html">Proof Layer</a><a href="index.html#engagements">Engagements</a><a href="index.html#check">How it works</a><a href="index.html#valid">Verification</a>
-    <a href="info-sheet.html">Info sheet</a><a class="ghost" href="check.html">Check a bundle</a>
-  </nav>
+<header class="site">
+  <div class="bar">
+    <a class="brand" href="/" aria-label="SMRFORGE home"><img class="logo" src="images/smrforge_logo_white_transparent.png" alt="SMRFORGE mark"><span class="wm">SMR<b>FORGE</b></span></a>
+    <nav class="main" aria-label="Primary">
+      <a href="proof-layer.html">Proof Layer</a><a href="engagements.html">Engagements</a><a class="sub" href="index.html#howit">How it works</a><a class="sub" href="index.html#valid">Verification</a>
+      <a href="info-sheet.html">Info sheet</a><a class="sub" href="index.html#products">Community &amp; Pro</a><a class="ghost" href="check.html">Check a bundle</a>
+    </nav>
+  </div>
 </header>
 
 <div class="wrap">
   <section class="hero">
     <div>
-      <p class="problem">A simulation output is a claim. So prove you can't quietly change ours.</p>
+      <p class="kicker warm">A standing public dare</p>
+      <p class="problem">A simulation output is a claim. So prove you can&rsquo;t quietly change ours.</p>
       <h1>Break the <span class="u">Seal</span>.</h1>
       <p class="desc"><b>We published a signed reactor calculation.</b> Change the number and convince our
-        verifier it is still ours. We don't think you can, because the seal is cryptographic, not a claim we
+        verifier it is still ours. We don&rsquo;t think you can, because the seal is cryptographic, not a claim we
         ask you to trust. The verifier is open and dependency-free, our key is cross-checkable out of band,
         and you can try it in your browser in a minute.</p>
+      <p class="tagline">Not &ldquo;trust us.&rdquo; <span class="cx">Break us.</span></p>
       <div class="ctas">
         <a class="btn primary" href="check.html">Try it live &rarr;</a>
         <a class="btn line" href="https://gitlab.com/smrforge/evidence-verifier" rel="noopener">Get the verifier</a>
       </div>
+      <p class="facts">
+        <span>verifier <b>open &middot; offline &middot; zero dependencies</b></span>
+        <span>signature <b>from-scratch RFC 8032 Ed25519</b></span>
+        <span>key <b>cross-checked from two channels</b></span>
+        <span>attempts <b>credited</b></span>
+      </p>
     </div>
     <div>
-      <div class="receipt" role="img" aria-label="The sealed record: an OpenMC criticality result, k_eff 1.00522, signed by SMRFORGE's production key.">
-        <div class="top"><span class="t">Sealed record</span><span class="dot"></span></div>
+      <div class="receipt" role="img" aria-label="The sealed record under attack: an OpenMC criticality result, k_eff 1.00522, signed by SMRFORGE's production key, seal 40a35716.">
+        <div class="top"><span class="t">Sealed record &middot; <em>the thing to break</em></span><span class="dot" aria-hidden="true"></span></div>
         <div class="mid">
           <div class="k">1.00522<small>k_eff &plusmn; 0.00060</small></div>
-          <span class="tag">physics:openmc</span>
+          <span class="tag">physics:openmc &middot; lab-escalation &middot; advisory</span>
           <div class="rows">
-            <div class="row"><span class="l">fidelity</span><span class="v">lab-escalation</span></div>
-            <div class="row"><span class="l">signed by</span><span class="v">ed25519:cfb88804&hellip;d69b52c</span></div>
+            <div class="row"><span class="l">card</span><span class="v">openmc-criticality</span></div>
             <div class="row"><span class="l">frozen at</span><span class="v">cise-v3</span></div>
-            <div class="row"><span class="l">verifier</span><span class="v">evidence-verifier v0.3.4</span></div>
+            <div class="row"><span class="l">seal (sha-256)</span><span class="v ok">40a35716&hellip;</span></div>
+            <div class="row"><span class="l">signed by</span><span class="v">ed25519:cfb88804&hellip;d69b52c</span></div>
+            <div class="row"><span class="l">verifier</span><span class="v">evidence-verifier v0.3.8</span></div>
           </div>
         </div>
-        <div class="foot"><span>SMRFORGE production key</span><span class="pass">SIGNED</span></div>
+        <div class="foot"><span>SMRFORGE production key</span><span class="pass">SIGNED &#10003;</span></div>
       </div>
       <p class="cap">An OpenMC criticality result on a homogeneous SMR slab (advisory, lab-escalation). The dare
         is about custody, not whether 1.00522 is a validated absolute. See <a href="#boundary">what this
@@ -151,72 +281,155 @@
   </section>
 </div>
 
-<div class="wrap">
-  <section class="band">
-    <p class="kicker">The challenge</p>
-    <h2>Try it in 60 seconds</h2>
-    <ol class="steps">
-      <li>Get the verifier, a single standard-library-only file you can read in full:
-        <span class="cmd">curl -O https://gitlab.com/smrforge/evidence-verifier/-/raw/v0.3.4/evidence_verify.py</span></li>
-      <li>Get the sealed record:
-        <span class="cmd">curl -O https://gitlab.com/smrforge/smrforge/-/raw/cise-v3/packs/openmc-criticality.reproduce-demo.bundle.json</span></li>
-      <li>Cross-check our key out of band. The fingerprint the verifier prints must match
-        <a href="/.well-known/smrforge-trust-root">smrforge.io/.well-known/smrforge-trust-root</a> and the DNS
-        TXT record <code class="kbd">smrforge-trust-root.smrforge.io</code>.</li>
-      <li>Run it, then try to beat it:
-        <span class="cmd">python evidence_verify.py verify openmc-criticality.reproduce-demo.bundle.json</span>
-        It passes. Change <code class="kbd">k_eff</code> to a different value and run again: it fails and names
-        the broken section. Your challenge is to make an edited copy it still reports as signed by our key.</li>
-    </ol>
-    <p class="cap" style="margin-top:14px">These refs are frozen: the record at <code class="kbd">cise-v3</code>
-      (commit 453b6a8) and the verifier at the protected tag <code class="kbd">v0.3.4</code>. The record's
-      integrity rests on its signature, not the URL, so bytes served under any other name simply fail to verify.
-      <code class="kbd">cise-v3</code> supersedes <code class="kbd">cise-v2</code>: the v0.14.0 re-mint of the
-      same benchmark (same <code class="kbd">k_eff</code>, 1.00522) that now also seals the execution runtime
-      &mdash; <code class="kbd">provenance.toolchain.machine</code> and the OpenMC solver build &mdash; under
-      ADR-040. It is a fresh seal (new <code class="kbd">bundle_sha256</code>, new signature over it); both
-      verify under the production key.</p>
-    <p class="lead" style="margin-top:18px">Prefer zero install? The same verifier runs live on the
-      <a href="check.html">Check a bundle</a> page, on this exact record. Change a digit and watch the seal
-      catch it, no download required.</p>
-  </section>
+<div class="wrap" id="challenge">
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <p class="kicker">The challenge</p>
+        <h2>Try it in 60 seconds.</h2>
+      </div>
+      <p class="lead">One file to read, one record to attack, one key to cross-check. <b>Everything runs on your
+        machine, with nothing of ours imported.</b></p>
+    </div>
+    <div class="grid c4">
+      <div class="step">
+        <div class="sn">Step 1</div>
+        <h3>Get the verifier</h3>
+        <p>A single standard-library-only file you can read in full.</p>
+        <span class="cmd"><span class="p">$</span> curl -O https://gitlab.com/smrforge/evidence-verifier/-/raw/v0.3.8/evidence_verify.py</span>
+      </div>
+      <div class="step">
+        <div class="sn">Step 2</div>
+        <h3>Get the sealed record</h3>
+        <p>The exact bundle shown above, frozen at <code>cise-v3</code>.</p>
+        <span class="cmd"><span class="p">$</span> curl -O https://gitlab.com/smrforge/smrforge/-/raw/cise-v3/packs/openmc-criticality.reproduce-demo.bundle.json</span>
+      </div>
+      <div class="step">
+        <div class="sn">Step 3</div>
+        <h3>Cross-check our key</h3>
+        <p>The fingerprint the verifier prints must match
+          <a href="/.well-known/smrforge-trust-root">smrforge.io/.well-known/smrforge-trust-root</a> and the DNS
+          TXT record <code class="kbd">smrforge-trust-root.smrforge.io</code>. Two channels, neither of them the
+          verifier itself.</p>
+      </div>
+      <div class="step">
+        <div class="sn">Step 4</div>
+        <h3>Run it, then beat it</h3>
+        <span class="cmd" style="margin-top:0"><span class="p">$</span> python evidence_verify.py verify openmc-criticality.reproduce-demo.bundle.json</span>
+        <p style="margin-top:10px">It passes. Change <code class="kbd">k_eff</code> to a different value and run again: it fails and names
+          the broken section. Your challenge is to make an edited copy it still reports as signed by our key.</p>
+      </div>
+    </div>
 
-  <section class="band">
-    <p class="kicker">The rules</p>
-    <h2>What counts as a break</h2>
-    <ul class="rules">
-      <li>Using the <b>unmodified</b> public verifier, pinned to our production key (fingerprint cross-checked
-        from the two channels above), produce a record whose <b>k_eff is a genuinely different value</b> from
-        1.00522 and that the verifier still reports as a pass signed by the pinned key. The verifier's own
-        printed verdict is the judge.</li>
-      <li><b>The same number written differently does not count.</b> 1.0052200 is the same value as 1.00522;
-        the verifier re-derives the number before hashing, so a reformat is not a changed result. A break has
-        to move the value.</li>
-      <li><b>Editing the verifier does not count.</b> Run it unchanged; you can read every line. The key is
-        pinned and cross-checkable from two channels precisely so a swapped verifier cannot help.</li>
-      <li><b>An unsigned or differently-signed record does not count.</b> The verifier fails any record that
-        is unsigned or signed by any key other than our pinned production key. That is not a pass under our
-        key.</li>
-      <li><b>Breaking Ed25519 or SHA-256 itself does not count here.</b> If you can do that, you have earned a
-        far larger prize and should tell the world, not us.</li>
-      <li><b>The interesting break is a flaw in the verifier or the format:</b> a record whose asserted result
-        genuinely differs yet still passes. If you find one, report it responsibly below.</li>
-    </ul>
-  </section>
+    <div class="frozen">
+      <div class="fk">Frozen refs</div>
+      <div>
+        <p class="refs">
+          <span>record <b>cise-v3</b> &middot; commit 453b6a8</span>
+          <span>seal <b>bundle_sha256 40a35716&hellip;</b></span>
+          <span>verifier <b>protected tag v0.3.8</b></span>
+        </p>
+        <p>The record&rsquo;s integrity rests on its signature, not the URL, so bytes served under any other name
+          simply fail to verify. <code class="kbd">cise-v3</code> supersedes <code class="kbd">cise-v2</code>: the
+          v0.14.0 re-mint of the same benchmark (same <code class="kbd">k_eff</code>, 1.00522) that now also seals
+          the execution runtime, <code class="kbd">provenance.toolchain.machine</code> and the OpenMC solver build,
+          under ADR-040. It is a fresh seal (new <code class="kbd">bundle_sha256</code>, new signature over it);
+          both verify under the production key.</p>
+      </div>
+    </div>
 
-  <section class="band">
-    <p class="kicker">Rewards</p>
-    <h2>What you get</h2>
-    <table class="rewards">
-      <tr><td>Public credit</td><td>Every confirmed break earns public credit: your name on the record as the
-        person who tested it, on this page.</td></tr>
-      <tr><td>Responsible disclosure</td><td>A confirmed, previously-unknown verifier or format vulnerability,
-        reported privately first, is fixed in a release that names you and credited here. SMRFORGE may also
-        offer a monetary reward for such a finding; write to support@smrforge.io before disclosing publicly.</td></tr>
-      <tr><td>Forge the signature</td><td>If you produce a record our pinned key verifies with the number
-        changed, that is a result of cryptographic significance. Tell us, and the world.</td></tr>
-    </table>
-    <div class="two" style="margin-top:30px">
+    <p class="zero"><b>Prefer zero install?</b> The same verifier runs live on the
+      <a href="check.html">Check a bundle</a> page, on this exact record: a from-scratch RFC&nbsp;8032 Ed25519
+      implementation with no crypto library behind it. Change a digit and watch the seal catch it, no download
+      required.</p>
+  </section>
+</div>
+
+<div class="wrap" id="rules">
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <p class="kicker">The rules</p>
+        <h2>What counts as a break.</h2>
+      </div>
+      <p class="lead">The verifier&rsquo;s own printed verdict is the judge. <b>Move the value, keep the pass,
+        under our pinned key.</b> Everything else is a shortcut we already closed.</p>
+    </div>
+    <div class="grid c3">
+      <div class="rule counts">
+        <div class="rn">The break</div>
+        <h3>A different number, still signed by us.</h3>
+        <p>Using the <b>unmodified</b> public verifier, pinned to our production key (fingerprint cross-checked
+          from the two channels above), produce a record whose k_eff is a genuinely different value from
+          1.00522 and that the verifier still reports as a pass signed by the pinned key.</p>
+      </div>
+      <div class="rule">
+        <div class="rn">Does not count</div>
+        <h3>The same number written differently.</h3>
+        <p>1.0052200 is the same value as 1.00522; the verifier re-derives the number before hashing, so a
+          reformat is not a changed result. A break has to move the value.</p>
+      </div>
+      <div class="rule">
+        <div class="rn">Does not count</div>
+        <h3>Editing the verifier.</h3>
+        <p>Run it unchanged; you can read every line. The key is pinned and cross-checkable from two channels
+          precisely so a swapped verifier cannot help.</p>
+      </div>
+      <div class="rule">
+        <div class="rn">Does not count</div>
+        <h3>An unsigned or differently-signed record.</h3>
+        <p>The verifier fails any record that is unsigned or signed by any key other than our pinned production
+          key. That is not a pass under our key.</p>
+      </div>
+      <div class="rule">
+        <div class="rn">Does not count here</div>
+        <h3>Breaking Ed25519 or SHA-256 itself.</h3>
+        <p>If you can do that, you have earned a far larger prize and should tell the world, not us.</p>
+      </div>
+      <div class="rule counts">
+        <div class="rn">The interesting break</div>
+        <h3>A flaw in the verifier or the format.</h3>
+        <p>A record whose asserted result genuinely differs yet still passes. If you find one,
+          <a href="#submit" style="color:var(--cyan);text-decoration:none">report it responsibly</a> and it gets
+          fixed in a release that names you.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap" id="rewards">
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <p class="kicker">Rewards</p>
+        <h2>What you get.</h2>
+      </div>
+      <p class="lead">Every reproducing attempt is credited. A real flaw is fixed with your name on the release.
+        A forged signature is a bigger story than this page.</p>
+    </div>
+    <div class="grid c3">
+      <div class="reward">
+        <div class="rk">Public credit</div>
+        <h3>Your name on the record.</h3>
+        <p>Every confirmed break earns public credit: your name on the record as the person who tested it, on
+          this page.</p>
+      </div>
+      <div class="reward">
+        <div class="rk">Responsible disclosure</div>
+        <h3>Fixed in a release that names you.</h3>
+        <p>A confirmed, previously-unknown verifier or format vulnerability, reported privately first, is fixed
+          in a release that names you and credited here. SMRFORGE may also offer a monetary reward for such a
+          finding; write to <a href="mailto:support@smrforge.io?subject=Break%20the%20Seal%20disclosure">support@smrforge.io</a>
+          before disclosing publicly.</p>
+      </div>
+      <div class="reward">
+        <div class="rk">Forge the signature</div>
+        <h3>Tell us, and the world.</h3>
+        <p>If you produce a record our pinned key verifies with the number changed, that is a result of
+          cryptographic significance.</p>
+      </div>
+    </div>
+    <div class="grid c2" style="margin-top:14px">
       <div class="col yes"><h3>A break is</h3><ul>
         <li>An unmodified-verifier pass, under our pinned key, on a record whose k_eff is a genuinely
           different value.</li>
@@ -230,49 +443,97 @@
       </ul></div>
     </div>
   </section>
+</div>
 
-  <section class="band">
-    <p class="kicker">Submit</p>
-    <h2>Report a break</h2>
-    <p class="lead">Send your altered record and the exact command and output of the unmodified verifier
-      reporting a pass to <a href="mailto:support@smrforge.io?subject=Break%20the%20Seal%20submission">support@smrforge.io</a>.
-      If you think you found a genuine verifier or format flaw, not a reformatting of the same number, email
-      that first too, so we can fix it before it is public. Confirmed results are credited by name here.</p>
-    <div class="ctas">
-      <a class="btn primary" href="mailto:support@smrforge.io?subject=Break%20the%20Seal%20submission">Send your break &rarr;</a>
+<div class="wrap" id="submit">
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <p class="kicker warm">Submit</p>
+        <h2>Report a break.</h2>
+      </div>
+      <p class="lead">Submissions are by email. If you think you found a genuine verifier or format flaw, not a
+        reformatting of the same number, email that first too, so we can fix it before it is public.</p>
+    </div>
+    <div class="submit">
+      <div class="sm">
+        <div class="en">By email</div>
+        <h3>Send the altered record and the verdict.</h3>
+        <p>Send your altered record and the exact command and output of the unmodified verifier reporting a
+          pass to <a href="mailto:support@smrforge.io?subject=Break%20the%20Seal%20submission">support@smrforge.io</a>.
+          Confirmed results are credited by name here.</p>
+        <a class="btn primary" href="mailto:support@smrforge.io?subject=Break%20the%20Seal%20submission">Send your break &rarr;</a>
+      </div>
+      <div class="sf">
+        <div class="fs"><span class="s">You send</span><b>the edited record + verifier output</b></div>
+        <div class="fs"><span class="s">We check</span><b>unmodified verifier, pinned key</b></div>
+        <div class="fs"><span class="s">If it holds</span><b>credited here, by name</b></div>
+      </div>
     </div>
   </section>
+</div>
 
-  <section class="band" id="trust">
-    <p class="kicker">Trusting the key</p>
-    <h2>Don't take our word for the key</h2>
-    <p class="boundary">A pass proves the record is unaltered and signed by this key. That the key is
-      <em>SMRFORGE's</em> rests on one fingerprint, <code class="kbd">ed25519:cfb88804&hellip;d69b52c</code>. We
-      publish that fingerprint where we cannot quietly change it: at the
-      <a href="/.well-known/smrforge-trust-root">well-known endpoint</a> and the DNS TXT record above, and in the
-      <a href="https://github.com/SMRFORGE/website/commits/main/.well-known/smrforge-trust-root" rel="noopener">public
-      commit history</a> of the open-source site on GitHub, where every change to that file is a timestamped,
-      third-party-hosted commit you can audit. Cross-check the fingerprint against all three, and don't rely on
-      a single server's word, ours included.</p>
+<div class="wrap" id="trust">
+  <section class="sec trust">
+    <div class="sec-head">
+      <div>
+        <p class="kicker">Trusting the key</p>
+        <h2>Don&rsquo;t take our word for the key.</h2>
+      </div>
+      <p class="lead">A pass proves the record is unaltered and signed by this key. That the key is
+        <b>SMRFORGE&rsquo;s</b> rests on one fingerprint, published where we cannot quietly change it.</p>
+    </div>
+    <p class="fp">fingerprint <b>ed25519:cfb88804&hellip;d69b52c</b></p>
+    <div class="grid c3">
+      <div class="chan">
+        <div class="ck">Channel 1 &middot; HTTPS</div>
+        <h3>Well-known endpoint</h3>
+        <p><a href="/.well-known/smrforge-trust-root">smrforge.io/.well-known/smrforge-trust-root</a></p>
+      </div>
+      <div class="chan">
+        <div class="ck">Channel 2 &middot; DNS</div>
+        <h3>TXT record</h3>
+        <p><code class="kbd">smrforge-trust-root.smrforge.io</code></p>
+      </div>
+      <div class="chan">
+        <div class="ck">Audit trail</div>
+        <h3>Public commit history</h3>
+        <p>The <a href="https://github.com/SMRFORGE/website/commits/main/.well-known/smrforge-trust-root" rel="noopener">commit
+          history</a> of the open-source site on GitHub, where every change to that file is a timestamped,
+          third-party-hosted commit you can audit.</p>
+      </div>
+    </div>
+    <p class="fine">Cross-check the fingerprint against all three, and don&rsquo;t rely on a single server&rsquo;s
+      word, ours included.</p>
   </section>
+</div>
 
-  <section class="band" id="boundary">
-    <p class="kicker">Honest boundary</p>
-    <h2>What this proves, and what it does not</h2>
-    <p class="boundary">A pass proves the record is unaltered, signed by SMRFORGE, and that the number
-      re-derives from the sealed inputs. It does not prove the number is physically correct. The sealed value
-      is an OpenMC multi-group eigenvalue on a homogeneous slab, advisory and lab-escalation grade; continuous
-      energy and heterogeneous geometry are the next escalation, and whether 1.00522 is the right answer is a
-      validation question, settled against experiment and the adequacy frameworks that govern reactor analysis.
-      This challenge is about custody: whether a computed number can be quietly changed or forged on its way to
-      a reviewer. It cannot.</p>
+<div class="wrap" id="boundary">
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <p class="kicker">Honest boundary</p>
+        <h2>What this proves, and what it does not.</h2>
+      </div>
+      <p class="lead">This challenge is about custody: whether a computed number can be quietly changed or
+        forged on its way to a reviewer. <b>It cannot.</b> Whether the number is right is a different question.</p>
+    </div>
+    <div class="note"><b>Custody, not correctness.</b> A pass proves the record is unaltered, signed by SMRFORGE,
+      and that the number re-derives from the sealed inputs. It does not prove the number is physically correct.
+      The sealed value is an OpenMC multi-group eigenvalue on a homogeneous slab, advisory and lab-escalation
+      grade; continuous energy and heterogeneous geometry are the next escalation, and whether 1.00522 is the
+      right answer is a validation question, settled against experiment and the adequacy frameworks that govern
+      reactor analysis.</div>
+    <p class="fine">Verification (the seal holds, the number re-derives) is not validation (the number matches
+      a measured experiment). SMRFORGE results are screening-to-reference grade and advisory, labeled on every
+      result. Nuclear data cited on this site is openly distributable (ENDF/B-VIII.0 and VIII.1).</p>
   </section>
 </div>
 
 <div class="wrap">
   <footer>
-    <span>SMRFORGE · reactor physics you can prove</span>
-    <span><a href="https://gitlab.com/smrforge" rel="noopener">gitlab.com/smrforge</a> · <a href="check.html">Check a bundle</a> · Community MIT · Pro FSL-1.1-MIT · air-gap-safe</span>
+    <span>SMRFORGE &middot; reactor physics you can prove</span>
+    <span><a href="https://gitlab.com/smrforge">gitlab.com/smrforge</a> &middot; <a href="info-sheet.html">Info sheet</a> &middot; <a href="engagements.html">Engagements</a> &middot; <a href="break-the-seal.html">Break the Seal</a> &middot; Community MIT &middot; Pro FSL-1.1-MIT &middot; air-gap-safe</span>
   </footer>
 </div>
 </body>

@@ -25,23 +25,33 @@
     --disp:"Archivo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
     --body:"Public Sans",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
     --mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+    --gutter:clamp(16px,4vw,40px);
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased}
+  html{scroll-behavior:smooth;scroll-padding-top:84px}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   .sheet{max-width:940px;margin:0 auto;padding:clamp(22px,4vw,40px) clamp(20px,4vw,44px) 40px}
   .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
   .kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan)}
   a{color:var(--cyan);text-decoration:none} a:hover{text-decoration:underline}
 
-  /* masthead + nav */
-  .mast{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
-    padding-bottom:16px;border-bottom:1px solid var(--line)}
-  .brand{display:flex;align-items:center;gap:.6rem}
-  .brand img{height:40px;width:auto;display:block}
-  .brand .wm{font-family:var(--disp);font-weight:800;font-size:1.3rem;letter-spacing:.03em;color:var(--ink)}
-  .brand .wm b{color:var(--cyan)}
-  nav{font-family:var(--mono);font-size:.74rem;letter-spacing:.04em;display:flex;gap:16px;flex-wrap:wrap}
-  nav a{color:var(--muted)} nav a:hover{color:var(--cyan);text-decoration:none}
+  /* masthead + nav (canonical sticky header, matches homepage) */
+  header.site{position:sticky;top:0;z-index:10;background:rgba(11,32,53,.92);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line)}
+  header.site .bar{display:flex;justify-content:space-between;align-items:center;gap:16px;
+    max-width:1120px;margin:0 auto;padding:14px var(--gutter)}
+  .brand{display:flex;align-items:center;gap:.65rem;font-family:var(--disp);font-weight:800;font-size:1.35rem;letter-spacing:.03em;text-decoration:none}
+  .brand .wm{line-height:1;color:var(--ink)}
+  .brand .logo{height:44px;width:auto;display:block}
+  .brand b{color:var(--cyan)}
+  nav.main{display:flex;gap:22px;align-items:center;font-family:var(--mono);font-size:.76rem;text-transform:uppercase;letter-spacing:.06em}
+  nav.main a{color:var(--muted);text-decoration:none;white-space:nowrap}
+  nav.main a:hover{color:var(--ink)}
+  nav.main a[aria-current="page"]{color:var(--cyan)}
+  nav.main .ghost{border:1px solid var(--line);padding:.5rem .85rem;color:var(--ink);border-radius:3px}
+  nav.main .ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+  @media(max-width:900px){nav.main{gap:14px}nav.main a.sub{display:none}}
+  @media(max-width:560px){nav.main a:not(.ghost){display:none}.brand .logo{height:38px}}
 
   h1{font-family:var(--disp);font-weight:800;font-size:clamp(2rem,5vw,3rem);line-height:1.04;
     letter-spacing:-.015em;margin:1.4rem 0 0;text-wrap:balance}
@@ -89,17 +99,16 @@
 </style>
 </head>
 <body>
-<div class="sheet">
-  <div class="mast">
-    <div class="brand"><img src="images/smrforge-logo.png" alt="SMRFORGE"><span class="wm">SMR<b>FORGE</b></span></div>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="proof-layer.html">Proof Layer</a>
-      <a href="check.html">Check a bundle</a>
-      <a href="break-the-seal.html">Break the Seal</a>
-      <a href="info-sheet.html">Info sheet</a>
+<header class="site">
+  <div class="bar">
+    <a class="brand" href="/" aria-label="SMRFORGE home"><img class="logo" src="images/smrforge_logo_white_transparent.png" alt="SMRFORGE mark"><span class="wm">SMR<b>FORGE</b></span></a>
+    <nav class="main" aria-label="Primary">
+      <a href="proof-layer.html">Proof Layer</a><a href="engagements.html" aria-current="page">Engagements</a><a class="sub" href="index.html#howit">How it works</a><a class="sub" href="index.html#valid">Verification</a>
+      <a href="info-sheet.html">Info sheet</a><a class="sub" href="index.html#products">Community &amp; Pro</a><a class="ghost" href="check.html">Check a bundle</a>
     </nav>
   </div>
+</header>
+<div class="sheet">
 
   <header>
     <p class="kicker">Work with us</p>
@@ -176,7 +185,7 @@
 
   <footer>
     <span>SMRFORGE &middot; reactor physics you can prove</span>
-    <span><a href="https://gitlab.com/smrforge">gitlab.com/smrforge</a> &middot; <a href="mailto:support@smrforge.io">support@smrforge.io</a> &middot; <a href="https://smrforge.io">smrforge.io</a></span>
+    <span><a href="https://gitlab.com/smrforge">gitlab.com/smrforge</a> &middot; <a href="info-sheet.html">Info sheet</a> &middot; <a href="mailto:support@smrforge.io">support@smrforge.io</a> &middot; <a href="break-the-seal.html">Break the Seal</a> &middot; Community MIT &middot; Pro FSL-1.1-MIT &middot; air-gap-safe</span>
   </footer>
 </div>
 <script src="script.js"></script>

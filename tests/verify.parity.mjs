@@ -22,7 +22,11 @@
 //     sha(canon(sha256sums)), no self-seal, no verdict field or verdict token, bounded identifiers, an RFC
 //     6901 pointer, <= 64 links) and the result carries a `chain` state ('none' | 'declared-unwalked' |
 //     'malformed' | 'unknown'). The links are NEVER walked here (single-bundle verifier).
-import { BUNDLE_TEXT, parseJSON, verifyBundle, canon, sha } from '../check.js';
+//  6. ADR-044 (2026-10-12): small-order / RFC 8032 5.1.3 hardening. The genuine embedded bundle still
+//     PASSES; the from-scratch verifier rejects a small-order public key or R (identity-point universal
+//     forgery + order-8), and the non-canonical x=0/sign-bit encodings (RFC 8032 5.1.3) -- in lock-step
+//     with smrf_verify._ed25519_verify.
+import { BUNDLE_TEXT, parseJSON, verifyBundle, canon, sha, ed25519Verify, hexToBytes } from '../check.js';
 
 let failures = 0;
 const check = (name, cond) => { console.log(`${cond ? 'ok  ' : 'FAIL'}  ${name}`); if (!cond) failures++; };
@@ -363,6 +367,27 @@ check('ADR-042: ...and "malformed" when the sealed link carries a verdict field'
 // existing states unchanged by the new field
 const chainTs = withChain([goodLink()]); chainTs.timestamp = { ...goodTs };
 check('ADR-042: the timestamp state is untouched by a chain claim', okChain.timestamp === 'absent' && verifyBundle(chainTs).timestamp === 'present-unverified');
+
+// --- 6. ADR-044: small-order / RFC 8032 5.1.3 hardening ---
+// Drive the SAME canonical KAT file the Python verifiers assert against (vendored byte-identical from
+// smrforge-export), so the browser and the CLI reject exactly the same inputs. ed25519Verify takes the
+// message as a string and UTF-8 encodes it; every KAT message is ASCII, so hex -> char-string round-trips.
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+const _here = dirname(fileURLToPath(import.meta.url));
+const _kat = JSON.parse(readFileSync(join(_here, 'ed25519_small_order_vectors.json'), 'utf8'));
+check('ADR-044: KAT file is the canonical schema', _kat.schema === 'smrforge.ed25519_kat.v1');
+const hexToStr = (h) => String.fromCharCode(...(h.match(/../g) || []).map((x) => parseInt(x, 16)));
+let katOk = 0, katBad = 0;
+for (const v of _kat.vectors) {
+  const want = v.expect === 'accept';
+  const got = ed25519Verify(hexToBytes(v.signature), hexToStr(v.message_hex), hexToBytes(v.public_key));
+  if (got === want) katOk++; else { katBad++; console.log(`     KAT MISMATCH ${v.id}: want ${v.expect}, got ${got}`); }
+}
+check(`ADR-044: all ${_kat.vectors.length} canonical KAT vectors match (CLI parity)`, katBad === 0 && katOk === _kat.vectors.length);
+// and the genuine embedded bundle is UNAFFECTED by the hardening
+check('ADR-044: the genuine embedded bundle still verifies after hardening', verifyBundle(fresh()).ok === true);
 
 console.log(failures ? `\n${failures} FAILURE(S)` : '\nall parity checks passed');
 process.exit(failures ? 1 : 0);

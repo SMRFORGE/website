@@ -212,7 +212,7 @@ function modpow(b, e, mm) { b = ((b % mm) + mm) % mm; let r = 1n; while (e > 0n)
 const inv = (a) => modpow(mod(a), Q - 2n, Q);
 const D = mod(-121665n * inv(121666n));
 const ISQRT = modpow(2n, (Q - 1n) / 4n, Q);
-function recoverX(y, sign) { const yy = y * y; const xx = mod((yy - 1n) * inv(D * yy + 1n)); let x = modpow(xx, (Q + 3n) / 8n, Q); if (mod(x * x - xx) !== 0n) x = mod(x * ISQRT); if ((x & 1n) !== BigInt(sign)) x = Q - x; return x; }
+function recoverX(y, sign) { const yy = y * y; const xx = mod((yy - 1n) * inv(D * yy + 1n)); let x = modpow(xx, (Q + 3n) / 8n, Q); if (mod(x * x - xx) !== 0n) x = mod(x * ISQRT); if (x === 0n && sign === 1) throw new Error('non-canonical encoding: x == 0 with sign bit set (RFC 8032 5.1.3)'); if ((x & 1n) !== BigInt(sign)) x = Q - x; return x; }
 const BY = mod(4n * inv(5n));
 const BASE = [recoverX(BY, 0), BY];
 const onCurve = (p) => { const [x, y] = p; return mod(-x * x + y * y - 1n - D * x * x * y * y) === 0n; };
@@ -238,6 +238,9 @@ function ed25519Verify(sig, msgStr, pub) {
   if (sig.length !== 64 || pub.length !== 32) return false;
   let R, A;
   try { R = ext(decodepoint(sig.slice(0, 32))); A = ext(decodepoint(pub)); } catch { return false; }
+  // reject a small-order public key OR R ([8]P == identity): the identity point accepts a key-free
+  // signature under the cofactorless equation, and small-order R launders torsion. Mirrors verify.py.
+  if (eEqual(emul(A, 8n), IDENT) || eEqual(emul(R, 8n), IDENT)) return false;
   const s = leInt(sig.slice(32));
   if (s >= L) return false;                 // reject a non-canonical / malleable scalar (RFC 8032)
   const msg = _enc.encode(msgStr);
@@ -580,7 +583,8 @@ function verifyBundle(bundle) {
 }
 
 // expose the pure core for a headless (Node) parity test
-export { BUNDLE_TEXT, parseJSON, canon, sha, verifyBundle, NumLit, PINNED_IS_DEMO, sha256hex, sha512 };
+export { BUNDLE_TEXT, parseJSON, canon, sha, verifyBundle, NumLit, PINNED_IS_DEMO, sha256hex, sha512,
+         ed25519Verify, hexToBytes };
 
 // ======================================================================================
 // UI wiring -- runs only in a browser; a Node import of the functions above skips all of this

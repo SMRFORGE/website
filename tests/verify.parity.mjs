@@ -22,7 +22,11 @@
 //     sha(canon(sha256sums)), no self-seal, no verdict field or verdict token, bounded identifiers, an RFC
 //     6901 pointer, <= 64 links) and the result carries a `chain` state ('none' | 'declared-unwalked' |
 //     'malformed' | 'unknown'). The links are NEVER walked here (single-bundle verifier).
-import { BUNDLE_TEXT, parseJSON, verifyBundle, canon, sha } from '../check.js';
+//  6. ADR-044 (2026-10-12): small-order / RFC 8032 5.1.3 hardening. The genuine embedded bundle still
+//     PASSES; the from-scratch verifier rejects a small-order public key or R (identity-point universal
+//     forgery + order-8), and the non-canonical x=0/sign-bit encodings (RFC 8032 5.1.3) -- in lock-step
+//     with smrf_verify._ed25519_verify.
+import { BUNDLE_TEXT, parseJSON, verifyBundle, canon, sha, ed25519Verify, hexToBytes } from '../check.js';
 
 let failures = 0;
 const check = (name, cond) => { console.log(`${cond ? 'ok  ' : 'FAIL'}  ${name}`); if (!cond) failures++; };
@@ -363,6 +367,43 @@ check('ADR-042: ...and "malformed" when the sealed link carries a verdict field'
 // existing states unchanged by the new field
 const chainTs = withChain([goodLink()]); chainTs.timestamp = { ...goodTs };
 check('ADR-042: the timestamp state is untouched by a chain claim', okChain.timestamp === 'absent' && verifyBundle(chainTs).timestamp === 'present-unverified');
+
+// --- 6. ADR-044: small-order / RFC 8032 5.1.3 hardening ---
+const SMALL_ORDER = [
+  '0100000000000000000000000000000000000000000000000000000000000000',
+  'ecffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000080',
+  'c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a',
+  'c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac03fa',
+  '26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc05',
+  '26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc85',
+];
+// identity public key + R=identity + S=0 verifies ANY message under the cofactorless equation -> must reject
+const ident = SMALL_ORDER[0];
+const universalForgery = hexToBytes(ident + '00'.repeat(32));
+check('ADR-044: identity-key universal forgery is REJECTED',
+  ed25519Verify(universalForgery, 'any message at all', hexToBytes(ident)) === false);
+// a small-order R under the genuine pinned key (any S<L) -> reject
+const genuinePub = hexToBytes(fresh().signature.public_key);
+let soR = 0;
+for (const h of SMALL_ORDER) {
+  const sig = hexToBytes(h + '01' + '00'.repeat(31));
+  if (ed25519Verify(sig, 'msg', genuinePub) === false) soR++;
+}
+check('ADR-044: a small-order R is REJECTED for all 8 points', soR === 8);
+// non-canonical x=0 with sign bit set (identity and (0,-1)) -> decode throws -> verify returns false,
+// whether the bad encoding is used as the public key or as R.
+const x0hex = ['0100000000000000000000000000000000000000000000000000000000000080',   // identity, signbit
+               'ecffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff']; // (0,-1), signbit
+let x0rej = 0;
+for (const h of x0hex) {
+  if (ed25519Verify(hexToBytes('00'.repeat(64)), 'm', hexToBytes(h)) === false) x0rej++;        // as pubkey
+  if (ed25519Verify(hexToBytes(h + '00'.repeat(32)), 'm', genuinePub) === false) x0rej++;       // as R
+}
+check('ADR-044: non-canonical x=0/signbit encodings rejected as key and as R', x0rej === 4);
+// and the genuine bundle is UNAFFECTED by the hardening
+check('ADR-044: the genuine embedded bundle still verifies after hardening', verifyBundle(fresh()).ok === true);
 
 console.log(failures ? `\n${failures} FAILURE(S)` : '\nall parity checks passed');
 process.exit(failures ? 1 : 0);

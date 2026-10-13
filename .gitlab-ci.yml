@@ -38,6 +38,22 @@ html-validate:
     - html5validator --root . --match "*.html"
 
 # ---------------------------------------------------------------------------
+# Parity gate for the in-browser /check verifier (check.js). Runs the Node
+# parity suite that drives check.js directly (no browser needed): the genuine
+# embedded bundle verifies, every tamper/forgery the CLI rejects is rejected
+# here too, and all 24 canonical ADR-044 KAT vectors match the CLI. The README
+# calls this "the parity gate"; this job is what makes it an actual gate.
+# Blocking on purpose -- a divergence between the browser verifier and the CLI
+# is exactly the "Break the Seal" invariant we must not ship broken.
+# Bump the pinned node image deliberately.
+# ---------------------------------------------------------------------------
+parity:
+  stage: lint
+  image: node:22-alpine
+  script:
+    - node tests/verify.parity.mjs
+
+# ---------------------------------------------------------------------------
 # Link checker. External links can flake (rate limits, transient DNS), so
 # this job is allow_failure - it surfaces broken links without blocking
 # merges. Tighten by removing allow_failure once external flake rate is

@@ -375,9 +375,18 @@ check('ADR-042: the timestamp state is untouched by a chain claim', okChain.time
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { createHash } from 'node:crypto';
 const _here = dirname(fileURLToPath(import.meta.url));
-const _kat = JSON.parse(readFileSync(join(_here, 'ed25519_small_order_vectors.json'), 'utf8'));
+const _katPath = join(_here, 'ed25519_small_order_vectors.json');
+const _kat = JSON.parse(readFileSync(_katPath, 'utf8'));
 check('ADR-044: KAT file is the canonical schema', _kat.schema === 'smrforge.ed25519_kat.v1');
+// Pin the vendored KAT to the canonical smrforge-export copy (LF-normalized sha256), so a stale or
+// edited copy fails here, not just when a verdict happens to diverge. Bump deliberately on re-vendor.
+const _katSha = createHash('sha256')
+  .update(readFileSync(_katPath, 'latin1').replace(/\r\n/g, '\n'), 'latin1')
+  .digest('hex');
+check('ADR-044: KAT file matches the canonical upstream (LF-normalized sha256)',
+  _katSha === '82e936ee5d3cc4717da83075941d264864563c5a188b9ba2751c17eda48d9791');
 const hexToStr = (h) => String.fromCharCode(...(h.match(/../g) || []).map((x) => parseInt(x, 16)));
 let katOk = 0, katBad = 0;
 for (const v of _kat.vectors) {

@@ -216,7 +216,7 @@
         the physics is right.</p>
     </div>
 
-    <div class="strip" aria-label="How to check any bundle on this page">
+    <div class="strip" id="verify" aria-label="How to check any bundle on this page">
       <div>
         <p class="sk">1 &middot; integrity, offline</p>
         <p class="sc"><span class="p">$</span> smrforge verify &lt;bundle.json&gt;</p>
@@ -354,7 +354,7 @@
         <p class="cav"><b>Caveat, from the bundle.</b> Code verification against the published 2-D reference, not a physical validation. The peaking at this mesh (mesh_per_10cm 1) is 1.613 and converges toward the published 1.479 as the mesh is refined.</p>
         <div class="links">
           <a class="raw" href="https://gitlab.com/smrforge/smrforge/-/raw/main/packs/iaea-2d.reproduce-demo.bundle.json">Raw signed bundle &darr;</a>
-          <a href="https://smrforge.io/check.html">Verify in browser &rarr;</a>
+          <a href="#verify">Verify offline &rarr;</a>
         </div>
         <p class="fn">packs/iaea-2d.reproduce-demo.bundle.json</p>
       </article>
@@ -378,7 +378,7 @@
         <p class="cav"><b>Caveat, from the bundle.</b> The depletion solve is exact against closed-form Bateman, but the network and cross sections are synthetic. These isotopics are screening-grade and <b>not</b> a claimable irradiated-fuel assay. Exact arithmetic on unvalidated data.</p>
         <div class="links">
           <a class="raw" href="https://gitlab.com/smrforge/smrforge/-/raw/main/packs/burnup.reproduce-demo.bundle.json">Raw signed bundle &darr;</a>
-          <a href="https://smrforge.io/check.html">Verify in browser &rarr;</a>
+          <a href="#verify">Verify offline &rarr;</a>
         </div>
         <p class="fn">packs/burnup.reproduce-demo.bundle.json</p>
       </article>
@@ -418,7 +418,7 @@
         <p class="cav"><b>Caveat, from the bundle.</b> A continuous-energy OpenMC bank worth from two verbatim sealed BEAVRS decks. Lab-grade per run. Reference is an earned per-domain validation status, not a per-run label, and this bundle does not claim it.</p>
         <div class="links">
           <a class="raw" href="https://gitlab.com/smrforge/smrforge/-/raw/main/packs/openmc-ce-rodworth.reproduce-demo.bundle.json">Raw signed bundle &darr;</a>
-          <a href="https://smrforge.io/check.html">Verify in browser &rarr;</a>
+          <a href="#verify">Verify offline &rarr;</a>
         </div>
         <p class="fn">packs/openmc-ce-rodworth.reproduce-demo.bundle.json</p>
       </article>
@@ -445,7 +445,7 @@
         <p class="cav"><b>Caveat, from the bundle.</b> Screening c_k reports n_eff 1.0 for the 7 applicable anchors, so the 95/95 tolerance factor is undefined and there is no qualified statistical USL from this basis. The optimistic bound treats correlated cases as independent. Do not quote it as the USL. A v1 demonstration of the open pipeline, not a licensing product.</p>
         <div class="links">
           <a class="raw" href="https://gitlab.com/smrforge/smrforge/-/raw/main/packs/usl.reproduce-demo.bundle.json">Raw signed bundle &darr;</a>
-          <a href="https://smrforge.io/check.html">Verify in browser &rarr;</a>
+          <a href="#verify">Verify offline &rarr;</a>
         </div>
         <p class="fn">packs/usl.reproduce-demo.bundle.json</p>
       </article>
@@ -470,7 +470,7 @@
         <p class="cav"><b>Caveat, from the bundle.</b> The +1.3 to +1.8% C/E is the documented HTGR continuous-energy over-prediction, attributed in the literature, not bespoke. The claim is consistency with the cited codes, not &ldquo;we hit 1.0000.&rdquo; Reference is earned per domain, not a per-run label.</p>
         <div class="links">
           <a class="raw" href="https://gitlab.com/smrforge/smrforge/-/raw/main/packs/openmc-htr10-first-crit.reproduce-demo.bundle.json">Raw signed bundle &darr;</a>
-          <a href="https://smrforge.io/check.html">Verify in browser &rarr;</a>
+          <a href="#verify">Verify offline &rarr;</a>
         </div>
         <p class="fn">packs/openmc-htr10-first-crit.reproduce-demo.bundle.json</p>
       </article>

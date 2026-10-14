@@ -589,9 +589,9 @@
         <h2>The seal doesn&rsquo;t care what the number is.</h2>
       </div>
       <p class="lead">A bundle seals whatever the computation outputs. Inputs, result, provenance, one SHA-256
-        manifest, one Ed25519 signature. A single k_eff is the easiest thing to show, so it is the demo, and a
-        full-core flux map ships sealed the same way. <b>The same record is built to hold a depletion curve, a
-        rod-worth table or a USL margin, with no change to how it is sealed or checked.</b></p>
+        manifest, one Ed25519 signature. A single k_eff is the easiest thing to show, so it is the demo. <b>The
+        same record is built to hold a full-core flux field, a depletion curve, a rod-worth table or a USL margin,
+        with no change to how it is sealed or checked.</b></p>
     </div>
 
     <figure class="shapes-fig">
@@ -664,9 +664,9 @@
 
     <div class="grid c4 shapes-grid">
       <div class="cell">
-        <div class="cmd">sealed today</div>
-        <h3>Power / flux map</h3>
-        <p>A whole-core field, sealed as the field. Published for the IAEA-2D benchmark and a 193-assembly core.</p>
+        <div class="cmd">same record, by design</div>
+        <h3>Power / flux field</h3>
+        <p>The whole assembly-by-assembly field seals as one record, the same way a scalar does.</p>
       </div>
       <div class="cell">
         <div class="cmd">same record, by design</div>
@@ -685,9 +685,9 @@
       </div>
     </div>
 
-    <p class="shapes-honest">When a result is an array or a Monte Carlo number rather than one value, the bundle
-      seals a reproduce tolerance and carries the full inputs, so a reviewer re-runs the open engine and diffs the
-      whole field against the sealed one, not a headline number.</p>
+    <p class="shapes-honest">When a result is an array or a stochastic number rather than one value, the bundle
+      carries the full inputs and, where the number is stochastic, a sealed reproduce tolerance, so a reviewer
+      re-runs the open engine and checks the result the same way, not just a headline number.</p>
     <p class="shapes-close">The seal proves custody of the computation, whatever its shape.
       <b>k_eff is the demo, not the limit.</b></p>
   </section>

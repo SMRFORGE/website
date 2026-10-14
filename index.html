@@ -590,12 +590,12 @@
       </div>
       <p class="lead">A bundle seals whatever the computation outputs. Inputs, result, provenance, one SHA-256
         manifest, one Ed25519 signature. A single k_eff is the easiest thing to show, so it is the demo. <b>The
-        same record is built to hold a full-core flux field, a depletion curve, a rod-worth table or a USL margin,
-        with no change to how it is sealed or checked.</b></p>
+        same record now holds a full-core flux field, a single depletion step, a measured rod-worth comparison and
+        a USL applicability analysis, each sealed and checked the same way.</b></p>
     </div>
 
     <figure class="shapes-fig">
-      <svg viewBox="0 0 480 340" role="img" aria-label="One sealed boundary, labeled Ed25519 signature and SHA-256 manifest, enclosing five result types drawn as their shapes. A scalar k-effective marked as the demo, a four-by-four power and flux grid, a burnup curve over time, three rod-worth bars, and a USL margin line with a point below it. Every shape is sealed identically.">
+      <svg viewBox="0 0 480 340" role="img" aria-label="One sealed boundary, labeled Ed25519 signature and SHA-256 manifest, enclosing five result types drawn as their shapes. A scalar k-effective marked as the demo, a four-by-four power and flux grid, a single burnup step, three rod-worth bars, and a USL margin line with a point below it. Every shape is sealed identically.">
         <!-- the seal: outer frame + inner ring -->
         <rect class="seal" x="10" y="20" width="460" height="300" rx="4" stroke-width="1.5"/>
         <rect class="seal-ring" x="16" y="26" width="448" height="288" rx="3" stroke-width="1" stroke-dasharray="3 3"/>
@@ -635,7 +635,7 @@
         <path class="mut-s" d="M339 62 C352 104 370 108 428 108" stroke-width="1.8" stroke-linecap="round"/>
         <circle class="mut" cx="339" cy="62" r="2"/><circle class="mut" cx="428" cy="108" r="2"/>
         <text class="fnt" x="428" y="131" font-size="8.5" text-anchor="end">time &#8594;</text>
-        <text class="mut" x="381.5" y="152" font-size="12.5" text-anchor="middle">burnup &#183; curve</text>
+        <text class="mut" x="381.5" y="152" font-size="12.5" text-anchor="middle">burnup &#183; step</text>
 
         <!-- tile 4: control-rod worth, three bars -->
         <rect class="tile" x="34" y="176" width="200" height="120" rx="3" stroke-width="1"/>
@@ -664,24 +664,24 @@
 
     <div class="grid c4 shapes-grid">
       <div class="cell">
-        <div class="cmd">same record, by design</div>
+        <div class="cmd">sealed today</div>
         <h3>Power / flux field</h3>
-        <p>The whole assembly-by-assembly field seals as one record, the same way a scalar does.</p>
+        <p>The full 52-assembly power array is sealed as the array, re-derived exactly on reproduce.</p>
       </div>
       <div class="cell">
-        <div class="cmd">same record, by design</div>
+        <div class="cmd">sealed today</div>
         <h3>Burnup / depletion</h3>
-        <p>k and inventory over burnup. The record holds the whole curve, not a summary number.</p>
+        <p>A single depletion step's isotopics, sealed. Screening-grade on a synthetic network, not an irradiated-fuel assay.</p>
       </div>
       <div class="cell">
-        <div class="cmd">same record, by design</div>
+        <div class="cmd">sealed today</div>
         <h3>Rod worth</h3>
-        <p>Worth per bank in pcm. A table seals the same way a single number does.</p>
+        <p>The BEAVRS D-bank worth, 811 pcm, sealed with its uncertainty and compared to the measured 788 (C/E 1.03).</p>
       </div>
       <div class="cell">
-        <div class="cmd">same record, by design</div>
-        <h3>USL / sensitivity</h3>
-        <p>A margin against a limit, with the sensitivities behind it, sealed as its own shape.</p>
+        <div class="cmd">sealed today</div>
+        <h3>USL / applicability</h3>
+        <p>An applicability analysis and subcritical-limit margin. The v1 result honestly seals a null defensible USL on screening c_k.</p>
       </div>
     </div>
 

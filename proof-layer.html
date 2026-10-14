@@ -152,7 +152,7 @@
 <style>
   /* ---- SMRFORGE design system (homepage sets it; other pages follow) ----
        ground: prussian navy with a teal undertone · identity: glacier cyan (commands, links, kickers)
-       signal: amber — the ONE warm accent, reserved for the thing that gets checked / the human decision
+       signal: amber, the ONE warm accent, reserved for the thing that gets checked / the human decision
        verdicts: lichen = pass, clay = fail · hairline grids (1px --line) instead of card shadows
        type: Archivo display, Public Sans body, IBM Plex Mono for anything a machine wrote. */
   :root{
@@ -179,7 +179,7 @@
   .kicker.warm{color:var(--amber)}
   code,.code{font-family:var(--mono);font-size:.9em;color:var(--cyan)}
 
-  /* --- section rhythm: one pattern, used everywhere --- */
+  /* --- section rhythm --- */
   .sec{padding:clamp(56px,7vw,96px) 0;border-top:1px solid var(--line)}
   .sec-head{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(20px,4vw,56px);align-items:end;margin-bottom:clamp(28px,4vw,44px)}
   @media(max-width:820px){.sec-head{grid-template-columns:1fr;gap:14px}}
@@ -188,9 +188,10 @@
   .sec .lead b{color:var(--ink);font-weight:600}
   .sec .lead a{color:var(--cyan);text-decoration:none}
   .sec .lead a:hover{text-decoration:underline}
-  .sec-head.tight{margin-bottom:0}
+  .sec .lead code{font-size:.92em}
+  .sub-h{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:0 0 12px}
 
-  /* --- hairline grid: cells on a 1px line background --- */
+  /* --- hairline grid --- */
   .grid{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
   .grid>*{background:var(--bg);padding:clamp(20px,2.6vw,28px) clamp(18px,2.4vw,26px);min-width:0}
   .grid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -232,7 +233,7 @@
 
   /* --- hero --- */
   .hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(30px,5vw,64px);
-    align-items:center;padding:clamp(48px,7vw,96px) 0 clamp(36px,5vw,64px)}
+    align-items:center;padding:clamp(48px,7vw,88px) 0 clamp(36px,5vw,64px)}
   @media(max-width:900px){.hero{grid-template-columns:1fr;gap:38px}}
   .problem{font-family:var(--mono);font-size:.84rem;color:var(--muted);margin:0 0 1rem;letter-spacing:.01em}
   h1{font-family:var(--disp);font-weight:800;font-size:clamp(2.5rem,6.2vw,4.4rem);
@@ -245,42 +246,136 @@
   .tagline .cx{color:var(--amber)}
   .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:1.8rem}
 
-  /* --- the one lifted object: the evidence receipt --- */
-  .receipt{background:var(--surface);border:1px solid var(--line);border-top:2px solid var(--cyan);border-radius:4px;
-    box-shadow:0 28px 64px -30px rgba(2,10,20,.9),0 0 0 1px rgba(76,211,232,.06);overflow:hidden;font-family:var(--mono);min-width:0}
+  /* --- the evidence receipt: a ledger, each line says what it proves --- */
+  .receipt{background:var(--surface);border:1px solid var(--line);border-top:2px solid var(--cyan);
+    font-family:var(--mono);min-width:0}
   .receipt .top{display:flex;justify-content:space-between;align-items:center;gap:10px;
     padding:11px 16px;border-bottom:1px solid var(--line);background:var(--surface-2)}
   .receipt .top .t{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .receipt .top .dot{width:9px;height:9px;border-radius:50%;background:var(--lichen);box-shadow:0 0 8px rgba(159,214,122,.6);flex:none}
-  .receipt .mid{padding:20px 18px}
+  .receipt .top .dot{width:9px;height:9px;border-radius:50%;background:var(--lichen);flex:none}
+  .receipt .mid{padding:20px 18px 10px}
   .receipt .k{font-size:clamp(1.7rem,4vw,2.2rem);color:var(--ink);letter-spacing:.01em;font-variant-numeric:tabular-nums;line-height:1.1}
   .receipt .k small{color:var(--muted);font-size:.9rem;margin-left:.4rem}
   .receipt .tag{display:inline-block;margin-top:.55rem;font-size:.7rem;color:var(--lichen);
     border:1px solid rgba(159,214,122,.4);padding:.06rem .5rem;border-radius:3px;letter-spacing:.04em}
-  .receipt .rows{border-top:1px dashed var(--line);margin-top:16px;padding-top:14px;display:grid;gap:8px}
-  .receipt .row{display:flex;justify-content:space-between;gap:12px;font-size:.8rem}
-  .receipt .row .l{color:var(--faint);letter-spacing:.04em;flex:none}
+  .receipt .rows{margin-top:16px}
+  .receipt .row{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:14px;row-gap:3px;
+    padding:9px 0;border-top:1px dashed var(--line);font-size:.8rem}
+  .receipt .row .l{color:var(--faint);letter-spacing:.04em}
   .receipt .row .v{color:var(--muted);text-align:right;overflow-wrap:anywhere}
   .receipt .row .v.ok{color:var(--amber)}
-  .receipt .row .v.bad{color:var(--clay)}
+  .receipt .row .pf{grid-column:1/-1;font-family:var(--body);font-size:.76rem;color:var(--faint);line-height:1.45;transition:color .14s}
+  .receipt .row:hover .pf,.receipt .row:focus-within .pf{color:var(--muted)}
   .receipt .foot{border-top:1px solid var(--line);padding:11px 18px;display:flex;justify-content:space-between;gap:12px;
     font-size:.74rem;color:var(--faint);background:var(--surface-2)}
   .receipt .foot .pass{color:var(--lichen);letter-spacing:.06em}
   .cap{font-size:.8rem;color:var(--faint);margin:12px 2px 0;font-family:var(--mono);line-height:1.5}
 
-  /* --- the proof-layer flow block: where it sits relative to your AI --- */
-  .flag{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:0;border:1px solid var(--line);border-top:2px solid var(--cyan);background:var(--surface)}
-  @media(max-width:820px){.flag{grid-template-columns:1fr}}
-  .flag .fm{padding:26px clamp(20px,3vw,34px);display:flex;flex-direction:column;gap:.8rem;align-items:flex-start}
-  .flag .fm .en{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
-  .flag .fm h3{font-family:var(--disp);font-weight:800;font-size:1.5rem;margin:0;letter-spacing:-.01em;text-wrap:balance}
-  .flag .fm p{margin:0;color:var(--muted);font-size:.97rem;max-width:58ch}
-  .flag .ff{border-left:1px solid var(--line);background:var(--surface-2);padding:22px clamp(18px,2.4vw,28px);display:flex;flex-direction:column;justify-content:center;gap:14px}
-  @media(max-width:820px){.flag .ff{border-left:0;border-top:1px solid var(--line)}}
-  .flag .fs{display:flex;flex-direction:column;gap:2px}
-  .flag .fs .s{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
-  .flag .fs b{font-family:var(--mono);color:var(--ink);font-size:.9rem;font-weight:500}
-  .flag .fs b .w{color:var(--amber)}
+  /* --- before / after: the same number, undefended and sealed --- */
+  .vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  @media(max-width:720px){.vs{grid-template-columns:1fr}}
+  .vs>div{background:var(--bg);padding:clamp(18px,2.4vw,26px);min-width:0}
+  .vs>div.left{background:var(--bg-2)}
+  .vs .vh{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .vs .vh b{font-weight:500;color:var(--muted)}
+  .vs .said{font-family:var(--mono);font-size:.82rem;color:var(--muted);margin:14px 0 2px;line-height:1.7}
+  .vs .said .q{color:var(--faint)}
+  .vs .said .k{color:var(--ink);font-size:1.5rem;display:block;letter-spacing:.01em;font-variant-numeric:tabular-nums}
+  .vs .said .k small{color:var(--muted);font-size:.8rem;margin-left:.3rem}
+  .vs .vr{display:grid;grid-template-columns:minmax(0,11ch) minmax(0,1fr);gap:12px;font-family:var(--mono);font-size:.76rem;
+    padding:7px 0;border-top:1px dashed var(--line)}
+  .vs .vr .l{color:var(--faint)}
+  .vs .vr .v{color:var(--muted);overflow-wrap:anywhere}
+  .vs .vr .v.no{color:var(--clay)}
+  .vs .vr .v.ok{color:var(--lichen)}
+  .vs .verdict{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-family:var(--disp);font-weight:700;font-size:1rem}
+  .vs .verdict.no{color:var(--clay)}
+  .vs .verdict.yes{color:var(--lichen)}
+  .vs .verdict span{color:var(--muted);font-family:var(--body);font-weight:400;font-size:.9rem}
+
+  /* --- the diagram: where the proof layer sits (the one bold object on the page) --- */
+  .pipe{display:grid;grid-template-columns:minmax(0,1fr) minmax(118px,.46fr) minmax(0,1.18fr) minmax(118px,.46fr) minmax(0,1fr);
+    border:1px solid var(--line);border-top:2px solid var(--cyan);background:var(--surface)}
+  @media(max-width:900px){.pipe{grid-template-columns:1fr}}
+  .st{padding:clamp(18px,2.4vw,26px);display:flex;flex-direction:column;gap:12px;min-width:0}
+  .st .who{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0}
+  .st.lay .who{color:var(--cyan)}
+  .st.who-checks .who{color:var(--amber)}
+  .st h3{font-family:var(--disp);font-weight:700;font-size:1.2rem;margin:0;letter-spacing:-.005em}
+  .st .hatch{border:1px dashed var(--line);padding:14px 10px;text-align:center;font-family:var(--mono);font-size:.66rem;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--faint);
+    background:repeating-linear-gradient(135deg,transparent 0 6px,rgba(98,130,155,.13) 6px 7px)}
+  .st .box{font-family:var(--mono);font-size:.74rem;line-height:1.65;color:var(--muted);border:1px solid var(--line);
+    background:var(--bg);padding:10px 12px;margin:0;overflow-wrap:anywhere;white-space:pre-wrap}
+  .st .box .bb{color:var(--ink)}
+  .st .box .cy{color:var(--cyan)}
+  .st .box .ok{color:var(--lichen)}
+  .st .box .am{color:var(--amber)}
+  .st p{margin:0;color:var(--muted);font-size:.9rem}
+  .lk{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:9px;padding:18px 12px;text-align:center;
+    background:var(--bg-2);border-left:1px solid var(--line);border-right:1px solid var(--line)}
+  .lk .lb{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan)}
+  .lk .sb{font-size:.76rem;color:var(--muted);line-height:1.4}
+  .lk .ar{position:relative;width:100%;height:2px;
+    background:repeating-linear-gradient(90deg,var(--cyan) 0 8px,transparent 8px 14px);animation:flow-x 1.4s linear infinite}
+  .lk .ar::after{content:"";position:absolute;right:-1px;top:50%;transform:translateY(-50%);
+    border-left:7px solid var(--cyan);border-top:5px solid transparent;border-bottom:5px solid transparent}
+  @keyframes flow-x{to{background-position:14px 0}}
+  @keyframes flow-y{to{background-position:0 14px}}
+  @media(max-width:900px){
+    .lk{border-left:0;border-right:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px}
+    .lk .ar{width:2px;height:36px;background:repeating-linear-gradient(180deg,var(--cyan) 0 8px,transparent 8px 14px);animation-name:flow-y}
+    .lk .ar::after{right:auto;top:auto;bottom:-1px;left:50%;transform:translateX(-50%);
+      border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--cyan);border-bottom:0}
+  }
+  @media(prefers-reduced-motion:reduce){.lk .ar{animation:none}}
+  .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-top:0}
+  @media(max-width:720px){.steps{grid-template-columns:1fr}}
+  .steps>div{background:var(--bg);padding:14px 18px;display:flex;flex-direction:column;gap:2px;min-width:0}
+  .steps .s{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+  .steps b{font-family:var(--mono);color:var(--ink);font-size:.88rem;font-weight:500}
+  .steps b .w{color:var(--amber)}
+  .aside{margin-top:clamp(24px,3vw,36px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:clamp(18px,3vw,40px);align-items:start}
+  @media(max-width:820px){.aside{grid-template-columns:1fr}}
+  .aside h3{font-family:var(--disp);font-weight:800;font-size:1.4rem;margin:0;letter-spacing:-.01em;text-wrap:balance}
+  .aside p{margin:0;color:var(--muted);font-size:.97rem;max-width:60ch}
+
+  /* --- orchestrator: one step, two doors, one trail --- */
+  .orch{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  @media(max-width:900px){.orch{grid-template-columns:1fr}}
+  .orch>div{background:var(--bg);padding:clamp(18px,2.4vw,26px);min-width:0}
+  .orch .oh{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:0 0 12px}
+  .orch .oh b{font-weight:500;color:var(--cyan)}
+  .orch p{margin:12px 0 0;color:var(--muted);font-size:.9rem}
+  pre.wire{margin:0 0 12px;font-family:var(--mono);font-size:.73rem;line-height:1.55;color:var(--muted);background:var(--surface);
+    border:1px solid var(--line);padding:12px 14px;overflow-x:auto;white-space:pre;max-width:100%}
+  pre.wire .c{color:var(--faint)}
+  pre.wire .k{color:var(--cyan)}
+  pre.wire .s{color:var(--ink)}
+  .chain{display:flex;flex-direction:column}
+  .lnk{position:relative;border:1px solid var(--line);background:var(--surface);padding:10px 12px;font-family:var(--mono);font-size:.73rem;
+    line-height:1.6;color:var(--muted);overflow-wrap:anywhere}
+  .lnk+.lnk{margin-top:22px}
+  .lnk+.lnk::before{content:"";position:absolute;left:22px;top:-23px;height:22px;border-left:2px dashed var(--cyan)}
+  .lnk .n{color:var(--ink)}
+  .lnk .h{color:var(--cyan)}
+  .lnk .sm{color:var(--faint)}
+  .walk{margin-top:22px;position:relative;border:1px solid rgba(242,163,58,.55);background:var(--amber-soft);padding:10px 12px;
+    font-family:var(--mono);font-size:.73rem;line-height:1.6;color:var(--ink);overflow-wrap:anywhere}
+  .walk::before{content:"";position:absolute;left:22px;top:-23px;height:22px;border-left:2px dashed var(--amber)}
+  .walk .w{color:var(--amber);letter-spacing:.1em;text-transform:uppercase;font-size:.64rem}
+  .walk .sm{color:var(--muted)}
+  .status{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-top:0}
+  @media(max-width:720px){.status{grid-template-columns:1fr}}
+  .status>div{background:var(--bg-2);padding:16px 18px;min-width:0}
+  .status .t{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .status ul{margin:0;padding:0;list-style:none;font-size:.9rem;color:var(--muted)}
+  .status li{position:relative;padding-left:18px;margin:4px 0}
+  .status li::before{content:"";position:absolute;left:0;top:.62em;width:8px;height:8px;border-radius:50%;background:var(--cyan)}
+  .status .dir li::before{background:transparent;border:1px solid var(--faint)}
+  .status code{font-size:.84em}
+  .thesis{margin:clamp(24px,3vw,36px) 0 0;font-family:var(--disp);font-weight:800;font-size:clamp(1.3rem,2.4vw,1.7rem);letter-spacing:-.01em;line-height:1.2;text-wrap:balance;max-width:30ch}
+  .thesis .cx{color:var(--amber)}
 
   /* --- honesty note: the one warm callout --- */
   .note{margin:18px 0 0;padding:14px 18px;border-left:3px solid var(--amber);background:var(--amber-soft);
@@ -295,6 +390,7 @@
     flex-wrap:wrap;gap:12px;font-family:var(--mono);font-size:.74rem;color:var(--faint)}
   footer a{color:var(--muted);text-decoration:none}
   footer a:hover{color:var(--cyan)}
+
 </style>
 </head>
 <body>
@@ -325,21 +421,33 @@
     </div>
 
     <div>
-      <div class="receipt" role="img" aria-label="An example sealed result: a k-effective of 1.001742 plus or minus 0.000285 for LEU-COMP-THERM-008, computed with OpenMC; the bundle hash and Ed25519 signature recorded; offline verify passing on integrity and origin; reproduce re-deriving the number within three sigma.">
+      <div class="receipt" aria-label="An example sealed result">
         <div class="top"><span class="t">One sealed number</span><span class="dot" aria-hidden="true"></span></div>
         <div class="mid">
           <div class="k">1.001742<small>&plusmn; 0.000285</small></div>
           <span class="tag">LEU-COMP-THERM-008 &middot; OpenMC &middot; ENDF/B-VIII.1</span>
           <div class="rows">
-            <div class="row"><span class="l">bundle_sha256</span><span class="v">sha256:0f98&hellip;c8e8</span></div>
-            <div class="row"><span class="l">signature</span><span class="v">ed25519 cfb88804&hellip;</span></div>
-            <div class="row"><span class="l">verify</span><span class="v ok">OK &middot; integrity + origin</span></div>
-            <div class="row"><span class="l">reproduce</span><span class="v ok">re-derived within 3&sigma;</span></div>
+            <div class="row" tabindex="0">
+              <span class="l">bundle_sha256</span><span class="v">sha256:0f98&hellip;c8e8</span>
+              <span class="pf">The manifest. Every input, the result, and the data library it read, each hashed into one digest.</span>
+            </div>
+            <div class="row" tabindex="0">
+              <span class="l">signature</span><span class="v">ed25519 cfb88804&hellip;</span>
+              <span class="pf">Who sealed it, and that nothing inside the bundle has changed since.</span>
+            </div>
+            <div class="row" tabindex="0">
+              <span class="l">verify</span><span class="v ok">OK &middot; integrity + origin</span>
+              <span class="pf">Checked offline by a tool that imports none of SMRFORGE&rsquo;s physics.</span>
+            </div>
+            <div class="row" tabindex="0">
+              <span class="l">reproduce</span><span class="v ok">re-derived within 3&sigma;</span>
+              <span class="pf">Re-run on the open engine from the recorded inputs, held to the committed band.</span>
+            </div>
           </div>
         </div>
         <div class="foot"><span>offline &middot; no trust required</span><span class="pass">CHECKED</span></div>
       </div>
-      <p class="cap">The seal proves custody, not correctness: the number is unaltered and re-derives from its own
+      <p class="cap">The seal proves custody, not correctness. The number is unaltered and re-derives from its own
         recorded inputs. Fidelity is labeled on every result, and every result is advisory.</p>
     </div>
   </section>
@@ -347,16 +455,48 @@
 
 <div class="wrap" id="problem">
   <section class="sec">
-    <div class="sec-head tight">
+    <div class="sec-head">
       <div>
         <p class="kicker">The problem</p>
         <h2>AI produces numbers faster than anyone can defend them.</h2>
       </div>
-      <p class="lead">The person who acts on a number is the one who has to defend it later: an engineer signing a
-        design, an auditor signing off, a regulator deciding whether to believe it. For that person,
+      <p class="lead">The person who acts on a number has to defend it later. An engineer signing a design. An
+        auditor signing off. A regulator deciding whether to believe it. For that person,
         <b>&ldquo;the model produced it&rdquo; is not an answer.</b> They need to open the number up and re-derive
-        it. In nuclear this is the whole bottleneck, where every safety-relevant number is defended to the NRC by
-        hand, for months.</p>
+        it. In nuclear this is the whole bottleneck. Every safety-relevant number is defended to the NRC by hand,
+        for months.</p>
+    </div>
+
+    <p class="sub-h">The same number, twice</p>
+    <div class="vs">
+      <div class="left">
+        <div class="vh"><span>Undefended</span><b>as it leaves the model</b></div>
+        <div class="said">
+          <span class="q">&gt; k_eff for this LEU lattice?</span><br>
+          <span class="k">&asymp; 1.0017</span>
+          <span class="q">Trust me.</span>
+        </div>
+        <div class="vr"><span class="l">inputs</span><span class="v">not recorded</span></div>
+        <div class="vr"><span class="l">data library</span><span class="v">unstated</span></div>
+        <div class="vr"><span class="l">engine build</span><span class="v">unknown</span></div>
+        <div class="vr"><span class="l">sealed by</span><span class="v">nobody</span></div>
+        <div class="vr"><span class="l">re-run</span><span class="v no">not possible</span></div>
+        <div class="verdict no">Defensible later? No. <span>Whoever signs it is on their own.</span></div>
+      </div>
+      <div>
+        <div class="vh"><span>Sealed</span><b>as it leaves the proof layer</b></div>
+        <div class="said">
+          <span class="q">&gt; the same question, the same model</span><br>
+          <span class="k">1.001742<small>&plusmn; 0.000285</small></span>
+          <span class="q">LEU-COMP-THERM-008 &middot; OpenMC</span>
+        </div>
+        <div class="vr"><span class="l">inputs</span><span class="v">recorded, each hashed in the manifest</span></div>
+        <div class="vr"><span class="l">data library</span><span class="v">ENDF/B-VIII.1, library hash recorded</span></div>
+        <div class="vr"><span class="l">engine build</span><span class="v">OpenMC, signed toolchain recorded</span></div>
+        <div class="vr"><span class="l">sealed by</span><span class="v">ed25519 cfb88804&hellip;</span></div>
+        <div class="vr"><span class="l">re-run</span><span class="v ok">re-derived within 3&sigma;</span></div>
+        <div class="verdict yes">Defensible later? Yes. <span>By anyone, offline, without asking us.</span></div>
+      </div>
     </div>
   </section>
 </div>
@@ -371,20 +511,140 @@
       <p class="lead">The model&rsquo;s reasoning stays a black box. <b>The result it lands on does not have to.</b></p>
     </div>
 
-    <div class="flag">
-      <div class="fm">
-        <div class="en">The proof layer</div>
-        <h3>SMRFORGE adds a defensibility layer to what you deliver. It does not replace any of it.</h3>
-        <p>When an agent&rsquo;s work ends in a real calculation, that calculation can be sealed, independently
-          re-run, and signed, so the engineer or regulator downstream can confirm it cold. It is the auditability,
-          traceability, and reproducibility layer that sits alongside a production AI system.</p>
+    <div class="pipe" aria-label="Where the proof layer sits. Your AI produces a number. SMRFORGE seals and signs it. An accountable person verifies it offline and reproduces it on the open engine.">
+      <div class="st">
+        <p class="who">Your AI &middot; any model, any vendor</p>
+        <h3>Produces the number</h3>
+        <div class="hatch">reasoning &middot; black box &middot; stays yours</div>
+        <pre class="box"><span class="bb">k_eff</span>      1.001742 &plusmn; 0.000285
+<span class="bb">inputs</span>     lattice, materials, library
+<span class="bb">engine</span>     OpenMC, run on your side</pre>
+        <p>The model gets to its answer however it gets there. SMRFORGE never looks inside, and does not need to.</p>
       </div>
-      <div class="ff">
-        <div class="fs"><span class="s">1 &middot; your AI</span><b>computes a number</b></div>
-        <div class="fs"><span class="s">2 &middot; SMRFORGE</span><b>seals inputs &middot; result &middot; provenance, then signs</b></div>
-        <div class="fs"><span class="s">3 &middot; any reviewer</span><b>verify offline &middot; <span class="w">reproduce</span> on the open engine</b></div>
+
+      <div class="lk" aria-hidden="true">
+        <span class="lb">number + inputs + provenance</span>
+        <span class="ar"></span>
+        <span class="sb">seal, then sign</span>
+      </div>
+
+      <div class="st lay">
+        <p class="who">SMRFORGE &middot; the proof layer</p>
+        <h3>Seals it, then signs it</h3>
+        <pre class="box"><span class="bb">manifest</span>
+  inputs/        <span class="cy">sha256</span>
+  result.json    <span class="cy">sha256</span>
+  provenance/    engine &middot; data library &middot; toolchain &middot; seed
+<span class="bb">bundle_sha256</span>  <span class="cy">sha256:0f98&hellip;c8e8</span>
+<span class="bb">signature</span>      <span class="cy">ed25519 cfb88804&hellip;</span></pre>
+        <p>Every input, the result, and the provenance that produced it, hashed into one manifest and signed. The
+          bundle is self-contained. Nothing in it needs a network or a vendor to check.</p>
+      </div>
+
+      <div class="lk" aria-hidden="true">
+        <span class="lb">sealed bundle</span>
+        <span class="ar"></span>
+        <span class="sb">verify offline, reproduce on the open engine</span>
+      </div>
+
+      <div class="st who-checks">
+        <p class="who">The accountable person &middot; engineer, auditor, regulator</p>
+        <h3>Checks it cold</h3>
+        <pre class="box"><span class="bb">$ smrforge verify bundle.json</span>
+  <span class="am">OK &middot; integrity + origin</span>
+<span class="bb">$ smrforge reproduce bundle.json</span>
+  <span class="am">re-derived within 3&sigma;</span></pre>
+        <p>Verify runs anywhere, with a checker that imports none of SMRFORGE&rsquo;s physics. Reproduce re-runs
+          the open engine on the recorded inputs, so it needs the engine installed. A browser cannot run an
+          eigenvalue solve, and this page does not pretend it can.</p>
       </div>
     </div>
+    <div class="steps">
+      <div><span class="s">1 &middot; your AI</span><b>computes a number</b></div>
+      <div><span class="s">2 &middot; SMRFORGE</span><b>seals inputs &middot; result &middot; provenance, then signs</b></div>
+      <div><span class="s">3 &middot; any reviewer</span><b>verify offline &middot; <span class="w">reproduce</span> on the open engine</b></div>
+    </div>
+
+    <div class="aside">
+      <h3>SMRFORGE adds a defensibility layer to what you deliver. It does not replace any of it.</h3>
+      <p>When an agent&rsquo;s work ends in a real calculation, that calculation can be sealed, independently
+        re-run, and signed, so the engineer or regulator downstream can confirm it cold. It is the auditability,
+        traceability, and reproducibility layer alongside a production AI system. The labs stay where they are.
+        So does the model.</p>
+    </div>
+  </section>
+</div>
+
+<div class="wrap" id="orchestrate">
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <p class="kicker">Agentic pipelines</p>
+        <h2>An orchestrator that calls SMRFORGE leaves a trail, not just an answer.</h2>
+      </div>
+      <p class="lead"><code>smrforge serve</code> is live today. One local process, pure Python standard library, no
+        web framework, nothing fetched at runtime, so it runs air-gapped. It fronts a REST API and an MCP endpoint.
+        <b>An agent can run a SMRFORGE capability as one step in its workflow and get back a signed evidence
+        bundle.</b></p>
+    </div>
+
+    <div class="orch">
+      <div>
+        <p class="oh">One step, two doors &middot; <b>127.0.0.1:8765</b></p>
+<pre class="wire"><span class="c"># MCP, for agents (JSON-RPC 2.0)</span>
+<span class="k">POST</span> /mcp
+{ "jsonrpc": "2.0", "id": 7,
+  "method": <span class="s">"tools/call"</span>,
+  "params": { "name": <span class="s">"smrf_run_&lt;capability&gt;"</span>,
+              "arguments": { <span class="c">...declared inputs...</span> } } }
+
+<span class="c">-&gt; result content: the signed evidence bundle</span></pre>
+<pre class="wire"><span class="c"># REST, for everything else</span>
+<span class="k">POST</span> /v1/run/&lt;capability&gt;
+Content-Type: application/json
+{ <span class="c">...declared inputs...</span> }
+
+<span class="c">-&gt; 200, body: the signed evidence bundle</span>
+<span class="k">GET</span>  /v1/tools       <span class="c">the open capabilities</span>
+<span class="k">GET</span>  /openapi.json   <span class="c">the generated spec</span></pre>
+        <p>Same bundle through either door. The MCP tool list and the OpenAPI spec are generated from the capability
+          cards, so an agent discovers what it can run with <code>tools/list</code> and the spec cannot drift from
+          the code.</p>
+      </div>
+
+      <div>
+        <p class="oh">The trail &middot; <b>each step binds to the one before it</b></p>
+        <div class="chain" aria-label="A chain of three sealed steps, each citing the previous bundle's hash, walked by a reviewer with smrforge verify --chain">
+          <div class="lnk"><span class="n">step 1 &middot; screening solve</span><br>bundle_sha256  <span class="h">sha256:&hellip;a1</span><br><span class="sm">derived_from   none, this is the root</span></div>
+          <div class="lnk"><span class="n">step 2 &middot; reference solve</span><br>bundle_sha256  <span class="h">sha256:&hellip;b2</span><br>derived_from   <span class="h">sha256:&hellip;a1</span> <span class="sm">&middot; consumed input, pointer, digest</span></div>
+          <div class="lnk"><span class="n">step 3 &middot; shutdown-margin gate</span><br>bundle_sha256  <span class="h">sha256:&hellip;c3</span><br>derived_from   <span class="h">sha256:&hellip;b2</span> <span class="sm">&middot; consumed input, pointer, digest</span></div>
+          <div class="walk"><span class="w">reviewer &middot; human or agent</span><br>$ smrforge verify step-3.json --chain --from ./chain/<br><span class="sm">walks every link backwards, offline, nothing fetched</span></div>
+        </div>
+        <p>The link lives inside the seal, so the signature covers it. A reviewer walks the chain and re-checks it
+          offline, re-running only the cheap deterministic steps. The orchestrator did not just produce an answer.
+          It produced a trail someone else can audit. Hashes above are illustrative.</p>
+      </div>
+    </div>
+    <div class="status">
+      <div>
+        <p class="t">Live today</p>
+        <ul>
+          <li><code>smrforge serve</code>, REST and MCP on localhost, standard library only</li>
+          <li>A signed evidence bundle returned per call</li>
+          <li>Sealed <code>derived_from</code> links between steps, binding by content hash</li>
+          <li><code>smrforge verify --chain</code> walks the links offline</li>
+        </ul>
+      </div>
+      <div class="dir">
+        <p class="t">The direction, not a finished claim</p>
+        <ul>
+          <li>Autonomous orchestration across a whole pipeline</li>
+          <li>Agents chaining and re-checking each other end to end</li>
+          <li>This is what the layer is built for. It is not shipped as a product today.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="thesis">AI can produce the number. SMRFORGE is what makes it <span class="cx">defensible</span>.</p>
   </section>
 </div>
 
@@ -407,8 +667,8 @@
       <div class="cell">
         <div class="cmd">$ smrforge reproduce &lt;bundle&gt;</div>
         <h3>Re-run the open engine</h3>
-        <p>Re-derive the number from the sealed inputs. This is what a signed PDF can&rsquo;t do: it proves the
-          number is real, not just unaltered.</p>
+        <p>Re-derive the number from the sealed inputs, with the open engine installed. This is what a signed PDF
+          cannot do. It proves the number is real, not just unaltered.</p>
       </div>
       <div class="cell">
         <div class="cmd">redact</div>
@@ -417,9 +677,10 @@
           untampered, inputs never shown.</p>
       </div>
     </div>
-    <div class="note"><b>What the seal proves, and what it doesn&rsquo;t.</b> Custody, not correctness. A sealed
-      number from a badly specified model is a faithfully preserved wrong answer. Verification against the bundle
-      is not validation against a measurement; SMRFORGE results are labeled for fidelity and are advisory.</div>
+    <div class="note"><b>What the seal proves, and what it does not.</b> Custody, not correctness. A sealed number
+      from a badly specified model is a faithfully preserved wrong answer. Verification against the bundle is not
+      validation against a measurement. SMRFORGE results are screening-to-reference grade, labeled for fidelity,
+      benchmarked against public references on open ENDF/B-VIII data, and advisory. It is not a licensing code.</div>
   </section>
 </div>
 
@@ -437,6 +698,7 @@
     </div>
   </section>
 </div>
+
 
 <div class="wrap">
   <footer>

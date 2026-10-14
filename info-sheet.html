@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SMRFORGE — Information Sheet</title>
+  <title>SMRFORGE · Information Sheet</title>
   <meta name="description" content="A one-page overview of SMRFORGE: a verifiable, reproducible screening reactor-physics engine for Small Modular Reactor design and analysis. The free open core (MIT) is the whole screening stack; Pro (FSL-1.1-MIT) adds the assurance / regulatory layer for submissions.">
   <link rel="icon" href="images/smrforge_logo_white_transparent.png" type="image/png">
   <link rel="canonical" href="https://smrforge.io/info-sheet.html">
-  <meta property="og:title" content="SMRFORGE — Information Sheet">
+  <meta property="og:title" content="SMRFORGE · Information Sheet">
   <meta property="og:description" content="A one-page overview of SMRFORGE: verifiable, reproducible SMR computational engineering. Screen fast, escalate to OpenMC, ship a sealed evidence bundle.">
   <meta property="og:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
   <meta property="og:url" content="https://smrforge.io/info-sheet.html">
@@ -103,7 +103,7 @@
     background:var(--amber-soft);border-radius:0 4px 4px 0;padding:24px clamp(18px,3vw,28px)}
   .ask h2{font-family:var(--disp);font-weight:800;font-size:clamp(1.35rem,2.6vw,1.7rem);margin:.2rem 0 .5rem;letter-spacing:-.01em}
   .ask p.lede{margin:0;color:var(--ink);max-width:64ch}
-  /* the engagement menu — the types, made legible */
+  /* the engagement menu, the types, made legible */
   .flagship-type{margin:18px 0 0;border:2px solid var(--amber);background:var(--surface);border-radius:4px;
     padding:15px 17px;display:flex;flex-direction:column;gap:.25rem}
   .flagship-type .tn{font-family:var(--disp);font-weight:700;font-size:1.12rem;color:var(--ink);letter-spacing:-.005em}
@@ -187,7 +187,7 @@
     <div class="c">
       <div class="cmd">$ smrforge verify</div>
       <h3>Verify it offline</h3>
-      <p>A standalone checker confirms the record is intact and signed — importing none of our physics. Your machine, no network. The in-browser version is from-scratch RFC 8032; <a href="https://smrforge.io/break-the-seal.html">forge a bundle that passes</a> and get credited.</p>
+      <p>A standalone checker confirms the record is intact and signed, importing none of our physics. Your machine, no network. The in-browser version is from-scratch RFC 8032; <a href="https://smrforge.io/break-the-seal.html">forge a bundle that passes</a> and get credited.</p>
     </div>
     <div class="c">
       <div class="cmd">$ smrforge reproduce</div>
@@ -197,7 +197,7 @@
   </section>
 
   <section class="ask">
-    <p class="kicker">Engagements — what we take on</p>
+    <p class="kicker">Engagements, what we take on</p>
     <h2>Bring us a number a reviewer won't take on faith.</h2>
     <p class="lede">Whatever the code it came from, we make the result checkable: sealed, verifiable offline,
       and re-derivable from scratch by whoever reviews it.</p>
@@ -212,11 +212,11 @@
       </div>
       <div class="type">
         <span class="tn">Pre-submission V&amp;V</span>
-        <span class="td">Code verification, a V&amp;V matrix, and the benchmark closures a regulator reads — stood up and re-runnable.</span>
+        <span class="td">Code verification, a V&amp;V matrix, and the benchmark closures a regulator reads, stood up and re-runnable.</span>
       </div>
       <div class="type">
         <span class="tn">Pipeline integration</span>
-        <span class="td">MCP and REST wiring into your — or a lab's — pipeline, so sealing a result is one call in a workflow you already run.</span>
+        <span class="td">MCP and REST wiring into your, or a lab's, pipeline, so sealing a result is one call in a workflow you already run.</span>
       </div>
     </div>
     <a class="cta" href="mailto:support@smrforge.io">Bring us a number →</a>
@@ -225,9 +225,9 @@
 
   <div class="facts">
     <div class="fact"><span class="fl">Verification</span><span class="fv">IAEA-2D full core closes the published reference to <b>≈ −3 pcm</b> (code-verification, not measured validation). Screening-grade, honestly labeled on every result.</span></div>
-    <div class="fact"><span class="fl">Lineage</span><span class="fv">A result can cite the <b>sealed bundle it was built from</b>, so a reviewer walks the whole derivation with one command (<span class="mono">smrforge verify --chain</span>) — custody end to end, not just the final number.</span></div>
-    <div class="fact"><span class="fl">Engine</span><span class="fv">Screen fast in pure Python; escalate the <b>same inputs</b> to OpenMC — a lab-grade eigenvalue — free.</span></div>
-    <div class="fact"><span class="fl">Licensing</span><span class="fv"><b>Community</b> MIT (the whole engine + evidence spine, free) · <b>Pro</b> FSL-1.1-MIT (the signed assurance layer — coverage, watch, report, assess + an evidence console) · air-gap-safe.</span></div>
+    <div class="fact"><span class="fl">Lineage</span><span class="fv">A result can cite the <b>sealed bundle it was built from</b>, so a reviewer walks the whole derivation with one command (<span class="mono">smrforge verify --chain</span>), custody end to end, not just the final number.</span></div>
+    <div class="fact"><span class="fl">Engine</span><span class="fv">Screen fast in pure Python; escalate the <b>same inputs</b> to OpenMC, a lab-grade eigenvalue, free.</span></div>
+    <div class="fact"><span class="fl">Licensing</span><span class="fv"><b>Community</b> MIT (the whole engine + evidence spine, free) · <b>Pro</b> FSL-1.1-MIT (the signed assurance layer, coverage, watch, report, assess + an evidence console) · air-gap-safe.</span></div>
     <div class="fact"><span class="fl">Run it yourself</span><span class="fv">Source-only install, by design: <span class="mono">git clone https://gitlab.com/smrforge/smrforge.git</span>, then <span class="mono">pip install -e .</span> (Python 3.11+, standard library, no dependencies; not on PyPI, on purpose). Run a capability from the command line (<span class="mono">smrforge run</span>), from Python (<span class="mono">run_capability</span>), or through the local REST/MCP server (<span class="mono">smrforge serve</span>). The in-tree engine is screening-grade and runs anywhere Python does; the lab-grade OpenMC path needs OpenMC and a continuous-energy library on your host. <b>Getting started:</b> <a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/GETTING_STARTED.md">gitlab.com/smrforge/smrforge/-/blob/main/docs/GETTING_STARTED.md</a></span></div>
   </div>
 

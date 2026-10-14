@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Check us — SMRFORGE</title>
-  <meta name="description" content="Verify a real SMRFORGE evidence bundle in your own browser. Recompute every hash, check the signature, then change a number and watch the seal catch you. No server, no SMRFORGE code — the check runs on your machine.">
+  <title>Check us · SMRFORGE</title>
+  <meta name="description" content="Verify a real SMRFORGE evidence bundle in your own browser. Recompute every hash, check the signature, then change a number and watch the seal catch you. No server, no SMRFORGE code, the check runs on your machine.">
   <link rel="icon" href="images/smrforge_logo_white_transparent.png" type="image/png">
   <link rel="canonical" href="https://smrforge.io/check.html">
-  <meta property="og:title" content="Check us — SMRFORGE">
+  <meta property="og:title" content="Check us · SMRFORGE">
   <meta property="og:description" content="Verify a real evidence bundle in your browser. Recompute the hashes, check the signature, then tamper with a number and watch the seal break. No server, no trust required.">
   <meta property="og:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
   <meta property="og:url" content="https://smrforge.io/check.html">
@@ -215,7 +215,7 @@ strong { color: var(--ink); }
     <p class="eyebrow">Don't trust us. Check us.</p>
     <h1>Verify a real bundle. Right here.</h1>
     <p>
-      Below is a real SMRFORGE evidence bundle — a lab-escalation OpenMC criticality result. Your browser is
+      Below is a real SMRFORGE evidence bundle, a lab-escalation OpenMC criticality result. Your browser is
       about to recompute every fingerprint and check the signature itself. No server. No SMRFORGE code.
       Then change a number and watch the seal catch you.
     </p>
@@ -230,15 +230,15 @@ strong { color: var(--ink); }
         <div class="panel-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="fname">openmc-criticality.bundle.json</span></div>
         <div class="panel-body">
           <div class="claim-big">
-            <div><span class="ck">k_eff = <input id="tamper-k" class="inline-edit ck-edit" inputmode="decimal" autocomplete="off" spellcheck="false" aria-label="k_eff (editable)"></span> <span class="cs">± <span id="claim-sigma">—</span></span></div>
+            <div><span class="ck">k_eff = <input id="tamper-k" class="inline-edit ck-edit" inputmode="decimal" autocomplete="off" spellcheck="false" aria-label="k_eff (editable)"></span> <span class="cs">± <span id="claim-sigma">, </span></span></div>
             <div class="claim-tags">
-              <span class="hr-pill" id="claim-fidelity">—</span>
-              <span class="hr-pill">verdict: <span id="claim-verdict">—</span></span>
+              <span class="hr-pill" id="claim-fidelity">, </span>
+              <span class="hr-pill">verdict: <span id="claim-verdict">, </span></span>
             </div>
           </div>
-          <p class="edit-hint"><strong>The two dashed boxes are editable.</strong> Change them to doctor the bundle — the check re-runs as you type. Everything else (fingerprints, signature) is sealed.</p>
+          <p class="edit-hint"><strong>The two dashed boxes are editable.</strong> Change them to doctor the bundle, the check re-runs as you type. Everything else (fingerprints, signature) is sealed.</p>
 
-          <div class="sub-label">Provenance — what produced the number</div>
+          <div class="sub-label">Provenance, what produced the number</div>
           <div id="prov-rows"></div>
           <div class="edit-field"><span class="hr-k">data_library_sha256 <span class="edit-tag">✎ editable</span></span><input id="tamper-dl" class="inline-edit dl-edit" autocomplete="off" spellcheck="false" aria-label="data_library_sha256 (editable)"></div>
 
@@ -247,14 +247,14 @@ strong { color: var(--ink); }
 
           <div class="sub-label">Signature</div>
           <div class="hr-row"><span class="hr-k">alg</span><span class="hr-v">ed25519</span></div>
-          <div class="hr-row"><span class="hr-k">public_key</span><span class="hr-hash" id="sig-key">—</span></div>
-          <div class="hr-row"><span class="hr-k">bundle seal</span><span class="hr-hash" id="bundle-seal">—</span></div>
+          <div class="hr-row"><span class="hr-k">public_key</span><span class="hr-hash" id="sig-key">, </span></div>
+          <div class="hr-row"><span class="hr-k">bundle seal</span><span class="hr-hash" id="bundle-seal">, </span></div>
         </div>
       </div>
 
       <!-- RIGHT: the check + guided tamper -->
       <div class="panel">
-        <div class="panel-head"><span class="fname">the check — running in your browser</span></div>
+        <div class="panel-head"><span class="fname">the check, running in your browser</span></div>
         <div class="panel-body">
           <div class="btn-row">
             <button id="btn-verify" class="btn btn-primary" type="button">Run verify</button>
@@ -269,17 +269,17 @@ strong { color: var(--ink); }
     <!-- REPRODUCE: the honest offline step -->
     <section class="reproduce">
       <div class="panel">
-        <div class="panel-head"><span class="fname">and one step deeper — reproduce</span></div>
+        <div class="panel-head"><span class="fname">and one step deeper, reproduce</span></div>
         <div class="panel-body">
           <p class="repro-lead">
             Verify proves the file is <strong>untouched</strong>. Reproduce proves the number is
             <strong>real</strong>: a reviewer installs the open engine, re-runs it on this bundle's own
             recorded inputs, and the answer has to land inside the band the bundle sealed in advance. This
-            part runs offline on the reviewer's machine — a browser can't run a Monte Carlo eigenvalue
+            part runs offline on the reviewer's machine, a browser can't run a Monte Carlo eigenvalue
             solve, and we are not going to pretend it did.
           </p>
           <div class="band"><span class="center" id="band-center-mark" data-label=""></span></div>
-          <div class="band-ends"><span id="band-lo">—</span><span>3σ reproduce band — the re-run must land in here</span><span id="band-hi">—</span></div>
+          <div class="band-ends"><span id="band-lo">, </span><span>3σ reproduce band, the re-run must land in here</span><span id="band-hi">, </span></div>
           <div class="repro-cmd"><span class="p">$</span> smrforge reproduce openmc-criticality.reproduce-demo.bundle.json</div>
           <p class="repro-lead" style="margin:0">
             The bundle, the reviewer guide, and the open engine are public:
@@ -294,7 +294,7 @@ strong { color: var(--ink); }
       <em>production</em> signing key (fingerprint <em>ed25519:cfb88804…d69b52c</em>), generated in an
       offline ceremony. So a passing signature here proves both <strong>integrity</strong> (the bundle was
       not edited) and <strong>origin</strong> (that it was sealed by SMRFORGE). Don't take our word for the
-      key: cross-check that fingerprint against our published trust root — the file at
+      key: cross-check that fingerprint against our published trust root, the file at
       <em>/.well-known/smrforge-trust-root</em> and the DNS TXT record at
       <em>smrforge-trust-root.smrforge.io</em>. Origin holds only if they match.
     </p>

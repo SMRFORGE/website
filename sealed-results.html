@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMRFORGE · Sealed results</title>
+  <meta name="description" content="A gallery of production-signed SMRFORGE evidence bundles, one per result shape. A scalar k_eff, a 52-assembly power field, a single depletion step, two measured comparisons and a USL margin, each downloadable as raw JSON, verifiable offline (SHA-256 plus Ed25519) and re-derivable on the open engine. The seal proves custody of the computation, not that the physics is right.">
+  <link rel="icon" href="images/smrforge_logo_white_transparent.png" type="image/png">
+  <link rel="canonical" href="https://smrforge.io/sealed-results.html">
+  <meta property="og:title" content="SMRFORGE · Sealed results">
+  <meta property="og:description" content="Six production-signed evidence bundles, five result shapes, one record. Download the raw JSON, verify it offline, re-derive it on the open engine. k_eff is the demo, not the limit.">
+  <meta property="og:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
+  <meta property="og:url" content="https://smrforge.io/sealed-results.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SMRFORGE · Sealed results">
+  <meta name="twitter:description" content="Six production-signed evidence bundles, five result shapes, one record. Verify offline, re-derive on the open engine.">
+  <meta name="twitter:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
+  <link rel="preload" as="image" href="images/smrforge_logo_white_transparent.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  /* ---- SMRFORGE design system (homepage sets it; this page follows) ----
+       ground: prussian navy with a teal undertone · identity: glacier cyan (commands, links, kickers)
+       signal: amber, the ONE warm accent, reserved for the thing that gets checked / the human decision
+       verdicts: lichen = pass, clay = fail · hairline grids (1px --line) instead of card shadows
+       type: Archivo display, Public Sans body, IBM Plex Mono for anything a machine wrote. */
+  :root{
+    --bg:#0b2035; --bg-2:#0e2640; --surface:#10293f; --surface-2:#143149;
+    --line:#1f3f5a; --line-soft:#193449;
+    --ink:#e6eef3; --muted:#93adbf; --faint:#62829b;
+    --cyan:#4cd3e8; --cyan-2:#7ae3f2; --cyan-soft:rgba(76,211,232,.11);
+    --amber:#f2a33a; --amber-soft:rgba(242,163,58,.14);
+    --lichen:#9fd67a; --clay:#e0704f;
+    --disp:"Archivo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+    --body:"Public Sans",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,Menlo,monospace;
+    --gutter:clamp(16px,4vw,40px);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:84px}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.62;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 var(--gutter)}
+  a{color:var(--ink)}
+  :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:2px}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin:0 0 .6rem}
+  .kicker.warm{color:var(--amber)}
+  code,.code{font-family:var(--mono);font-size:.9em;color:var(--cyan)}
+
+  /* --- section rhythm: one pattern, used everywhere --- */
+  .sec{padding:clamp(56px,7vw,96px) 0;border-top:1px solid var(--line)}
+  .sec.first{border-top:0;padding-top:clamp(40px,6vw,72px)}
+  .sec-head{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(20px,4vw,56px);align-items:end;margin-bottom:clamp(28px,4vw,44px)}
+  @media(max-width:820px){.sec-head{grid-template-columns:1fr;gap:14px}}
+  .sec h2{font-family:var(--disp);font-weight:700;font-size:clamp(1.75rem,3.6vw,2.6rem);line-height:1.08;letter-spacing:-.015em;margin:0;text-wrap:balance}
+  .sec .lead{margin:0;color:var(--muted);font-size:1.05rem;max-width:56ch}
+  .sec .lead b{color:var(--ink);font-weight:600}
+  .sec .lead a{color:var(--cyan);text-decoration:none}
+  .sec .lead a:hover{text-decoration:underline}
+
+  /* --- hairline grid: cells on a 1px line background --- */
+  .grid{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+  .grid>*{background:var(--bg);padding:clamp(20px,2.6vw,28px) clamp(18px,2.4vw,26px);min-width:0}
+  .grid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  @media(max-width:720px){.grid.c3,.grid.c2{grid-template-columns:1fr}}
+  .cell .cmd{font-family:var(--mono);font-size:.78rem;color:var(--cyan);letter-spacing:.02em;word-break:break-word}
+  .cell h3{font-family:var(--disp);font-weight:700;font-size:1.22rem;margin:.55rem 0 .45rem;letter-spacing:-.005em}
+  .cell p{margin:0;color:var(--muted);font-size:.95rem}
+  .cell p a{color:var(--cyan);text-decoration:none}
+  .cell p a:hover{text-decoration:underline}
+
+  /* --- buttons --- */
+  .btn{display:inline-block;font-family:var(--mono);font-size:.84rem;letter-spacing:.04em;text-transform:uppercase;
+    padding:.78rem 1.2rem;text-decoration:none;border-radius:3px;transition:background .14s,border-color .14s,color .14s}
+  .btn.primary{background:var(--cyan);color:#06202f;font-weight:600}
+  .btn.primary:hover{background:var(--cyan-2)}
+  .btn.line{border:1px solid var(--line);color:var(--ink)}
+  .btn.line:hover{border-color:var(--cyan);color:var(--cyan)}
+  .btn.warm{border:1px solid rgba(242,163,58,.5);color:var(--amber)}
+  .btn.warm:hover{border-color:var(--amber);background:var(--amber-soft)}
+  .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:1.8rem}
+
+  /* --- header --- */
+  header.site{position:sticky;top:0;z-index:10;background:rgba(11,32,53,.92);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line)}
+  header.site .bar{display:flex;justify-content:space-between;align-items:center;gap:16px;
+    max-width:1120px;margin:0 auto;padding:14px var(--gutter)}
+  .brand{display:flex;align-items:center;gap:.65rem;font-family:var(--disp);font-weight:800;font-size:1.35rem;letter-spacing:.03em;text-decoration:none}
+  .brand .wm{line-height:1;color:var(--ink)}
+  .brand .logo{height:44px;width:auto;display:block}
+  .brand b{color:var(--cyan)}
+  nav.main{display:flex;gap:22px;align-items:center;font-family:var(--mono);font-size:.76rem;text-transform:uppercase;letter-spacing:.06em}
+  nav.main a{color:var(--muted);text-decoration:none;white-space:nowrap}
+  nav.main a:hover{color:var(--ink)}
+  nav.main a[aria-current="page"]{color:var(--cyan)}
+  nav.main .ghost{border:1px solid var(--line);padding:.5rem .85rem;color:var(--ink);border-radius:3px}
+  nav.main .ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+  @media(max-width:900px){nav.main{gap:14px}nav.main a.sub{display:none}}
+  @media(max-width:560px){nav.main a:not(.ghost){display:none}.brand .logo{height:38px}}
+
+  /* --- the check strip: three commands, one key --- */
+  .strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:4px}
+  @media(max-width:720px){.strip{grid-template-columns:1fr}}
+  .strip>div{background:var(--surface);padding:16px clamp(16px,2.2vw,22px);min-width:0}
+  .strip .sk{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin:0 0 6px}
+  .strip .sc{font-family:var(--mono);font-size:.8rem;color:var(--cyan);overflow-wrap:anywhere;margin:0}
+  .strip .sc .p{color:var(--faint)}
+  .strip p.sd{margin:6px 0 0;font-size:.86rem;color:var(--muted)}
+  .keyline{margin:14px 0 0;font-family:var(--mono);font-size:.78rem;color:var(--faint);letter-spacing:.02em;overflow-wrap:anywhere}
+  .keyline b{color:var(--ink);font-weight:500}
+  .keyline a{color:var(--cyan);text-decoration:none}
+  .keyline a:hover{text-decoration:underline}
+
+  /* --- the gallery: one card per sealed bundle --- */
+  .gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  @media(max-width:820px){.gallery{grid-template-columns:1fr}}
+  .card{background:var(--bg);padding:clamp(20px,2.6vw,28px) clamp(18px,2.4vw,26px);min-width:0;display:flex;flex-direction:column;gap:14px}
+  .card.demo{background:var(--bg-2)}
+  .card .ct{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .tag{display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;
+    padding:.08rem .55rem;border-radius:3px;border:1px solid var(--line);color:var(--cyan);white-space:nowrap}
+  .tag.shape{color:var(--ink);border-color:rgba(230,238,243,.28)}
+  .tag.fid{color:var(--cyan)}
+  .tag.fid.lab{color:var(--amber);border-color:rgba(242,163,58,.35)}
+  .tag.demo{color:var(--amber);border-color:rgba(242,163,58,.55);background:var(--amber-soft)}
+  .tags{display:flex;gap:6px;flex-wrap:wrap}
+  .card h3{font-family:var(--disp);font-weight:700;font-size:1.28rem;margin:0;letter-spacing:-.005em;line-height:1.2}
+  .card .sub{margin:-8px 0 0;font-family:var(--mono);font-size:.74rem;color:var(--faint);letter-spacing:.02em;overflow-wrap:anywhere}
+  .card .k{font-family:var(--mono);font-size:clamp(1.5rem,3.2vw,1.95rem);color:var(--ink);letter-spacing:.01em;
+    font-variant-numeric:tabular-nums;line-height:1.15;overflow-wrap:anywhere}
+  .card .k small{color:var(--muted);font-size:.86rem;margin-left:.45rem;letter-spacing:0}
+  .card .k .null{color:var(--amber)}
+  .card .k2{font-family:var(--mono);font-size:.95rem;color:var(--muted);margin:-6px 0 0;font-variant-numeric:tabular-nums}
+  .card .k2 b{color:var(--ink);font-weight:500}
+  .card .rows{border-top:1px dashed var(--line);padding-top:12px;display:grid;gap:7px;font-family:var(--mono)}
+  .card .row{display:flex;justify-content:space-between;gap:12px;font-size:.78rem}
+  .card .row .l{color:var(--faint);letter-spacing:.04em;flex:none}
+  .card .row .v{color:var(--muted);text-align:right;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+  .card .row .v.ok{color:var(--amber)}
+  .card .row .v.pass{color:var(--lichen)}
+  .card .cav{margin:0;padding:10px 14px;border-left:3px solid var(--amber);background:var(--amber-soft);
+    color:var(--ink);font-size:.88rem;border-radius:0 4px 4px 0}
+  .card .cav b{font-weight:600}
+  .card .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;padding-top:4px}
+  .card .links a{font-family:var(--mono);font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;
+    border:1px solid var(--line);color:var(--ink);padding:.55rem .85rem;border-radius:3px;transition:border-color .14s,color .14s}
+  .card .links a:hover{border-color:var(--cyan);color:var(--cyan)}
+  .card .links a.raw{color:var(--cyan)}
+  .card .fn{margin:0;font-family:var(--mono);font-size:.7rem;color:var(--faint);overflow-wrap:anywhere}
+
+  /* --- the two small figures: field heatmap, rod-worth bar --- */
+  .card figure{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center}
+  @media(max-width:480px){.card figure{grid-template-columns:1fr}}
+  .card figure.wide{grid-template-columns:1fr}
+  .card figure svg{display:block;max-width:100%;height:auto}
+  .card figure text{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .card figcaption{font-family:var(--mono);font-size:.74rem;color:var(--faint);line-height:1.5}
+  .card figcaption b{color:var(--muted);font-weight:500}
+  .heat{width:180px;flex:none}
+  .heat rect{fill:var(--ink)}
+  .heat rect.peak{stroke:var(--amber);stroke-width:1.5}
+  .heat rect.peak:hover,.heat rect:hover{stroke:var(--cyan);stroke-width:1.5}
+  .ramp{display:flex;gap:2px;align-items:center;margin-top:8px}
+  .ramp i{display:block;width:12px;height:8px;background:var(--ink)}
+  .ramp span{font-family:var(--mono);font-size:.66rem;color:var(--faint);margin:0 6px}
+  .rw .bar{fill:var(--muted)}
+  .rw .err{stroke:var(--ink);fill:none}
+  .rw .meas{stroke:var(--amber);fill:none}
+  .rw .axis{stroke:var(--line);fill:none}
+  .rw .ink{fill:var(--ink)} .rw .mut{fill:var(--muted)} .rw .fnt{fill:var(--faint)} .rw .amb{fill:var(--amber)}
+
+  /* --- closing --- */
+  .close-honest{margin:22px 0 0;color:var(--muted);font-size:.95rem;max-width:72ch}
+  .close-honest b{color:var(--ink);font-weight:600}
+  .close-line{margin:18px 0 0;font-family:var(--disp);font-weight:700;font-size:clamp(1.08rem,2vw,1.3rem);
+    letter-spacing:-.01em;color:var(--ink);max-width:40ch;text-wrap:balance}
+  .close-line b{color:var(--cyan)}
+  .fine{font-size:.84rem;color:var(--faint);margin:14px 0 0;max-width:64ch}
+
+  /* --- contact + footer --- */
+  .contact h2{max-width:22ch}
+  .contact p{color:var(--muted);max-width:52ch;margin:0 0 1.5rem}
+  .contact p a{color:var(--cyan);text-decoration:none}
+  footer{border-top:1px solid var(--line);padding:22px 0 46px;display:flex;justify-content:space-between;
+    flex-wrap:wrap;gap:12px;font-family:var(--mono);font-size:.74rem;color:var(--faint)}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--cyan)}
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="bar">
+    <a class="brand" href="/" aria-label="SMRFORGE home"><img class="logo" src="images/smrforge_logo_white_transparent.png" alt="SMRFORGE mark"><span class="wm">SMR<b>FORGE</b></span></a>
+    <nav class="main" aria-label="Primary">
+      <a href="proof-layer.html">Proof Layer</a><a href="engagements.html">Engagements</a><a class="sub" href="index.html#howit">How it works</a><a class="sub" href="index.html#valid">Verification</a>
+      <a href="info-sheet.html">Info sheet</a><a href="sealed-results.html" aria-current="page">Sealed results</a><a class="sub" href="index.html#products">Community &amp; Pro</a><a class="ghost" href="check.html">Check a bundle</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="sec first" id="top">
+    <div class="sec-head">
+      <div>
+        <p class="kicker">Sealed results gallery</p>
+        <h2>Six signed bundles. Five shapes of result. One record.</h2>
+      </div>
+      <p class="lead">Every card below is the same record, <code>smrforge.result.v1</code> inside an
+        Evidence Envelope, signed with the SMRFORGE production key. <b>Download the raw JSON, verify it offline
+        by recomputing the SHA-256 and checking the Ed25519 signature, then re-derive it by running the open
+        engine on the inputs sealed inside it.</b> The seal proves custody of the computation. It does not prove
+        the physics is right.</p>
+    </div>
+
+    <div class="strip" aria-label="How to check any bundle on this page">
+      <div>
+        <p class="sk">1 &middot; integrity, offline</p>
+        <p class="sc"><span class="p">$</span> smrforge verify &lt;bundle.json&gt;</p>
+        <p class="sd">Recomputes every SHA-256 in the manifest and checks the Ed25519 signature over the bundle hash. No physics is imported. <a href="check.html" style="color:var(--cyan);text-decoration:none">The in-browser version</a> does the same with no crypto library behind it.</p>
+      </div>
+      <div>
+        <p class="sk">2 &middot; re-derive the number</p>
+        <p class="sc"><span class="p">$</span> smrforge reproduce &lt;bundle.json&gt;</p>
+        <p class="sd">Re-runs the open engine on the bundle&rsquo;s own sealed inputs. Deterministic cards re-derive bit-identical. Monte Carlo cards carry a sealed tolerance, a re-run within 3&sigma;.</p>
+      </div>
+      <div>
+        <p class="sk">3 &middot; origin, decided by you</p>
+        <p class="sc"><span class="p">key</span> ed25519:cfb88804&hellip;d69b52c</p>
+        <p class="sd">Origin is never a field in the bundle. Your verifier compares the signing key to the pinned production key in the <a href="https://gitlab.com/smrforge/smrforge/-/blob/main/docs/TRUST_ROOT.md" style="color:var(--cyan);text-decoration:none">trust root</a>, and decides.</p>
+      </div>
+    </div>
+    <p class="keyline">All six bundles below carry <b>schema smrforge.evidence_envelope.v1</b>, signature <b>alg ed25519</b> over <b>message bundle_sha256</b>, public key <b>cfb88804b92163566d485c8be3757baf74215944ad4852326457fcfd3d69b52c</b>. Raw files are served from <a href="https://gitlab.com/smrforge/smrforge/-/tree/main/packs">gitlab.com/smrforge/smrforge/packs</a>.</p>
+  </section>
+</div>
+
+<div class="wrap" id="gallery">
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <p class="kicker">The gallery</p>
+        <h2>The seal doesn&rsquo;t care what the number is.</h2>
+      </div>
+      <p class="lead">Each card shows the sealed headline value with its units, the honest grade the engine
+        wrote into the bundle, and one caveat lifted from the bundle&rsquo;s own <code>caveats</code> field.
+        <b>Nothing here is a claim the bundle doesn&rsquo;t make itself.</b></p>
+    </div>
+
+    <div class="gallery">
+
+      <!-- 1 · SCALAR · the demo -->
+      <article class="card demo" id="scalar">
+        <div class="ct">
+          <div class="tags"><span class="tag shape">scalar</span><span class="tag fid lab">fidelity: lab-escalation</span><span class="tag">verdict: advisory</span></div>
+          <span class="tag demo">the demo</span>
+        </div>
+        <h3>Criticality, k_eff</h3>
+        <p class="sub">physics:openmc &middot; engine openmc-0.15.3-mg &middot; the Break-the-Seal bundle</p>
+        <div class="k">1.00522<small>k_eff &middot; &plusmn;0.000596 (1&sigma;)</small></div>
+        <div class="rows">
+          <div class="row"><span class="l">sealed inputs</span><span class="v">preset lwr-smr-2g &middot; 4.95 w/o &middot; 30 cm</span></div>
+          <div class="row"><span class="l">reproduce</span><span class="v">re-run within 3&sigma; of k_eff</span></div>
+          <div class="row"><span class="l">bundle sha-256</span><span class="v">40a35716&hellip;5dc98</span></div>
+          <div class="row"><span class="l">signature</span><span class="v ok">ed25519 &#10003;</span></div>
+        </div>
+        <p class="cav"><b>Caveat, from the bundle.</b> OpenMC multi-group eigenvalue on a homogeneous slab. Continuous-energy with heterogeneous geometry is the next escalation.</p>
+        <div class="links">
+          <a class="raw" href="https://gitlab.com/smrforge/smrforge/-/raw/main/packs/openmc-criticality.reproduce-demo.bundle.json">Raw signed bundle &darr;</a>
+          <a href="https://smrforge.io/check.html">Verify in browser &rarr;</a>
+        </div>
+        <p class="fn">packs/openmc-criticality.reproduce-demo.bundle.json</p>
+      </article>
+
+      <!-- 2 · FIELD · the 52-assembly power array -->
+      <article class="card" id="field">
+        <div class="ct">
+          <div class="tags"><span class="tag shape">field</span><span class="tag fid">fidelity: screening</span><span class="tag" style="color:var(--lichen);border-color:rgba(159,214,122,.4)">verdict: pass</span></div>
+        </div>
+        <h3>Full-core power field, IAEA-2D</h3>
+        <p class="sub">physics:iaea-2d &middot; smrf-physics, finite-difference diffusion &middot; code verification</p>
+        <div class="k">52 values<small>assembly_power &middot; mean normalized to 1.0</small></div>
+        <p class="k2">max(assembly_power) <b>1.612683</b> &middot; power_peaking <b>1.613</b> &middot; k_eff <b>1.029633</b></p>
+        <figure>
+          <svg class="heat" viewBox="0 0 180 180" width="180" height="180" role="img" aria-label="The sealed 52-value assembly power array drawn as a quarter core of 9 by 9 nodes, fuel assemblies only. Opacity scales with each sealed value from 0.417724 to 1.612683. The two symmetric peak assemblies at 1.612683 are outlined.">
+            <rect x="2" y="2" width="20" height="20" fill-opacity="0.35"><title>assembly (0,0) &#183; 0.745062</title></rect>
+            <rect x="24" y="2" width="20" height="20" fill-opacity="0.85"><title>assembly (0,1) &#183; 1.469131</title></rect>
+            <rect x="46" y="2" width="20" height="20" fill-opacity="0.93"><title>assembly (0,2) &#183; 1.587913</title></rect>
+            <rect x="68" y="2" width="20" height="20" fill-opacity="0.75"><title>assembly (0,3) &#183; 1.327804</title></rect>
+            <rect x="90" y="2" width="20" height="20" fill-opacity="0.23"><title>assembly (0,4) &#183; 0.575927</title></rect>
+            <rect x="112" y="2" width="20" height="20" fill-opacity="0.49"><title>assembly (0,5) &#183; 0.947642</title></rect>
+            <rect x="134" y="2" width="20" height="20" fill-opacity="0.44"><title>assembly (0,6) &#183; 0.879837</title></rect>
+            <rect x="156" y="2" width="20" height="20" fill-opacity="0.27"><title>assembly (0,7) &#183; 0.629516</title></rect>
+            <rect x="2" y="24" width="20" height="20" fill-opacity="0.85"><title>assembly (1,0) &#183; 1.469131</title></rect>
+            <rect x="24" y="24" width="20" height="20" fill-opacity="0.93"><title>assembly (1,1) &#183; 1.589175</title></rect>
+            <rect class="peak" x="46" y="24" width="20" height="20" fill-opacity="0.95"><title>assembly (1,2) &#183; 1.612683 &#183; peak</title></rect>
+            <rect x="68" y="24" width="20" height="20" fill-opacity="0.82"><title>assembly (1,3) &#183; 1.420728</title></rect>
+            <rect x="90" y="24" width="20" height="20" fill-opacity="0.62"><title>assembly (1,4) &#183; 1.133209</title></rect>
+            <rect x="112" y="24" width="20" height="20" fill-opacity="0.55"><title>assembly (1,5) &#183; 1.038302</title></rect>
+            <rect x="134" y="24" width="20" height="20" fill-opacity="0.45"><title>assembly (1,6) &#183; 0.891462</title></rect>
+            <rect x="156" y="24" width="20" height="20" fill-opacity="0.25"><title>assembly (1,7) &#183; 0.610364</title></rect>
+            <rect x="2" y="46" width="20" height="20" fill-opacity="0.93"><title>assembly (2,0) &#183; 1.587913</title></rect>
+            <rect class="peak" x="24" y="46" width="20" height="20" fill-opacity="0.95"><title>assembly (2,1) &#183; 1.612683 &#183; peak</title></rect>
+            <rect x="46" y="46" width="20" height="20" fill-opacity="0.93"><title>assembly (2,2) &#183; 1.585060</title></rect>
+            <rect x="68" y="46" width="20" height="20" fill-opacity="0.82"><title>assembly (2,3) &#183; 1.428773</title></rect>
+            <rect x="90" y="46" width="20" height="20" fill-opacity="0.67"><title>assembly (2,4) &#183; 1.215609</title></rect>
+            <rect x="112" y="46" width="20" height="20" fill-opacity="0.56"><title>assembly (2,5) &#183; 1.052972</title></rect>
+            <rect x="134" y="46" width="20" height="20" fill-opacity="0.46"><title>assembly (2,6) &#183; 0.913530</title></rect>
+            <rect x="156" y="46" width="20" height="20" fill-opacity="0.19"><title>assembly (2,7) &#183; 0.525353</title></rect>
+            <rect x="2" y="68" width="20" height="20" fill-opacity="0.75"><title>assembly (3,0) &#183; 1.327804</title></rect>
+            <rect x="24" y="68" width="20" height="20" fill-opacity="0.82"><title>assembly (3,1) &#183; 1.420728</title></rect>
+            <rect x="46" y="68" width="20" height="20" fill-opacity="0.82"><title>assembly (3,2) &#183; 1.428773</title></rect>
+            <rect x="68" y="68" width="20" height="20" fill-opacity="0.70"><title>assembly (3,3) &#183; 1.256129</title></rect>
+            <rect x="90" y="68" width="20" height="20" fill-opacity="0.52"><title>assembly (3,4) &#183; 0.999457</title></rect>
+            <rect x="112" y="68" width="20" height="20" fill-opacity="0.44"><title>assembly (3,5) &#183; 0.877940</title></rect>
+            <rect x="134" y="68" width="20" height="20" fill-opacity="0.33"><title>assembly (3,6) &#183; 0.717792</title></rect>
+            <rect x="2" y="90" width="20" height="20" fill-opacity="0.23"><title>assembly (4,0) &#183; 0.575927</title></rect>
+            <rect x="24" y="90" width="20" height="20" fill-opacity="0.62"><title>assembly (4,1) &#183; 1.133209</title></rect>
+            <rect x="46" y="90" width="20" height="20" fill-opacity="0.67"><title>assembly (4,2) &#183; 1.215609</title></rect>
+            <rect x="68" y="90" width="20" height="20" fill-opacity="0.52"><title>assembly (4,3) &#183; 0.999457</title></rect>
+            <rect x="90" y="90" width="20" height="20" fill-opacity="0.12"><title>assembly (4,4) &#183; 0.417724</title></rect>
+            <rect x="112" y="90" width="20" height="20" fill-opacity="0.29"><title>assembly (4,5) &#183; 0.656349</title></rect>
+            <rect x="134" y="90" width="20" height="20" fill-opacity="0.15"><title>assembly (4,6) &#183; 0.461052</title></rect>
+            <rect x="2" y="112" width="20" height="20" fill-opacity="0.49"><title>assembly (5,0) &#183; 0.947642</title></rect>
+            <rect x="24" y="112" width="20" height="20" fill-opacity="0.55"><title>assembly (5,1) &#183; 1.038302</title></rect>
+            <rect x="46" y="112" width="20" height="20" fill-opacity="0.56"><title>assembly (5,2) &#183; 1.052972</title></rect>
+            <rect x="68" y="112" width="20" height="20" fill-opacity="0.44"><title>assembly (5,3) &#183; 0.877940</title></rect>
+            <rect x="90" y="112" width="20" height="20" fill-opacity="0.29"><title>assembly (5,4) &#183; 0.656349</title></rect>
+            <rect x="112" y="112" width="20" height="20" fill-opacity="0.15"><title>assembly (5,5) &#183; 0.460161</title></rect>
+            <rect x="2" y="134" width="20" height="20" fill-opacity="0.44"><title>assembly (6,0) &#183; 0.879837</title></rect>
+            <rect x="24" y="134" width="20" height="20" fill-opacity="0.45"><title>assembly (6,1) &#183; 0.891462</title></rect>
+            <rect x="46" y="134" width="20" height="20" fill-opacity="0.46"><title>assembly (6,2) &#183; 0.913530</title></rect>
+            <rect x="68" y="134" width="20" height="20" fill-opacity="0.33"><title>assembly (6,3) &#183; 0.717792</title></rect>
+            <rect x="90" y="134" width="20" height="20" fill-opacity="0.15"><title>assembly (6,4) &#183; 0.461052</title></rect>
+            <rect x="2" y="156" width="20" height="20" fill-opacity="0.27"><title>assembly (7,0) &#183; 0.629516</title></rect>
+            <rect x="24" y="156" width="20" height="20" fill-opacity="0.25"><title>assembly (7,1) &#183; 0.610364</title></rect>
+            <rect x="46" y="156" width="20" height="20" fill-opacity="0.19"><title>assembly (7,2) &#183; 0.525353</title></rect>
+          </svg>
+          <figcaption>The sealed <b>assembly_power</b> array, all 52 values, drawn on the quarter-core node grid it describes, fuel assemblies only, reflector excluded. Opacity scales with the sealed value, <b>0.417724</b> at the corner to <b>1.612683</b> at the two outlined peak assemblies. Hover a cell for its value.
+            <span class="ramp" aria-hidden="true"><span style="margin-left:0">low</span><i style="opacity:.12"></i><i style="opacity:.33"></i><i style="opacity:.54"></i><i style="opacity:.75"></i><i style="opacity:.95"></i><span>high</span></span>
+          </figcaption>
+        </figure>
+        <div class="rows">
+          <div class="row"><span class="l">n_fuel_assemblies</span><span class="v">52</span></div>
+          <div class="row"><span class="l">k_eff vs reference</span><span class="v">1.029633 vs 1.029585 &middot; C&minus;E +4.8 pcm at this mesh</span></div>
+          <div class="row"><span class="l">converged C&minus;E</span><span class="v">&minus;3.0 pcm (Richardson, h&rarr;0)</span></div>
+          <div class="row"><span class="l">reference_power_peaking</span><span class="v">1.479 (NEACRP-L-138) &middot; mesh-dependent here</span></div>
+          <div class="row"><span class="l">reproduce</span><span class="v">bit-identical, the whole array</span></div>
+          <div class="row"><span class="l">bundle sha-256</span><span class="v">85be9c26&hellip;9128c</span></div>
+          <div class="row"><span class="l">signature</span><span class="v ok">ed25519 &#10003;</span></div>
+        </div>
+        <p class="cav"><b>Caveat, from the bundle.</b> Code verification against the published 2-D reference, not a physical validation. The peaking at this mesh (mesh_per_10cm 1) is 1.613 and converges toward the published 1.479 as the mesh is refined.</p>
+        <div class="links">
+          <a class="raw" href="https://gitlab.com/smrforge/smrforge/-/raw/main/packs/iaea-2d.reproduce-demo.bundle.json">Raw signed bundle &darr;</a>
+          <a href="https://smrforge.io/check.html">Verify in browser &rarr;</a>
+        </div>
+        <p class="fn">packs/iaea-2d.reproduce-demo.bundle.json</p>
+      </article>
+
+      <!-- 3 · SINGLE STEP · burnup -->
+      <article class="card" id="step">
+        <div class="ct">
+          <div class="tags"><span class="tag shape">single step</span><span class="tag fid">fidelity: screening</span><span class="tag">verdict: advisory</span></div>
+        </div>
+        <h3>One depletion step, 100 days</h3>
+        <p class="sub">physics:burnup &middot; smrf-physics, matrix-exponential depletion &middot; synthetic network</p>
+        <div class="k">0.958548<small>fissile_remaining &middot; after 100.0 days</small></div>
+        <p class="k2">fission_products <b>0.067677</b> &middot; converted_fraction <b>0.007614</b></p>
+        <div class="rows">
+          <div class="row"><span class="l">sealed inputs</span><span class="v">days 100.0 &middot; flux 1e14</span></div>
+          <div class="row"><span class="l">data library</span><span class="v">smrforge-burnup-1g/u235-illustrative &middot; by sha-256</span></div>
+          <div class="row"><span class="l">reproduce</span><span class="v">bit-identical</span></div>
+          <div class="row"><span class="l">bundle sha-256</span><span class="v">bd527f12&hellip;b01f6</span></div>
+          <div class="row"><span class="l">signature</span><span class="v ok">ed25519 &#10003;</span></div>
+        </div>
+        <p class="cav"><b>Caveat, from the bundle.</b> The depletion solve is exact against closed-form Bateman, but the network and cross sections are synthetic. These isotopics are screening-grade and <b>not</b> a claimable irradiated-fuel assay. Exact arithmetic on unvalidated data.</p>
+        <div class="links">
+          <a class="raw" href="https://gitlab.com/smrforge/smrforge/-/raw/main/packs/burnup.reproduce-demo.bundle.json">Raw signed bundle &darr;</a>
+          <a href="https://smrforge.io/check.html">Verify in browser &rarr;</a>
+        </div>
+        <p class="fn">packs/burnup.reproduce-demo.bundle.json</p>
+      </article>
+
+      <!-- 4 · MEASURED COMPARISON · BEAVRS D-bank worth -->
+      <article class="card" id="measured">
+        <div class="ct">
+          <div class="tags"><span class="tag shape">measured comparison</span><span class="tag fid lab">fidelity: lab-escalation</span><span class="tag">verdict: advisory</span></div>
+        </div>
+        <h3>Control-bank worth, BEAVRS D-bank</h3>
+        <p class="sub">physics:openmc-ce-rodworth &middot; engine openmc-0.15.3-ce &middot; ENDF/B-VIII.1 &middot; BEAVRS Cycle-1 HZP</p>
+        <div class="k">811.2<small>pcm &middot; bank_worth_pcm &middot; &plusmn;24.6 (1&sigma;)</small></div>
+        <p class="k2">measured <b>788 pcm</b> (BEAVRS spec Table 22) &middot; C/E <b>1.029</b>, computed from the two sealed numbers</p>
+        <figure class="wide">
+          <svg class="rw" viewBox="0 0 320 78" role="img" aria-label="One horizontal bar from zero to the computed D-bank worth of 811.2 pcm with a one-sigma error whisker of plus or minus 24.6 pcm. A dashed amber line marks the measured 788 pcm, which sits inside the whisker.">
+            <line class="axis" x1="12" y1="52" x2="308" y2="52" stroke-width="1"/>
+            <text class="fnt" x="12" y="66" font-size="8.5">0</text>
+            <text class="fnt" x="308" y="66" font-size="8.5" text-anchor="end">900 pcm</text>
+            <!-- computed bar: 811.2 pcm on a 0 to 900 scale, 296 px wide, so 1 pcm = 0.3289 px -->
+            <rect class="bar" x="12" y="30" width="266.8" height="18" rx="0"/>
+            <!-- 1-sigma whisker: 24.6 pcm = 8.1 px each side, centered on 278.8 -->
+            <path class="err" d="M270.7 39 H286.9 M270.7 34 V44 M286.9 34 V44" stroke-width="1.2"/>
+            <text class="ink" x="150" y="22" font-size="10" text-anchor="middle">computed 811.2 &#177; 24.6 pcm</text>
+            <!-- measured 788 pcm = 259.2 px from the axis origin, x = 271.2 -->
+            <path class="meas" d="M271.2 26 V56" stroke-width="1.5" stroke-dasharray="3 2"/>
+            <text class="amb" x="268" y="75" font-size="9" text-anchor="end">measured 788</text>
+          </svg>
+          <figcaption>Computed <b>811.2 &plusmn; 24.6 pcm</b> as one bar from zero with its 1&sigma; whisker. The dashed line is the measured <b>788 pcm</b>, which lies inside the whisker. BEAVRS publishes no formal per-worth sigma, so no measured error bar is drawn.</figcaption>
+        </figure>
+        <div class="rows">
+          <div class="row"><span class="l">benchmark_id</span><span class="v">BEAVRS Cycle-1 HZP D-bank @ mit-crpg/BEAVRS</span></div>
+          <div class="row"><span class="l">reproduce</span><span class="v">re-run within 3&sigma; of bank_worth_pcm</span></div>
+          <div class="row"><span class="l">reference status</span><span class="v">lab-grade per run &middot; not reference-earned</span></div>
+          <div class="row"><span class="l">bundle sha-256</span><span class="v">25063e70&hellip;ddfaba</span></div>
+          <div class="row"><span class="l">signature</span><span class="v ok">ed25519 &#10003;</span></div>
+        </div>
+        <p class="cav"><b>Caveat, from the bundle.</b> A continuous-energy OpenMC bank worth from two verbatim sealed BEAVRS decks. Lab-grade per run. Reference is an earned per-domain validation status, not a per-run label, and this bundle does not claim it.</p>
+        <div class="links">
+          <a class="raw" href="https://gitlab.com/smrforge/smrforge/-/raw/main/packs/openmc-ce-rodworth.reproduce-demo.bundle.json">Raw signed bundle &darr;</a>
+          <a href="https://smrforge.io/check.html">Verify in browser &rarr;</a>
+        </div>
+        <p class="fn">packs/openmc-ce-rodworth.reproduce-demo.bundle.json</p>
+      </article>
+
+      <!-- 5 · MARGIN · USL -->
+      <article class="card" id="margin">
+        <div class="ct">
+          <div class="tags"><span class="tag shape">margin</span><span class="tag fid">fidelity: screening</span><span class="tag">verdict: advisory</span></div>
+        </div>
+        <h3>Applicability and USL, an honest null</h3>
+        <p class="sub">physics:usl &middot; NUREG/CR-6698 non-trended method &middot; 7 applicable OpenMC-anchored benchmarks</p>
+        <div class="k"><span class="null">null</span><small>usl_defensible &middot; the headline</small></div>
+        <p class="k2">usl_optimistic_bound <b>0.94193</b>, explicitly <b>not</b> a defensible subcritical limit</p>
+        <div class="rows">
+          <div class="row"><span class="l">application</span><span class="v">U lattice &middot; H2O &middot; 4.95 w/o</span></div>
+          <div class="row"><span class="l">bias_pcm</span><span class="v">&minus;17.7 &middot; pooled_sigma_pcm 235.3</span></div>
+          <div class="row"><span class="l">n_applicable</span><span class="v">7 &middot; n_eff_screening_ck 1.0 &middot; K_neff undefined</span></div>
+          <div class="row"><span class="l">covered</span><span class="v">false &middot; defensible false</span></div>
+          <div class="row"><span class="l">extrapolation</span><span class="v">4.95 w/o above the benchmark range [2.4, 2.46]</span></div>
+          <div class="row"><span class="l">reproduce</span><span class="v">bit-identical</span></div>
+          <div class="row"><span class="l">bundle sha-256</span><span class="v">d9fde46d&hellip;f4db3</span></div>
+          <div class="row"><span class="l">signature</span><span class="v ok">ed25519 &#10003;</span></div>
+        </div>
+        <p class="cav"><b>Caveat, from the bundle.</b> Screening c_k reports n_eff 1.0 for the 7 applicable anchors, so the 95/95 tolerance factor is undefined and there is no qualified statistical USL from this basis. The optimistic bound treats correlated cases as independent. Do not quote it as the USL. A v1 demonstration of the open pipeline, not a licensing product.</p>
+        <div class="links">
+          <a class="raw" href="https://gitlab.com/smrforge/smrforge/-/raw/main/packs/usl.reproduce-demo.bundle.json">Raw signed bundle &darr;</a>
+          <a href="https://smrforge.io/check.html">Verify in browser &rarr;</a>
+        </div>
+        <p class="fn">packs/usl.reproduce-demo.bundle.json</p>
+      </article>
+
+      <!-- 6 · MEASURED COMPARISON · HTR-10 first criticality -->
+      <article class="card" id="measured-2">
+        <div class="ct">
+          <div class="tags"><span class="tag shape">measured comparison</span><span class="tag fid lab">fidelity: lab-escalation</span><span class="tag">verdict: advisory</span></div>
+        </div>
+        <h3>Pebble-bed first criticality, HTR-10</h3>
+        <p class="sub">physics:openmc-htr10 &middot; engine openmc-0.15.3-ce &middot; ENDF/B-VIII.1 &middot; explicit TRISO and pebble bed</p>
+        <div class="k">1.016588<small>k_eff &middot; &plusmn;0.001023 (1&sigma;)</small></div>
+        <p class="k2">c_over_e <b>1.01659</b>, sealed &middot; measured k <b>1.0000 &plusmn; 0.0037</b> (IAEA TECDOC-1382 Part 2)</p>
+        <div class="rows">
+          <div class="row"><span class="l">benchmark_id</span><span class="v">HTR-10 first criticality @ IAEA TECDOC-1382 Part 2</span></div>
+          <div class="row"><span class="l">geometry</span><span class="v">16,960 pebbles &middot; 9,689 fuel</span></div>
+          <div class="row"><span class="l">generator</span><span class="v">sealed by sha-256 &middot; 835b6b09&hellip;</span></div>
+          <div class="row"><span class="l">reproduce</span><span class="v">re-run within 3&sigma; of k_eff &middot; c_over_e derived</span></div>
+          <div class="row"><span class="l">bundle sha-256</span><span class="v">87d00c46&hellip;839a1</span></div>
+          <div class="row"><span class="l">signature</span><span class="v ok">ed25519 &#10003;</span></div>
+        </div>
+        <p class="cav"><b>Caveat, from the bundle.</b> The +1.3 to +1.8% C/E is the documented HTGR continuous-energy over-prediction, attributed in the literature, not bespoke. The claim is consistency with the cited codes, not &ldquo;we hit 1.0000.&rdquo; Reference is earned per domain, not a per-run label.</p>
+        <div class="links">
+          <a class="raw" href="https://gitlab.com/smrforge/smrforge/-/raw/main/packs/openmc-htr10-first-crit.reproduce-demo.bundle.json">Raw signed bundle &darr;</a>
+          <a href="https://smrforge.io/check.html">Verify in browser &rarr;</a>
+        </div>
+        <p class="fn">packs/openmc-htr10-first-crit.reproduce-demo.bundle.json</p>
+      </article>
+
+    </div>
+
+    <p class="close-honest">Every grade on this page was written into the bundle by the engine at mint time and is
+      covered by the signature, so a reviewer who changes <b>screening</b> to <b>reference</b> breaks the seal the
+      same way as changing the number. A sealed number from a badly specified core is still a faithfully preserved
+      wrong answer. <b>Nobody should license a reactor on a SMRFORGE number alone.</b></p>
+    <p class="close-line">The seal proves custody of the computation, whatever its shape.
+      <b>k_eff is the demo, not the limit.</b></p>
+    <p class="fine">pcm = per cent mille (10<sup>&minus;5</sup> &Delta;k/k). w/o = weight percent U-235. C/E = computed over experiment.
+      Verification (vs analytic and published references) is not validation (vs measured experiments). Nuclear data cited
+      on this page is openly distributable (ENDF/B-VIII.1).</p>
+  </section>
+</div>
+
+<div class="wrap" id="contact">
+  <section class="sec contact">
+    <p class="kicker warm">Your number, sealed the same way</p>
+    <h2>Bring a result a reviewer won&rsquo;t take on faith.</h2>
+    <p>A scalar, a field, a step, a comparison or a margin. We seal it as one of these records, you verify
+      it offline and re-run it yourself. Engagements, pilots and Pro at <a href="mailto:support@smrforge.io">support@smrforge.io</a>.</p>
+    <div class="ctas" style="margin-top:0">
+      <a class="btn primary" href="engagements.html">How an engagement works &rarr;</a>
+      <a class="btn warm" href="break-the-seal.html">Or try to break the seal</a>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <footer>
+    <span>SMRFORGE &middot; reactor physics you can prove</span>
+    <span><a href="https://gitlab.com/smrforge">gitlab.com/smrforge</a> &middot; <a href="info-sheet.html">Info sheet</a> &middot; <a href="sealed-results.html">Sealed results</a> &middot; <a href="engagements.html">Engagements</a> &middot; <a href="break-the-seal.html">Break the Seal</a> &middot; Community MIT &middot; Pro FSL-1.1-MIT &middot; air-gap-safe</span>
+  </footer>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

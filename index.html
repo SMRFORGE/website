@@ -243,11 +243,11 @@
 
   /* --- the one lifted object: the evidence receipt --- */
   .receipt{background:var(--surface);border:1px solid var(--line);border-top:2px solid var(--cyan);border-radius:4px;
-    box-shadow:0 28px 64px -30px rgba(2,10,20,.9),0 0 0 1px rgba(76,211,232,.06);overflow:hidden;font-family:var(--mono);min-width:0}
+    overflow:hidden;font-family:var(--mono);min-width:0}
   .receipt .top{display:flex;justify-content:space-between;align-items:center;gap:10px;
     padding:11px 16px;border-bottom:1px solid var(--line);background:var(--surface-2)}
   .receipt .top .t{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .receipt .top .dot{width:9px;height:9px;border-radius:50%;background:var(--lichen);box-shadow:0 0 8px rgba(159,214,122,.6);flex:none}
+  .receipt .top .dot{width:9px;height:9px;border-radius:50%;background:var(--lichen);flex:none}
   .receipt .mid{padding:20px 18px}
   .receipt .k{font-size:clamp(1.7rem,4vw,2.2rem);color:var(--ink);letter-spacing:.01em;font-variant-numeric:tabular-nums;line-height:1.1}
   .receipt .k small{color:var(--muted);font-size:.9rem;margin-left:.4rem}
@@ -259,6 +259,11 @@
   .receipt .row .v{color:var(--muted);text-align:right;overflow-wrap:anywhere}
   .receipt .row .v.ok{color:var(--amber)}
   .receipt .row .v.bad{color:var(--clay)}
+  .receipt.ledger .rows{border-top:0;margin-top:14px;padding-top:0;gap:0}
+  .receipt.ledger .row{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:14px;row-gap:3px;padding:9px 0;border-top:1px dashed var(--line)}
+  .receipt.ledger .row .l{flex:none}
+  .receipt.ledger .row .pf{grid-column:1/-1;font-family:var(--body);font-size:.76rem;color:var(--faint);line-height:1.45;transition:color .14s}
+  .receipt.ledger .row:hover .pf,.receipt.ledger .row:focus-within .pf{color:var(--muted)}
   .receipt .foot{border-top:1px solid var(--line);padding:11px 18px;display:flex;justify-content:space-between;gap:12px;
     font-size:.74rem;color:var(--faint);background:var(--surface-2)}
   .receipt .foot .pass{color:var(--lichen);letter-spacing:.06em}
@@ -441,7 +446,7 @@
     </div>
 
     <div>
-      <div class="receipt" role="img" aria-label="An example evidence bundle: SMRFORGE computes a k-effective of 1.029554 for the IAEA-2D benchmark, closing the published reference of 1.029585 to minus 3 pcm; screening-grade code-verification; inputs pinned by SHA-256; the minting toolchain recorded; an Ed25519 signature; and an offline integrity check passing.">
+      <div class="receipt ledger" role="img" aria-label="An example evidence bundle: SMRFORGE computes a k-effective of 1.029554 for the IAEA-2D benchmark, closing the published reference of 1.029585 to minus 3 pcm; screening-grade code-verification; inputs pinned by SHA-256; the minting toolchain recorded; an Ed25519 signature; and an offline integrity check passing.">
         <div class="top"><span class="t">Evidence bundle &middot; smrforge.result.v1</span><span class="dot" aria-hidden="true"></span></div>
         <div class="mid">
           <div class="k">1.029554<small>k_eff</small></div>
@@ -450,10 +455,10 @@
             <div class="row"><span class="l">case</span><span class="v">IAEA-2D &middot; full core</span></div>
             <div class="row"><span class="l">published reference</span><span class="v">k = 1.029585</span></div>
             <div class="row"><span class="l">C&minus;E</span><span class="v ok">&minus;3 pcm</span></div>
-            <div class="row"><span class="l">inputs &middot; outputs</span><span class="v ok">sha-256 pinned &#10003;</span></div>
-            <div class="row"><span class="l">toolchain</span><span class="v">machine &middot; solver &middot; sealed</span></div>
-            <div class="row"><span class="l">seal (sha-256)</span><span class="v">4c1a 7f&hellip; 9e02</span></div>
-            <div class="row"><span class="l">signature</span><span class="v ok">ed25519 &#10003;</span></div>
+            <div class="row" tabindex="0"><span class="l">inputs &middot; outputs</span><span class="v ok">sha-256 pinned &#10003;</span><span class="pf">Every input and output hashed into the manifest.</span></div>
+            <div class="row" tabindex="0"><span class="l">toolchain</span><span class="v">machine &middot; solver &middot; sealed</span><span class="pf">The machine and solver that produced it, recorded in the signed provenance.</span></div>
+            <div class="row" tabindex="0"><span class="l">seal (sha-256)</span><span class="v">4c1a 7f&hellip; 9e02</span><span class="pf">One SHA-256 over the whole manifest.</span></div>
+            <div class="row" tabindex="0"><span class="l">signature</span><span class="v ok">ed25519 &#10003;</span><span class="pf">Who sealed it, and that nothing has changed since.</span></div>
           </div>
         </div>
         <div class="foot"><span>$ smrforge verify</span><span class="pass">INTEGRITY OK &#10003;</span></div>

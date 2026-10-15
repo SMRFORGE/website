@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="rlIf4eIc2Vl0NRAyAg5GZjQ8myi2Sw5cR3YJXz-t9fQ">
+  <title>SMRFORGE for reviewers</title>
+  <meta name="description" content="For reviewers and regulators. A reviewer can re-run and check a sealed reactor-physics number offline. SMRFORGE seals the result, its inputs, and its provenance into one SHA-256 manifest with one Ed25519 signature, so the number can be confirmed and re-derived without trusting the model, the vendor, or us.">
+  <link rel="icon" href="images/smrforge_logo_white_transparent.png" type="image/png">
+  <meta property="og:title" content="SMRFORGE for reviewers">
+  <meta property="og:description" content="A number you can re-run, not take on faith. One sealed file a reviewer checks offline and re-derives on the open engine. Faster, cost effective, smarter, just as safe, durable.">
+  <meta property="og:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
+  <meta property="og:url" content="https://smrforge.io/for-reviewers.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SMRFORGE for reviewers">
+  <meta name="twitter:description" content="A number you can re-run, not take on faith. One sealed file a reviewer checks offline and re-derives on the open engine.">
+  <meta name="twitter:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
+  <link rel="canonical" href="https://smrforge.io/for-reviewers.html">
+  <link rel="preload" as="image" href="images/smrforge_logo_white_transparent.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  /* ---- SMRFORGE design system (homepage sets it; other pages follow) ----
+       ground: prussian navy with a teal undertone · identity: glacier cyan (commands, links, kickers)
+       signal: amber, the ONE warm accent, reserved for the thing that gets checked / the human decision
+       verdicts: lichen = pass, clay = fail · hairline grids (1px --line) instead of card shadows
+       type: Archivo display, Public Sans body, IBM Plex Mono for anything a machine wrote. */
+  :root{
+    --bg:#0b2035; --bg-2:#0e2640; --surface:#10293f; --surface-2:#143149;
+    --line:#1f3f5a; --line-soft:#193449;
+    --ink:#e6eef3; --muted:#93adbf; --faint:#62829b;
+    --cyan:#4cd3e8; --cyan-2:#7ae3f2; --cyan-soft:rgba(76,211,232,.11);
+    --amber:#f2a33a; --amber-soft:rgba(242,163,58,.14);
+    --lichen:#9fd67a; --clay:#e0704f;
+    --disp:"Archivo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+    --body:"Public Sans",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,Menlo,monospace;
+    --gutter:clamp(16px,4vw,40px);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:84px}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.62;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 var(--gutter)}
+  a{color:var(--ink)}
+  :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:2px}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin:0 0 .6rem}
+  .kicker.warm{color:var(--amber)}
+  code,.code{font-family:var(--mono);font-size:.9em;color:var(--cyan)}
+
+  /* --- section rhythm --- */
+  .sec{padding:clamp(56px,7vw,96px) 0;border-top:1px solid var(--line)}
+  .sec-head{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(20px,4vw,56px);align-items:end;margin-bottom:clamp(28px,4vw,44px)}
+  @media(max-width:820px){.sec-head{grid-template-columns:1fr;gap:14px}}
+  .sec h2{font-family:var(--disp);font-weight:700;font-size:clamp(1.75rem,3.6vw,2.6rem);line-height:1.08;letter-spacing:-.015em;margin:0;text-wrap:balance}
+  .sec .lead{margin:0;color:var(--muted);font-size:1.05rem;max-width:56ch}
+  .sec .lead b{color:var(--ink);font-weight:600}
+  .sec .lead a{color:var(--cyan);text-decoration:none}
+  .sec .lead a:hover{text-decoration:underline}
+  .sec .lead code{font-size:.92em}
+  .sub-h{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:0 0 12px}
+
+  /* --- hairline grid --- */
+  .grid{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+  .grid>*{background:var(--bg);padding:clamp(20px,2.6vw,28px) clamp(18px,2.4vw,26px);min-width:0}
+  .grid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  @media(max-width:720px){.grid.c3,.grid.c2{grid-template-columns:1fr}}
+  .cell .cmd{font-family:var(--mono);font-size:.78rem;color:var(--cyan);letter-spacing:.02em;word-break:break-word}
+  .cell h3{font-family:var(--disp);font-weight:700;font-size:1.22rem;margin:.55rem 0 .45rem;letter-spacing:-.005em}
+  .cell p{margin:0;color:var(--muted);font-size:.95rem}
+  .cell p a{color:var(--cyan);text-decoration:none}
+  .cell p a:hover{text-decoration:underline}
+
+  /* --- buttons --- */
+  .btn{display:inline-block;font-family:var(--mono);font-size:.84rem;letter-spacing:.04em;text-transform:uppercase;
+    padding:.78rem 1.2rem;text-decoration:none;border-radius:3px;transition:background .14s,border-color .14s,color .14s}
+  .btn.primary{background:var(--cyan);color:#06202f;font-weight:600}
+  .btn.primary:hover{background:var(--cyan-2)}
+  .btn.line{border:1px solid var(--line);color:var(--ink)}
+  .btn.line:hover{border-color:var(--cyan);color:var(--cyan)}
+  .btn.warm{border:1px solid rgba(242,163,58,.5);color:var(--amber)}
+  .btn.warm:hover{border-color:var(--amber);background:var(--amber-soft)}
+
+  /* --- header --- */
+  header.site{position:sticky;top:0;z-index:10;background:rgba(11,32,53,.92);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line)}
+  header.site .bar{display:flex;justify-content:space-between;align-items:center;gap:16px;
+    max-width:1120px;margin:0 auto;padding:14px var(--gutter)}
+  .brand{display:flex;align-items:center;gap:.65rem;font-family:var(--disp);font-weight:800;font-size:1.35rem;letter-spacing:.03em;text-decoration:none}
+  .brand .wm{line-height:1;color:var(--ink)}
+  .brand .logo{height:52px;width:auto;display:block}
+  .brand b{color:var(--cyan)}
+  nav.main{display:flex;gap:22px;align-items:center;font-family:var(--mono);font-size:.76rem;text-transform:uppercase;letter-spacing:.06em}
+  nav.main a{color:var(--muted);text-decoration:none;white-space:nowrap}
+  nav.main a:hover{color:var(--ink)}
+  nav.main a[aria-current="page"]{color:var(--cyan)}
+  nav.main .ghost{border:1px solid var(--line);padding:.5rem .85rem;color:var(--ink);border-radius:3px}
+  nav.main .ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+  @media(max-width:900px){nav.main{gap:14px}nav.main a.sub{display:none}}
+  @media(max-width:560px){nav.main a:not(.ghost){display:none}.brand .logo{height:44px}}
+
+  /* --- hero --- */
+  .hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(30px,5vw,64px);
+    align-items:center;padding:clamp(48px,7vw,88px) 0 clamp(36px,5vw,64px)}
+  @media(max-width:900px){.hero{grid-template-columns:1fr;gap:38px}}
+  .problem{font-family:var(--mono);font-size:.84rem;color:var(--muted);margin:0 0 1rem;letter-spacing:.01em}
+  h1{font-family:var(--disp);font-weight:800;font-size:clamp(2.5rem,6.2vw,4.4rem);
+    line-height:.98;letter-spacing:-.02em;margin:0;text-wrap:balance}
+  h1 .u{color:var(--amber);text-decoration:underline;text-decoration-thickness:.08em;
+    text-underline-offset:.12em;text-decoration-color:rgba(242,163,58,.55)}
+  .desc{font-size:1.12rem;color:var(--ink);max-width:42ch;margin:1.4rem 0 0}
+  .desc b{font-weight:600}
+  .tagline{font-family:var(--disp);font-weight:700;font-size:1.15rem;margin:1.1rem 0 0;color:var(--ink)}
+  .tagline .cx{color:var(--amber)}
+  .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:1.8rem}
+
+  /* --- the evidence receipt: a ledger, each line says what it proves --- */
+  .receipt{background:var(--surface);border:1px solid var(--line);border-top:2px solid var(--cyan);
+    font-family:var(--mono);min-width:0}
+  .receipt .top{display:flex;justify-content:space-between;align-items:center;gap:10px;
+    padding:11px 16px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+  .receipt .top .t{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .receipt .top .dot{width:9px;height:9px;border-radius:50%;background:var(--lichen);flex:none}
+  .receipt .mid{padding:20px 18px 10px}
+  .receipt .k{font-size:clamp(1.7rem,4vw,2.2rem);color:var(--ink);letter-spacing:.01em;font-variant-numeric:tabular-nums;line-height:1.1}
+  .receipt .k small{color:var(--muted);font-size:.9rem;margin-left:.4rem}
+  .receipt .tag{display:inline-block;margin-top:.55rem;font-size:.7rem;color:var(--lichen);
+    border:1px solid rgba(159,214,122,.4);padding:.06rem .5rem;border-radius:3px;letter-spacing:.04em}
+  .receipt .rows{margin-top:16px}
+  .receipt .row{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:14px;row-gap:3px;
+    padding:9px 0;border-top:1px dashed var(--line);font-size:.8rem}
+  .receipt .row .l{color:var(--faint);letter-spacing:.04em}
+  .receipt .row .v{color:var(--muted);text-align:right;overflow-wrap:anywhere}
+  .receipt .row .v.ok{color:var(--amber)}
+  .receipt .row .pf{grid-column:1/-1;font-family:var(--body);font-size:.76rem;color:var(--faint);line-height:1.45;transition:color .14s}
+  .receipt .row:hover .pf,.receipt .row:focus-within .pf{color:var(--muted)}
+  .receipt .foot{border-top:1px solid var(--line);padding:11px 18px;display:flex;justify-content:space-between;gap:12px;
+    font-size:.74rem;color:var(--faint);background:var(--surface-2)}
+  .receipt .foot .pass{color:var(--lichen);letter-spacing:.06em}
+  .cap{font-size:.8rem;color:var(--faint);margin:12px 2px 0;font-family:var(--mono);line-height:1.5}
+
+  /* --- honesty note: the one warm callout --- */
+  .note{margin:18px 0 0;padding:14px 18px;border-left:3px solid var(--amber);background:var(--amber-soft);
+    color:var(--ink);font-size:.93rem;max-width:72ch;border-radius:0 4px 4px 0}
+  .note b{font-weight:600}
+
+  /* --- contact + footer --- */
+  .contact h2{max-width:22ch}
+  .contact p{color:var(--muted);max-width:52ch;margin:0 0 1.5rem}
+  .contact p a{color:var(--cyan);text-decoration:none}
+  footer{border-top:1px solid var(--line);padding:22px 0 46px;display:flex;justify-content:space-between;
+    flex-wrap:wrap;gap:12px;font-family:var(--mono);font-size:.74rem;color:var(--faint)}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--cyan)}
+
+  /* ===== for-reviewers additions ===== */
+
+  /* --- anatomy of a sealed result: the hero figure --- */
+  .anat{background:var(--surface);border:1px solid var(--line);border-top:2px solid var(--cyan);min-width:0}
+  .anat .top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 16px;
+    border-bottom:1px solid var(--line);background:var(--surface-2);font-family:var(--mono)}
+  .anat .top .t{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .anat .top .dot{width:9px;height:9px;border-radius:50%;background:var(--lichen);flex:none}
+  .anat .fig{padding:14px 12px 8px}
+  .anat svg{width:100%;height:auto;display:block}
+  .anat .foot{border-top:1px solid var(--line);padding:11px 18px;display:flex;justify-content:space-between;gap:12px;
+    font-family:var(--mono);font-size:.74rem;color:var(--faint);background:var(--surface-2)}
+  .anat .foot .pass{color:var(--lichen);letter-spacing:.06em}
+  .dg text{font-family:var(--mono)}
+  .dg .bx{fill:var(--bg);stroke:var(--line)}
+  .dg .bx.m{stroke:var(--cyan);stroke-opacity:.8}
+  .dg .bx.s{fill:var(--amber-soft);stroke:var(--amber);stroke-opacity:.6}
+  .dg .lab{fill:var(--ink);font-size:10px}
+  .dg .sm{fill:var(--faint);font-size:8.4px}
+  .dg .hx{fill:var(--cyan);font-size:8.6px}
+  .dg .mt{fill:var(--muted);font-size:7.6px;letter-spacing:.12em}
+  .dg .am{fill:var(--amber);font-size:7.6px;letter-spacing:.12em}
+  .dg .ak{fill:var(--ink);font-size:9px}
+  .dg .ln{stroke:var(--cyan);stroke-width:1.2;fill:none}
+  .dg .ln.d{stroke-dasharray:3 2}
+  .dg .ln.a{stroke:var(--amber)}
+
+  /* --- the five qualities: a ledger, one row per thing a reviewer wants --- */
+  .five{border:1px solid var(--line);border-top:2px solid var(--cyan);background:var(--bg)}
+  .q{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.05fr) minmax(0,1.7fr);
+    gap:clamp(14px,2.4vw,36px);align-items:start;padding:clamp(20px,2.6vw,30px) clamp(18px,2.4vw,28px);
+    border-top:1px solid var(--line);min-width:0;position:relative}
+  .q:first-child{border-top:0}
+  .q .id{display:flex;align-items:center;gap:14px;min-width:0}
+  .q .ic{width:34px;height:34px;flex:none;color:var(--cyan)}
+  .q .ic svg{width:100%;height:100%;display:block}
+  .q .no{display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;color:var(--faint)}
+  .q .tn{display:block;font-family:var(--disp);font-weight:800;font-size:1.1rem;letter-spacing:.04em;color:var(--cyan);line-height:1.15}
+  .q h3{font-family:var(--disp);font-weight:700;font-size:clamp(1.15rem,1.9vw,1.42rem);line-height:1.15;letter-spacing:-.01em;margin:0;text-wrap:balance}
+  .q p{margin:0;color:var(--muted);font-size:.95rem;max-width:58ch}
+  .q p b{color:var(--ink);font-weight:600}
+  .q.safe{background:var(--amber-soft);box-shadow:inset 3px 0 0 var(--amber)}
+  .q.safe .ic,.q.safe .tn{color:var(--amber)}
+  .q.safe .no{color:var(--muted)}
+  .q.safe p{color:var(--ink)}
+  @media(max-width:820px){
+    .q{grid-template-columns:1fr;gap:8px}
+    .q .id{margin-bottom:4px}
+  }
+  .five-cap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:12px 2px 0;
+    font-family:var(--mono);font-size:.78rem;color:var(--faint);line-height:1.5}
+  .five-cap .w{color:var(--amber)}
+
+  /* --- go deeper: pointers, not copies --- */
+  .cell .go{display:inline-block;margin-top:.6rem;font-family:var(--mono);font-size:.76rem;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--cyan);text-decoration:none}
+  .cell .go:hover{text-decoration:underline}
+  .cell .where{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="bar">
+    <a class="brand" href="/" aria-label="SMRFORGE home"><img class="logo" src="images/smrforge-mark-white.png" alt="SMRFORGE mark"><span class="wm">SMR<b>FORGE</b></span></a>
+    <nav class="main" aria-label="Primary">
+      <a href="proof-layer.html">Proof Layer</a><a href="engagements.html">Engagements</a><a class="sub" href="index.html#howit">How it works</a><a class="sub" href="index.html#valid">Verification</a>
+      <a href="sealed-results.html">Sealed results</a><a class="sub" href="index.html#products">Community &amp; Pro</a><a href="info-sheet.html">Info sheet</a><a class="ghost" href="check.html">Check a bundle</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="hero">
+    <div>
+      <p class="kicker">For reviewers and regulators</p>
+      <p class="problem">Reactor-physics evidence &middot; one file, checked offline</p>
+      <h1>A number you can <span class="u">re-run</span>, not take on faith.</h1>
+      <p class="desc">Your team computes a reactor-physics number in whatever code it already uses. SMRFORGE seals
+        that result, the inputs that fed it, and the provenance that produced it, into one SHA-256 manifest with one
+        Ed25519 signature. The bundle is self-contained, so anyone downstream can confirm it offline and re-derive
+        it, <b>without trusting the model, the vendor, or us.</b></p>
+      <p class="tagline">Not &ldquo;trust us.&rdquo; <span class="cx">Check us.</span></p>
+      <div class="ctas">
+        <a class="btn primary" href="smrforge-reviewer-brief.pdf">Download the brief (PDF)</a>
+        <a class="btn line" href="check.html">Verify a bundle yourself &rarr;</a>
+      </div>
+    </div>
+
+    <div>
+      <div class="anat" aria-label="Anatomy of a sealed result. Inputs, the result, and provenance are each hashed into one manifest, the manifest is signed, and a reviewer verifies it offline and reproduces it on the open engine.">
+        <div class="top"><span class="t">Anatomy of a sealed result</span><span class="dot" aria-hidden="true"></span></div>
+        <div class="fig">
+          <svg class="dg" viewBox="0 0 420 318" role="img" aria-hidden="true" focusable="false">
+            <defs>
+              <marker id="arc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 z" fill="#4cd3e8"/></marker>
+              <marker id="ara" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 z" fill="#f2a33a"/></marker>
+            </defs>
+            <!-- what goes in -->
+            <text x="12" y="14" class="mt">WHAT GOES IN</text>
+            <rect x="12" y="22" width="176" height="46" rx="3" class="bx"/>
+            <text x="22" y="40" class="lab">inputs/</text>
+            <text x="22" y="56" class="sm">geometry, materials, library</text>
+            <text x="180" y="40" class="hx" text-anchor="end">sha256</text>
+
+            <rect x="12" y="80" width="176" height="46" rx="3" class="bx"/>
+            <text x="22" y="98" class="lab">result.json</text>
+            <text x="22" y="114" class="sm">the number, its uncertainty</text>
+            <text x="180" y="98" class="hx" text-anchor="end">sha256</text>
+
+            <rect x="12" y="138" width="176" height="46" rx="3" class="bx"/>
+            <text x="22" y="156" class="lab">provenance/</text>
+            <text x="22" y="172" class="sm">engine, library, toolchain, seed</text>
+            <text x="180" y="156" class="hx" text-anchor="end">sha256</text>
+
+            <!-- each fingerprint flows into the manifest -->
+            <g class="ln d" marker-end="url(#arc)">
+              <path d="M188 45 H214 V102 H230"/>
+              <path d="M188 103 H230"/>
+              <path d="M188 161 H214 V104 H230"/>
+            </g>
+
+            <!-- the manifest -->
+            <text x="234" y="14" class="mt">ONE MANIFEST</text>
+            <rect x="234" y="22" width="174" height="110" rx="3" class="bx m"/>
+            <text x="244" y="40" class="lab">manifest</text>
+            <text x="244" y="58" class="sm">inputs/</text><text x="398" y="58" class="hx" text-anchor="end">sha256</text>
+            <text x="244" y="72" class="sm">result.json</text><text x="398" y="72" class="hx" text-anchor="end">sha256</text>
+            <text x="244" y="86" class="sm">provenance/</text><text x="398" y="86" class="hx" text-anchor="end">sha256</text>
+            <text x="244" y="106" class="lab">bundle_sha256</text>
+            <text x="244" y="122" class="hx">sha256:0f98&hellip;c8e8</text>
+
+            <!-- the signature -->
+            <path class="ln" d="M321 132 V150" marker-end="url(#arc)"/>
+            <text x="234" y="166" class="mt">ONE SIGNATURE</text>
+            <rect x="234" y="172" width="174" height="40" rx="3" class="bx m"/>
+            <text x="244" y="189" class="lab">signature</text>
+            <text x="244" y="204" class="hx">ed25519 cfb88804&hellip;</text>
+
+            <!-- the reviewer -->
+            <path class="ln a d" d="M321 212 V236" marker-end="url(#ara)"/>
+            <rect x="12" y="240" width="396" height="66" rx="3" class="bx s"/>
+            <text x="22" y="256" class="am">THE REVIEWER &middot; OFFLINE, NO NETWORK, NO TRUST IN US</text>
+            <text x="22" y="275" class="ak">$ smrforge verify bundle.json</text>
+            <text x="22" y="288" class="sm">recompute every fingerprint and the signature, name any section that changed</text>
+            <text x="22" y="300" class="sm">then reproduce on the open engine, held to a tolerance committed before the run</text>
+          </svg>
+        </div>
+        <div class="foot"><span>hashes illustrative &middot; custody, not correctness</span><span class="pass">CHECKED</span></div>
+      </div>
+      <p class="cap">The seal proves the number is unaltered and re-derives from its own recorded inputs. Fidelity is
+        labeled on every result, and every result is advisory.</p>
+    </div>
+  </section>
+</div>
+
+<div class="wrap" id="five">
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <p class="kicker">Why a reviewer wants it</p>
+        <h2>Five things a regulator wants from a number.</h2>
+      </div>
+      <p class="lead">A reviewer has to defend a number they did not produce. <b>The seal delivers each of these.</b>
+        The fourth is the one the person signing cares about most, so it carries the warm mark.</p>
+    </div>
+
+    <div class="five" aria-label="The five qualities a sealed result gives a reviewer">
+      <div class="q">
+        <div class="id">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 34 34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 3 8 19h8l-1 12 11-16h-8z"/></svg></span>
+          <span><span class="no">01</span><span class="tn">FASTER</span></span>
+        </div>
+        <h3>Checked in milliseconds, not hours.</h3>
+        <p>Verify is a hash check and a signature check. It runs offline on the reviewer&rsquo;s own machine, with no
+          cluster and no re-run of the pipeline. <b>If anything inside the bundle changed, the checker names the
+          section.</b></p>
+      </div>
+
+      <div class="q">
+        <div class="id">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 34 34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="8" width="20" height="13" rx="1.5"/><path d="M3 25h28M12 25v2h10v-2"/></svg></span>
+          <span><span class="no">02</span><span class="tn">COST EFFECTIVE</span></span>
+        </div>
+        <h3>A laptop, not a cluster.</h3>
+        <p>The expensive Monte Carlo runs once. Downstream, a reviewer re-runs only the cheap deterministic step on
+          the sealed upstream constants, which were already verified. <b>A laptop does it.</b></p>
+      </div>
+
+      <div class="q">
+        <div class="id">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 34 34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="15" width="20" height="14" rx="1.5"/><path d="M11 15v-4a6 6 0 0 1 12 0v4M13 22l3 3 5-6"/></svg></span>
+          <span><span class="no">03</span><span class="tn">SMARTER</span></span>
+        </div>
+        <h3>No trust in the producer.</h3>
+        <p>The tolerance is committed before the run, not fitted after it. The seal covers the fingerprints of every
+          input and output, so <b>a doctored value is caught while the signature stays valid.</b> Nothing rests on
+          the producer&rsquo;s word.</p>
+      </div>
+
+      <div class="q safe">
+        <div class="id">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 34 34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3 6 7v9c0 7 4.5 12.5 11 15 6.5-2.5 11-8 11-15V7z"/><path d="M12 17l3.5 3.5L22 14"/></svg></span>
+          <span><span class="no">04</span><span class="tn">JUST AS SAFE</span></span>
+        </div>
+        <h3>Nothing about the safety basis changes.</h3>
+        <p>The reviewer&rsquo;s own validated codes and V&amp;V still produce the number. SMRFORGE adds a checkable
+          record beside the existing process and never becomes the authority over it. <b>Adopting it subtracts no
+          rigor.</b></p>
+      </div>
+
+      <div class="q">
+        <div class="id">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 34 34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h16M9 30h16M10 4c0 6 4 9 7 13 3-4 7-7 7-13M10 30c0-6 4-9 7-13 3 4 7 7 7 13"/></svg></span>
+          <span><span class="no">05</span><span class="tn">DURABLE</span></span>
+        </div>
+        <h3>Still checks decades out.</h3>
+        <p>The bundle verifies offline years later with just the file and the public key. <b>It outlives the author,
+          the cluster, and the tool that made it.</b></p>
+      </div>
+    </div>
+    <div class="five-cap">
+      <span>verify = hash + signature, offline &middot; reproduce = re-run the open engine on the recorded inputs</span>
+      <span class="w">amber marks the human decision</span>
+    </div>
+  </section>
+</div>
+
+<div class="wrap" id="deeper">
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <p class="kicker">Go deeper</p>
+        <h2>Each of these has its own page. This one stays short.</h2>
+      </div>
+      <p class="lead">Three pointers. <b>None of them asks you to trust us first.</b></p>
+    </div>
+    <div class="grid c3">
+      <div class="cell">
+        <span class="where">proof-layer.html</span>
+        <h3>The Proof Layer</h3>
+        <p>How a sealed result sits alongside your AI rather than in front of it, and how an orchestrator running
+          many agents leaves <a href="proof-layer.html#orchestrate">a chain a reviewer can walk</a>.</p>
+        <a class="go" href="proof-layer.html">Read the proof layer &rarr;</a>
+      </div>
+      <div class="cell">
+        <span class="where">sealed-results.html</span>
+        <h3>Sealed results</h3>
+        <p>The record holds more than k_eff. See what a sealed result carries, and which shapes of number the seal
+          covers today.</p>
+        <a class="go" href="sealed-results.html">See the sealed results &rarr;</a>
+      </div>
+      <div class="cell">
+        <span class="where">check.html</span>
+        <h3>Check a bundle</h3>
+        <p>Verify a real sealed result in your browser, then tamper with one byte and watch the seal catch the
+          change. No install, no server, no SMRFORGE code.</p>
+        <a class="go" href="check.html">Check one now &rarr;</a>
+      </div>
+    </div>
+    <div class="note"><b>Said plainly.</b> The seal proves custody, not correctness. A sealed number from a badly
+      specified model is a faithfully preserved wrong answer. Verify runs offline and imports none of our physics.
+      Reproduce needs the open engine installed, because a browser cannot run a Monte Carlo eigenvalue solve. Results
+      are screening-to-reference grade, labeled for fidelity, benchmarked against public references on open
+      ENDF/B-VIII data, and advisory. SMRFORGE is not a licensing code. It sits alongside the labs and your validated
+      codes, and replaces neither.</div>
+  </section>
+</div>
+
+<div class="wrap" id="try">
+  <section class="sec contact">
+    <p class="kicker warm">Check us</p>
+    <h2>Take the brief, or take the bundle.</h2>
+    <p>Founder-led, and reachable. Download the two-page brief for the people who have to defend the number, or skip
+      the brief and verify a sealed result in your browser in about a minute. Questions, bundles you want checked,
+      and review requests go to <a href="mailto:support@smrforge.io">support@smrforge.io</a>.</p>
+    <div class="ctas" style="margin-top:0">
+      <a class="btn primary" href="smrforge-reviewer-brief.pdf">Download the brief (PDF)</a>
+      <a class="btn line" href="check.html">Check a bundle &rarr;</a>
+      <a class="btn warm" href="mailto:support@smrforge.io">support@smrforge.io</a>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <footer>
+    <span>SMRFORGE &middot; reactor physics you can prove</span>
+    <span><a href="https://gitlab.com/smrforge">gitlab.com/smrforge</a> &middot; <a href="info-sheet.html">Info sheet</a> &middot; <a href="for-reviewers.html">For reviewers</a> &middot; <a href="engagements.html">Engagements</a> &middot; <a href="break-the-seal.html">Break the Seal</a> &middot; Community MIT &middot; Pro FSL-1.1-MIT &middot; air-gap-safe</span>
+  </footer>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

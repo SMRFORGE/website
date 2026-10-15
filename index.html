@@ -446,15 +446,16 @@
     </div>
 
     <div>
-      <div class="receipt ledger" role="img" aria-label="An example evidence bundle: SMRFORGE computes a k-effective of 1.029554 for the IAEA-2D benchmark, closing the published reference of 1.029585 to minus 3 pcm; screening-grade code-verification; inputs pinned by SHA-256; the minting toolchain recorded; an Ed25519 signature; and an offline integrity check passing.">
+      <div class="receipt ledger" role="img" aria-label="An example evidence bundle: SMRFORGE computes a k-effective of 1.029633 for the IAEA-2D benchmark, which is plus 4.8 pcm from the published reference of 1.029585 at this mesh and converges to minus 3 pcm by Richardson extrapolation; screening-grade code-verification; inputs pinned by SHA-256; the minting toolchain recorded; an Ed25519 signature; and an offline integrity check passing.">
         <div class="top"><span class="t">Evidence bundle &middot; smrforge.result.v1</span><span class="dot" aria-hidden="true"></span></div>
         <div class="mid">
-          <div class="k">1.029554<small>k_eff</small></div>
+          <div class="k">1.029633<small>k_eff</small></div>
           <span class="tag">fidelity: screening &middot; code-verification &middot; advisory</span>
           <div class="rows">
             <div class="row"><span class="l">case</span><span class="v">IAEA-2D &middot; full core</span></div>
             <div class="row"><span class="l">published reference</span><span class="v">k = 1.029585</span></div>
-            <div class="row"><span class="l">C&minus;E</span><span class="v ok">&minus;3 pcm</span></div>
+            <div class="row"><span class="l">C&minus;E (this mesh)</span><span class="v">+4.8 pcm</span></div>
+            <div class="row"><span class="l">converged (Richardson)</span><span class="v ok">&minus;3.0 pcm</span></div>
             <div class="row" tabindex="0"><span class="l">inputs &middot; outputs</span><span class="v ok">sha-256 pinned &#10003;</span><span class="pf">Every input and output hashed into the manifest.</span></div>
             <div class="row" tabindex="0"><span class="l">toolchain</span><span class="v">machine &middot; solver &middot; sealed</span><span class="pf">The machine and solver that produced it, recorded in the signed provenance.</span></div>
             <div class="row" tabindex="0"><span class="l">seal (sha-256)</span><span class="v">4c1a 7f&hellip; 9e02</span><span class="pf">One SHA-256 over the whole manifest.</span></div>
@@ -760,8 +761,10 @@
         <h2>Numbers you can look up.</h2>
       </div>
       <p class="lead">These are code-verification closures: the engine checked against analytic solutions and
-        published benchmark references, not against measured experiments. Screening-grade by design, and every
-        row re-runs from its own bundle.</p>
+        published benchmark references, not against measured experiments. The IAEA-2D &minus;3 pcm and the
+        CE Monte-Carlo +108 pcm floor are our numbers of record; the analytic rows are method-verification
+        tolerances and the OpenMC row is a reproducibility band, not accuracy claims. Screening-grade by
+        design, and every row re-runs from its own bundle.</p>
     </div>
     <div class="tscroll">
     <table>

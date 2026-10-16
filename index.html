@@ -43,7 +43,7 @@
         "name": "SMRFORGE Community",
         "applicationCategory": "EngineeringApplication",
         "operatingSystem": "Windows|macOS|Linux",
-        "softwareVersion": "0.14.0",
+        "softwareVersion": "0.15.0",
         "description": "Open-source (MIT) screening reactor-physics engine for Small Modular Reactor design and analysis. In-tree pure-Python solvers, full-core Cartesian nodal diffusion, higher-order NEM (1-D/2-D/3-D) with ADF/SPH equivalence, few-group homogenization, continuous-energy Monte Carlo, Sn transport, SP3, burnup/depletion, kinetics and reactivity coefficients, for fast screening, plus one-step escalation to OpenMC (free). Every run produces a sealed evidence bundle (SHA-256 manifest, Ed25519 signature, reproducibility block with the data library by content hash and the minting toolchain, derivation lineage, and sealed derived_from links to upstream bundles) that any third party can verify offline. Ships the CLI (smrforge run, verify, verify --chain, reproduce, serve, license, --version) and the full evidence spine. Honestly screening-grade and reproducible. Pure Python standard library, zero dependencies; install from source (not on PyPI).",
         "offers": {
           "@type": "Offer",
@@ -805,7 +805,7 @@
       <div class="rung"><div class="rk">rung 1 &middot; screening</div><div class="rt">Nodal / NEM</div><p class="rd">Full-core diffusion, in-tree.</p></div>
       <div class="rung"><div class="rk">rung 2 &middot; screening</div><div class="rt">S<sub>N</sub> / SP<sub>3</sub></div><p class="rd">Transport on the same inputs.</p></div>
       <div class="rung"><div class="rk">rung 3 &middot; screening</div><div class="rt">CE Monte Carlo</div><p class="rd">Continuous-energy, in-tree, screening-grade.</p></div>
-      <div class="rung free"><div class="rk">rung 4 &middot; reference / lab &middot; free</div><div class="rt">OpenMC</div><p class="rd">Same inputs, a field-validated eigenvalue, sealed and reproduced through our spine. Reference lives here, earned per domain.</p></div>
+      <div class="rung free"><div class="rk">rung 4 &middot; reference / lab &middot; free</div><div class="rt">OpenMC</div><p class="rd">Same inputs, an eigenvalue from a field-validated code, sealed and reproduced through our spine. Reference lives here, earned per domain.</p></div>
     </div>
   </section>
 </div>
@@ -823,7 +823,7 @@
     <div class="grid c2">
       <div class="prod">
         <div class="pt">Community</div>
-        <div class="lic">MIT &middot; open source &middot; v0.14</div>
+        <div class="lic">MIT &middot; open source &middot; v0.15</div>
         <p>Screen a core, escalate it to OpenMC, and ship every result sealed. Free, MIT, source-only.</p>
         <ul>
           <li>Full-core diffusion, NEM, S<sub>N</sub>/SP<sub>3</sub>, CE Monte Carlo, burnup, kinetics</li>

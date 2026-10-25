@@ -265,24 +265,24 @@
         <p class="kicker">What it does</p>
         <h2>Seal it. Verify it. Re-run it.</h2>
       </div>
-      <p class="lead">Three verbs, no network, and no trust in the producer. The checker imports no domain code,
-        so a pass is never the producer grading its own work.</p>
+      <p class="lead">Three verbs, no network, and no need to take the producer&rsquo;s word. The checker imports
+        no domain code, so a pass is never the producer grading its own work.</p>
     </div>
     <div class="grid c3">
       <div class="cell">
-        <div class="cmd">seal</div>
+        <div class="cmd">@sealed &middot; .seal(inputs)</div>
         <h3>Seal the output</h3>
         <p>Wrap the result, its inputs, and how it was made into one signed file. A SHA-256 manifest of every
           part, an Ed25519 signature over the whole.</p>
       </div>
       <div class="cell">
-        <div class="cmd">verify &middot; offline</div>
+        <div class="cmd">proof-verify &middot; offline</div>
         <h3>Verify anywhere</h3>
         <p>A standalone checker confirms the file is intact and signed under the pinned key. It needs only the
           file and the published public key. No network, no access to the producer&rsquo;s system.</p>
       </div>
       <div class="cell">
-        <div class="cmd">reproduce</div>
+        <div class="cmd">proof-reproduce</div>
         <h3>Re-run the number</h3>
         <p>A signature can&rsquo;t catch a signed mistake. Reproduce re-runs the computation on the recorded
           inputs and checks the result lands inside a tolerance band set up front.</p>
@@ -361,8 +361,8 @@
       <div class="cell">
         <div class="cmd">pass / fail</div>
         <h3>A requirements check</h3>
-        <p>Seals the verdict with the rule and the inputs pinned, so a reviewer can confirm the check really ran
-          on what it claims.</p>
+        <p>Seals the verdict with the rule and the inputs pinned, so a reviewer can re-run the rule on the sealed
+          inputs and confirm the verdict follows from them.</p>
       </div>
       <div class="cell">
         <div class="cmd">test data</div>
@@ -395,8 +395,8 @@
       <div class="tbar">illustrative &middot; air-gapped laptop, eight months later</div>
 <pre><span class="p">$</span> proof-verify result.bundle.json
 <span class="d">integrity</span>   every section hash recomputes      <span class="ok">ok</span>
-<span class="d">origin</span>      signed under the published pin     <span class="ok">ok</span>
-<span class="p">$</span> proof-core reproduce result.bundle.json --from ./inputs
+<span class="d">origin</span>      signed under the pinned key        <span class="ok">ok</span>
+<span class="p">$</span> proof-reproduce result.bundle.json --runner engine.module:Runner
 <span class="d">reproduce</span>   re-ran the engine on sealed inputs  <span class="ok">in band</span>
 <span class="d">note</span>        <span class="w">checkable and re-derivable</span> &middot; not proof the answer is right</pre>
     </div>
@@ -411,7 +411,7 @@
       </a>
       <a class="callout amber" href="proof-layer.html">
         <span class="ck">The Proof Layer &middot; the offering</span>
-        <strong>Don&rsquo;t want to build it? We&rsquo;ll seal your deliverables.</strong>
+        <strong>Don&rsquo;t want to build it? SMRFORGE will seal your deliverables.</strong>
         <span class="s">This page is the open kernel, for builders. If you ship AI or engineering numbers
           someone has to defend later, the Proof Layer is SMRFORGE sealing those results for you, so a reviewer
           can re-run and verify them.</span>
@@ -452,9 +452,11 @@
           before it presents a result.</p>
       </div>
     </div>
-    <p class="honest">The verify and reproduce tools ship over MCP in a proof-core edition today, so any
-      MCP-capable assistant plugs in with no bespoke integration. A bundle one agent sealed, another can verify
-      through the same tools.</p>
+    <p class="honest">The open repo ships an MCP server template that puts seal, verify and reproduce behind one
+      endpoint, and a proof-core edition ships the verify and reproduce tools over MCP today, so any MCP-capable
+      assistant plugs in with no bespoke integration. A bundle one agent sealed, another can verify through the
+      same tools. The bundle proves its recorded inputs are unaltered and re-runnable, not that the agent ran
+      what it claims.</p>
   </section>
 </div>
 
@@ -473,7 +475,7 @@
     <p class="kicker warm">Open, and yours to build on</p>
     <h2>Read it, run it, build on it.</h2>
     <p>proof-core is public and MIT. SMRFORGE is the reactor-physics case that shows the evidence holds where
-      being wrong is expensive. Questions, or want to seal your own output: <a href="mailto:support@smrforge.io">support@smrforge.io</a>.</p>
+      being wrong is expensive. Questions, or want to seal your own output? Write to <a href="mailto:support@smrforge.io">support@smrforge.io</a>.</p>
     <div class="install">
       <div class="ik">repos</div>
       <div>

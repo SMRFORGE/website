@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="rlIf4eIc2Vl0NRAyAg5GZjQ8myi2Sw5cR3YJXz-t9fQ">
+  <title>proof-core · Provenance for AI</title>
+  <meta name="description" content="proof-core is a free, MIT-licensed evidence layer for computed outputs. Stdlib-only and keyless, it wraps any result, including an AI agent's answer, in a signed, tamper-evident record of what produced it, from what inputs, and whether it comes back when you re-run it. Software sits on top of it without rebuilding. proof-core is not AI. It is provenance for AI.">
+  <link rel="icon" href="images/smrforge_logo_white_transparent.png" type="image/png">
+  <meta property="og:title" content="proof-core · Provenance for AI">
+  <meta property="og:description" content="A free, MIT, keyless evidence layer. Seal any computed output, including an AI's, into one signed file anyone can verify offline and re-run later. proof-core is not AI. It is provenance for AI.">
+  <meta property="og:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
+  <meta property="og:url" content="https://smrforge.io/proof-core.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="proof-core · Provenance for AI">
+  <meta name="twitter:description" content="Open, MIT, keyless evidence layer. Seal, verify and reproduce any computed output, including an agent's answer. Provenance for AI.">
+  <meta name="twitter:image" content="https://smrforge.io/images/smrforge_logo_white_transparent.png">
+  <link rel="canonical" href="https://smrforge.io/proof-core.html">
+  <link rel="preload" as="image" href="images/smrforge_logo_white_transparent.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  /* ---- SMRFORGE design system (homepage sets it; other pages follow) ----
+       ground: prussian navy with a teal undertone · identity: glacier cyan (commands, links, kickers)
+       signal: amber, the ONE warm accent, reserved for the thing that gets checked / the human decision
+       verdicts: lichen = pass, clay = fail · hairline grids (1px --line) instead of card shadows
+       type: Archivo display, Public Sans body, IBM Plex Mono for anything a machine wrote. */
+  :root{
+    --bg:#0b2035; --bg-2:#0e2640; --surface:#10293f; --surface-2:#143149;
+    --line:#1f3f5a; --line-soft:#193449;
+    --ink:#e6eef3; --muted:#93adbf; --faint:#62829b;
+    --cyan:#4cd3e8; --cyan-2:#7ae3f2; --cyan-soft:rgba(76,211,232,.11);
+    --amber:#f2a33a; --amber-soft:rgba(242,163,58,.14);
+    --lichen:#9fd67a; --clay:#e0704f;
+    --disp:"Archivo",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+    --body:"Public Sans",system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,Menlo,monospace;
+    --gutter:clamp(16px,4vw,40px);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:84px}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.62;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 var(--gutter)}
+  a{color:var(--ink)}
+  :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:2px}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin:0 0 .6rem}
+  .kicker.warm{color:var(--amber)}
+  code,.code{font-family:var(--mono);font-size:.9em;color:var(--cyan)}
+
+  /* --- section rhythm: one pattern, used everywhere --- */
+  .sec{padding:clamp(56px,7vw,96px) 0;border-top:1px solid var(--line)}
+  .sec-head{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(20px,4vw,56px);align-items:end;margin-bottom:clamp(28px,4vw,44px)}
+  @media(max-width:820px){.sec-head{grid-template-columns:1fr;gap:14px}}
+  .sec h2{font-family:var(--disp);font-weight:700;font-size:clamp(1.75rem,3.6vw,2.6rem);line-height:1.08;letter-spacing:-.015em;margin:0;text-wrap:balance}
+  .sec .lead{margin:0;color:var(--muted);font-size:1.05rem;max-width:56ch}
+  .sec .lead b{color:var(--ink);font-weight:600}
+  .sec .lead a{color:var(--cyan);text-decoration:none}
+  .sec .lead a:hover{text-decoration:underline}
+
+  /* --- hairline grid: cells on a 1px line background --- */
+  .grid{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+  .grid>*{background:var(--bg);padding:clamp(20px,2.6vw,28px) clamp(18px,2.4vw,26px);min-width:0}
+  .grid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid.c4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .grid.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  @media(max-width:860px){.grid.c4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:720px){.grid.c3,.grid.c2{grid-template-columns:1fr}}
+  @media(max-width:480px){.grid.c4{grid-template-columns:1fr}}
+  .cell .cmd{font-family:var(--mono);font-size:.78rem;color:var(--cyan);letter-spacing:.02em;word-break:break-word}
+  .cell h3{font-family:var(--disp);font-weight:700;font-size:1.22rem;margin:.55rem 0 .45rem;letter-spacing:-.005em}
+  .cell p{margin:0;color:var(--muted);font-size:.95rem}
+  .cell p a{color:var(--cyan);text-decoration:none}
+  .cell p a:hover{text-decoration:underline}
+
+  /* --- buttons --- */
+  .btn{display:inline-block;font-family:var(--mono);font-size:.84rem;letter-spacing:.04em;text-transform:uppercase;
+    padding:.78rem 1.2rem;text-decoration:none;border-radius:3px;transition:background .14s,border-color .14s,color .14s}
+  .btn.primary{background:var(--cyan);color:#06202f;font-weight:600}
+  .btn.primary:hover{background:var(--cyan-2)}
+  .btn.line{border:1px solid var(--line);color:var(--ink)}
+  .btn.line:hover{border-color:var(--cyan);color:var(--cyan)}
+  .btn.warm{border:1px solid rgba(242,163,58,.5);color:var(--amber)}
+  .btn.warm:hover{border-color:var(--amber);background:var(--amber-soft)}
+
+  /* --- header --- */
+  header.site{position:sticky;top:0;z-index:10;background:rgba(11,32,53,.92);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line)}
+  header.site .bar{display:flex;justify-content:space-between;align-items:center;gap:16px;
+    max-width:1120px;margin:0 auto;padding:14px var(--gutter)}
+  .brand{display:flex;align-items:center;gap:.65rem;font-family:var(--disp);font-weight:800;font-size:1.35rem;letter-spacing:.03em;text-decoration:none}
+  .brand .wm{line-height:1;color:var(--ink)}
+  .brand .logo{height:52px;width:auto;display:block}
+  .brand b{color:var(--cyan)}
+  nav.main{display:flex;gap:22px;align-items:center;font-family:var(--mono);font-size:.76rem;text-transform:uppercase;letter-spacing:.06em}
+  nav.main a{color:var(--muted);text-decoration:none;white-space:nowrap}
+  nav.main a:hover{color:var(--ink)}
+  nav.main a[aria-current="page"]{color:var(--cyan)}
+  nav.main .ghost{border:1px solid var(--line);padding:.5rem .85rem;color:var(--ink);border-radius:3px}
+  nav.main .ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+  @media(max-width:900px){nav.main{gap:14px}nav.main a.sub{display:none}}
+  @media(max-width:560px){nav.main a:not(.ghost){display:none}.brand .logo{height:44px}}
+
+  /* --- hero --- */
+  .hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(30px,5vw,64px);
+    align-items:center;padding:clamp(48px,7vw,96px) 0 clamp(36px,5vw,64px)}
+  @media(max-width:900px){.hero{grid-template-columns:1fr;gap:38px}}
+  .problem{font-family:var(--mono);font-size:.84rem;color:var(--muted);margin:0 0 1rem;letter-spacing:.01em}
+  h1{font-family:var(--disp);font-weight:800;font-size:clamp(2.5rem,6.2vw,4.4rem);
+    line-height:.98;letter-spacing:-.02em;margin:0;text-wrap:balance}
+  h1 .u{color:var(--amber);text-decoration:underline;text-decoration-thickness:.08em;
+    text-underline-offset:.12em;text-decoration-color:rgba(242,163,58,.55)}
+  .desc{font-size:1.12rem;color:var(--ink);max-width:46ch;margin:1.4rem 0 0}
+  .desc b{font-weight:600}
+  .tagline{font-family:var(--disp);font-weight:700;font-size:1.15rem;margin:1.1rem 0 0;color:var(--ink)}
+  .tagline .cx{color:var(--amber)}
+  .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:1.8rem}
+  .avail{margin-top:1.6rem;font-size:.92rem;color:var(--muted);max-width:50ch}
+  .avail b{color:var(--ink);font-weight:600}
+  .avail a{color:var(--cyan);text-decoration:none}
+
+  /* --- the one lifted object: the evidence receipt --- */
+  .receipt{background:var(--surface);border:1px solid var(--line);border-top:2px solid var(--cyan);border-radius:4px;
+    overflow:hidden;font-family:var(--mono);min-width:0}
+  .receipt .top{display:flex;justify-content:space-between;align-items:center;gap:10px;
+    padding:11px 16px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+  .receipt .top .t{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .receipt .top .dot{width:9px;height:9px;border-radius:50%;background:var(--lichen);flex:none}
+  .receipt .mid{padding:20px 18px}
+  .receipt .k{font-size:clamp(1.5rem,3.4vw,1.9rem);color:var(--ink);letter-spacing:.01em;font-variant-numeric:tabular-nums;line-height:1.1}
+  .receipt .k small{color:var(--muted);font-size:.9rem;margin-left:.4rem}
+  .receipt .tag{display:inline-block;margin-top:.55rem;font-size:.7rem;color:var(--lichen);
+    border:1px solid rgba(159,214,122,.4);padding:.06rem .5rem;border-radius:3px;letter-spacing:.04em}
+  .receipt .rows{border-top:1px dashed var(--line);margin-top:16px;padding-top:14px;display:grid;gap:8px}
+  .receipt .row{display:flex;justify-content:space-between;gap:12px;font-size:.8rem}
+  .receipt .row .l{color:var(--faint);letter-spacing:.04em;flex:none}
+  .receipt .row .v{color:var(--muted);text-align:right;overflow-wrap:anywhere}
+  .receipt .row .v.ok{color:var(--amber)}
+  .receipt .foot{border-top:1px solid var(--line);padding:11px 18px;display:flex;justify-content:space-between;gap:12px;
+    font-size:.74rem;color:var(--faint);background:var(--surface-2)}
+  .receipt .foot .pass{color:var(--lichen);letter-spacing:.06em}
+  .cap{font-size:.8rem;color:var(--faint);margin:12px 2px 0;font-family:var(--mono);line-height:1.5}
+
+  /* --- layering figure (reuses homepage shapes-fig conventions) --- */
+  .shapes-fig{margin:0 auto;max-width:640px}
+  .shapes-fig svg{display:block;width:100%;height:auto}
+  .shapes-fig text{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .shapes-fig .seal{stroke:var(--cyan);fill:rgba(76,211,232,.05)}
+  .shapes-fig .seal-lbl{fill:var(--cyan)}
+  .shapes-fig .tile{fill:var(--surface);stroke:var(--line)}
+  .shapes-fig .ink{fill:var(--ink)}
+  .shapes-fig .mut{fill:var(--muted)}
+  .shapes-fig .fnt{fill:var(--faint)}
+  .shapes-fig .mut-s{stroke:var(--muted);fill:none}
+  .shapes-fig .cyan-s{stroke:var(--cyan);fill:none}
+
+  /* --- terminal block --- */
+  .term{margin-top:22px;background:var(--surface);border:1px solid var(--line);border-radius:4px;overflow:hidden;font-family:var(--mono);font-size:.8rem}
+  .term .tbar{padding:8px 14px;border-bottom:1px solid var(--line);background:var(--surface-2);color:var(--faint);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase}
+  .term pre{margin:0;padding:14px 16px;color:var(--muted);overflow-x:auto;line-height:1.6}
+  .term .p{color:var(--cyan)} .term .ok{color:var(--lichen)} .term .w{color:var(--amber)} .term .d{color:var(--faint)}
+
+  /* --- paired callouts --- */
+  .callouts{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:clamp(8px,2vw,16px) 0 0}
+  @media(max-width:820px){.callouts{grid-template-columns:1fr}}
+  .callout{display:flex;flex-direction:column;gap:6px;padding:20px clamp(18px,2.6vw,26px);text-decoration:none;
+    border-left:3px solid var(--cyan);background:var(--cyan-soft);transition:background .14s;border-radius:0 4px 4px 0}
+  .callout:hover{background:rgba(76,211,232,.17)}
+  .callout.amber{border-left-color:var(--amber);background:var(--amber-soft)}
+  .callout.amber:hover{background:rgba(242,163,58,.2)}
+  .callout .ck{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
+  .callout.amber .ck{color:var(--amber)}
+  .callout strong{font-family:var(--disp);font-weight:700;font-size:clamp(1.08rem,2vw,1.3rem);color:var(--ink);letter-spacing:-.01em}
+  .callout span.s{color:var(--muted);font-size:.93rem}
+  .callout .go{font-family:var(--mono);font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;color:var(--amber);margin-top:4px}
+  .callout.amber .go{color:var(--cyan)}
+
+  /* --- honest-boundary note --- */
+  .note{margin:0;padding:16px 20px;border-left:3px solid var(--amber);background:var(--amber-soft);
+    color:var(--ink);font-size:1rem;max-width:74ch;border-radius:0 4px 4px 0}
+  .note b{font-weight:600}
+  .honest{margin:18px 0 0;color:var(--muted);font-size:.93rem;max-width:72ch}
+
+  /* --- install/repo strip --- */
+  .install{margin:28px 0 0;padding:18px clamp(18px,2.4vw,24px);border:1px solid var(--line);background:var(--surface);
+    display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:start;border-radius:4px}
+  @media(max-width:720px){.install{grid-template-columns:1fr}}
+  .install .ik{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);padding-top:4px}
+  .install p{margin:0;color:var(--muted);font-size:.93rem}
+  .install p b{color:var(--ink);font-weight:600}
+  .install p a{color:var(--cyan);text-decoration:none}
+  .install .cmd{display:block;font-family:var(--mono);font-size:.82rem;color:var(--ink);margin:0 0 8px;overflow-wrap:anywhere}
+  .install .cmd .p{color:var(--cyan)}
+
+  /* --- contact + footer --- */
+  .contact h2{max-width:24ch}
+  .contact p{color:var(--muted);max-width:56ch;margin:0 0 1.5rem}
+  .contact p a{color:var(--cyan);text-decoration:none}
+  footer{border-top:1px solid var(--line);padding:22px 0 46px;display:flex;justify-content:space-between;
+    flex-wrap:wrap;gap:12px;font-family:var(--mono);font-size:.74rem;color:var(--faint)}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--cyan)}
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="bar">
+    <a class="brand" href="/" aria-label="SMRFORGE home"><img class="logo" src="images/smrforge-mark-white.png" alt="SMRFORGE mark"><span class="wm">SMR<b>FORGE</b></span></a>
+    <nav class="main" aria-label="Primary">
+      <a href="proof-layer.html">Proof Layer</a><a href="proof-core.html" aria-current="page">proof-core</a><a href="for-reviewers.html">For reviewers</a><a href="engagements.html">Engagements</a><a href="sealed-results.html">Sealed results</a>
+      <a class="ghost" href="check.html">Check a bundle</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="hero">
+    <div>
+      <p class="kicker">proof-core &middot; the open evidence kernel</p>
+      <p class="problem">An AI answer you can&rsquo;t re-derive is an opinion.</p>
+      <h1>Provenance<br>for <span class="u">AI</span>.</h1>
+      <p class="desc"><b>proof-core is a free, MIT-licensed evidence layer for computed outputs.</b> It is
+        standard-library-only and contains no AI. It wraps any result, including an AI agent&rsquo;s answer, in a
+        signed, tamper-evident record of what produced it, from what inputs, and whether it comes back when you
+        re-run it.</p>
+      <p class="tagline">proof-core is not AI. <span class="cx">It is provenance for AI.</span></p>
+      <div class="ctas">
+        <a class="btn primary" href="https://gitlab.com/proof-core/proof-core">Read the code &rarr;</a>
+        <a class="btn line" href="#how">How it works</a>
+      </div>
+      <p class="avail"><b>Open and MIT, today.</b> Keyless, with zero third-party dependencies.
+        SMRFORGE runs on it; so can your software.</p>
+    </div>
+
+    <div>
+      <div class="receipt" role="img" aria-label="An example proof-core evidence bundle for a computed output: produced by a pipeline run, inputs and outputs pinned by SHA-256, the minting toolchain recorded, a reproduce tolerance band sealed, an Ed25519 signature, and an offline integrity check passing.">
+        <div class="top"><span class="t">Evidence bundle &middot; evidence.envelope.v2</span><span class="dot" aria-hidden="true"></span></div>
+        <div class="mid">
+          <div class="k">result sealed<small>+ inputs</small></div>
+          <span class="tag">integrity + origin &middot; reproduces in band</span>
+          <div class="rows">
+            <div class="row"><span class="l">produced by</span><span class="v">pipeline run</span></div>
+            <div class="row"><span class="l">inputs &middot; outputs</span><span class="v ok">sha-256 pinned &#10003;</span></div>
+            <div class="row"><span class="l">toolchain</span><span class="v">machine &middot; solver &middot; sealed</span></div>
+            <div class="row"><span class="l">reproduce band</span><span class="v">committed up front</span></div>
+            <div class="row"><span class="l">seal (sha-256)</span><span class="v">4c1a 7f&hellip; 9e02</span></div>
+            <div class="row"><span class="l">signature</span><span class="v ok">ed25519 &#10003;</span></div>
+          </div>
+        </div>
+        <div class="foot"><span>$ proof-verify</span><span class="pass">INTEGRITY OK &#10003;</span></div>
+      </div>
+      <p class="cap">Illustrative. proof-core seals any computed output the same way. The seal proves custody,
+        not that the answer is right.</p>
+    </div>
+  </section>
+</div>
+
+<div class="wrap" id="how">
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <p class="kicker">What it does</p>
+        <h2>Seal it. Verify it. Re-run it.</h2>
+      </div>
+      <p class="lead">Three verbs, no network, and no trust in the producer. The checker imports no domain code,
+        so a pass is never the producer grading its own work.</p>
+    </div>
+    <div class="grid c3">
+      <div class="cell">
+        <div class="cmd">seal</div>
+        <h3>Seal the output</h3>
+        <p>Wrap the result, its inputs, and how it was made into one signed file. A SHA-256 manifest of every
+          part, an Ed25519 signature over the whole.</p>
+      </div>
+      <div class="cell">
+        <div class="cmd">verify &middot; offline</div>
+        <h3>Verify anywhere</h3>
+        <p>A standalone checker confirms the file is intact and signed under the pinned key. It needs only the
+          file and the published public key. No network, no access to the producer&rsquo;s system.</p>
+      </div>
+      <div class="cell">
+        <div class="cmd">reproduce</div>
+        <h3>Re-run the number</h3>
+        <p>A signature can&rsquo;t catch a signed mistake. Reproduce re-runs the computation on the recorded
+          inputs and checks the result lands inside a tolerance band set up front.</p>
+      </div>
+    </div>
+    <p class="honest"><b style="color:var(--ink)">Keyless by design.</b> proof-core ships with no signing key of
+      its own. Whoever uses it brings their own key, so the kernel never vouches for anyone. It does the math,
+      you hold the trust root.</p>
+  </section>
+</div>
+
+<div class="wrap" id="ontop">
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <p class="kicker">Build on it</p>
+        <h2>Your software sits on top of it.</h2>
+      </div>
+      <p class="lead">Because proof-core is domain-neutral and keyless, an application doesn&rsquo;t rebuild
+        around it. It keeps its own code, calls proof-core to seal, verify and reproduce its results, and brings
+        its own key and domain profile. <b>Any software that produces a number or a decision can gain provenance
+        without rebuilding itself.</b></p>
+    </div>
+
+    <figure class="shapes-fig">
+      <svg viewBox="0 0 580 316" role="img" aria-label="Four applications, SMRFORGE, a requirements check, a signal check, and an AI agent, each feed down into the proof-core kernel, which seals, verifies and reproduces. The kernel emits one signed bundle, which anyone can verify offline and re-run.">
+        <defs>
+          <marker id="pcarr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+        </defs>
+        <!-- four application tiles -->
+        <g>
+          <rect class="tile" x="16" y="16" width="120" height="50" rx="3"/>
+          <text class="ink" x="76" y="39" font-size="12.5" text-anchor="middle">SMRFORGE</text>
+          <text class="fnt" x="76" y="54" font-size="9" text-anchor="middle">reactor physics</text>
+          <rect class="tile" x="152" y="16" width="120" height="50" rx="3"/>
+          <text class="ink" x="212" y="39" font-size="12.5" text-anchor="middle">requirements</text>
+          <text class="fnt" x="212" y="54" font-size="9" text-anchor="middle">pass / fail check</text>
+          <rect class="tile" x="288" y="16" width="120" height="50" rx="3"/>
+          <text class="ink" x="348" y="39" font-size="12.5" text-anchor="middle">signals</text>
+          <text class="fnt" x="348" y="54" font-size="9" text-anchor="middle">test-data check</text>
+          <rect class="tile" x="424" y="16" width="120" height="50" rx="3"/>
+          <text class="ink" x="484" y="39" font-size="12.5" text-anchor="middle">AI agent</text>
+          <text class="fnt" x="484" y="54" font-size="9" text-anchor="middle">an answer</text>
+        </g>
+        <!-- app -> kernel arrows -->
+        <g class="mut-s" style="color:var(--muted)" stroke-width="1.2">
+          <path d="M76 66 V118" marker-end="url(#pcarr)"/>
+          <path d="M212 66 V118" marker-end="url(#pcarr)"/>
+          <path d="M348 66 V118" marker-end="url(#pcarr)"/>
+          <path d="M484 66 V118" marker-end="url(#pcarr)"/>
+        </g>
+        <!-- the kernel -->
+        <rect class="seal" x="16" y="120" width="528" height="58" rx="4" stroke-width="1.5"/>
+        <text class="seal-lbl" x="280" y="146" font-size="14" font-weight="600" text-anchor="middle" letter-spacing=".04em">proof-core</text>
+        <text class="mut" x="280" y="166" font-size="10.5" text-anchor="middle" letter-spacing=".03em">seal &middot; verify &middot; reproduce &middot; keyless &middot; domain-neutral</text>
+        <!-- kernel -> bundle -->
+        <path class="cyan-s" style="color:var(--cyan)" stroke-width="1.4" d="M280 178 V210" marker-end="url(#pcarr)"/>
+        <!-- bundle pill -->
+        <rect class="tile" x="200" y="212" width="160" height="34" rx="4" style="stroke:var(--cyan)"/>
+        <text class="seal-lbl" x="280" y="233" font-size="11.5" text-anchor="middle" letter-spacing=".03em">one signed bundle</text>
+        <!-- bundle -> verifier -->
+        <path class="cyan-s" style="color:var(--cyan)" stroke-width="1.4" d="M280 246 V276" marker-end="url(#pcarr)"/>
+        <text class="mut" x="280" y="296" font-size="11" text-anchor="middle">anyone verifies offline &middot; re-runs the number</text>
+      </svg>
+      <figcaption class="cap">Four kinds of software, one kernel, one signed bundle. The seal proves custody of
+        what was computed, whatever its shape.</figcaption>
+    </figure>
+
+    <div class="grid c4" style="margin-top:clamp(24px,3vw,36px)">
+      <div class="cell">
+        <div class="cmd">the proof case</div>
+        <h3>SMRFORGE</h3>
+        <p>Reactor physics, where being wrong is expensive. It runs on proof-core and shows the layer holds
+          against numbers a skeptic re-runs.</p>
+      </div>
+      <div class="cell">
+        <div class="cmd">pass / fail</div>
+        <h3>A requirements check</h3>
+        <p>Seals the verdict with the rule and the inputs pinned, so a reviewer can confirm the check really ran
+          on what it claims.</p>
+      </div>
+      <div class="cell">
+        <div class="cmd">test data</div>
+        <h3>A signal check</h3>
+        <p>Seals a measurement screen with its thresholds, so the result travels with the evidence behind it.</p>
+      </div>
+      <div class="cell">
+        <div class="cmd">an answer</div>
+        <h3>An AI agent</h3>
+        <p>Seals the output with the inputs and the run, so the agent hands over a record, not just a number.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap" id="travels">
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <p class="kicker">Proof that travels</p>
+        <h2>The proof leaves the system that made it.</h2>
+      </div>
+      <p class="lead">Normally the proof a result is real lives where it can&rsquo;t move, in server logs, a
+        dashboard, or someone&rsquo;s word. proof-core puts the whole thing in one self-contained signed file, so
+        the proof leaves the system that made it and <b>still checks out</b> months later, on a machine that was
+        never near the original.</p>
+    </div>
+
+    <div class="term" aria-label="Illustrative offline verify of a travelled bundle">
+      <div class="tbar">illustrative &middot; air-gapped laptop, eight months later</div>
+<pre><span class="p">$</span> proof-verify result.bundle.json
+<span class="d">integrity</span>   every section hash recomputes      <span class="ok">ok</span>
+<span class="d">origin</span>      signed under the published pin     <span class="ok">ok</span>
+<span class="p">$</span> proof-core reproduce result.bundle.json --from ./inputs
+<span class="d">reproduce</span>   re-ran the engine on sealed inputs  <span class="ok">in band</span>
+<span class="d">note</span>        <span class="w">checkable and re-derivable</span> &middot; not proof the answer is right</pre>
+    </div>
+
+    <div class="callouts">
+      <a class="callout" href="check.html">
+        <span class="ck">Try it</span>
+        <strong>Verify a real signed bundle in your browser.</strong>
+        <span class="s">A from-scratch Ed25519 verifier runs in the page, offline, with no crypto library behind
+          it. Change a byte and watch it fail.</span>
+        <span class="go">Check a bundle &rarr;</span>
+      </a>
+      <a class="callout amber" href="proof-layer.html">
+        <span class="ck">The Proof Layer &middot; the offering</span>
+        <strong>Don&rsquo;t want to build it? We&rsquo;ll seal your deliverables.</strong>
+        <span class="s">This page is the open kernel, for builders. If you ship AI or engineering numbers
+          someone has to defend later, the Proof Layer is SMRFORGE sealing those results for you, so a reviewer
+          can re-run and verify them.</span>
+        <span class="go">See the Proof Layer &rarr;</span>
+      </a>
+    </div>
+  </section>
+</div>
+
+<div class="wrap" id="mcp">
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <p class="kicker">Agent-callable</p>
+        <h2>An agent can check its own evidence.</h2>
+      </div>
+      <p class="lead">MCP is the standard way an AI agent calls outside tools, and proof-core&rsquo;s verbs map
+        straight onto it. An agent produces provenance as a normal action, and can refuse to hand over a result
+        that only passes integrity or fails to reproduce.</p>
+    </div>
+    <div class="grid c3">
+      <div class="cell">
+        <div class="cmd">run</div>
+        <h3>Produce with a receipt</h3>
+        <p>The agent runs a computation and gets back a sealed, signed bundle, so it can hand over the record,
+          not just the number.</p>
+      </div>
+      <div class="cell">
+        <div class="cmd">verify</div>
+        <h3>Check before answering</h3>
+        <p>The agent verifies its own bundle and reads one of three honest verdicts, integrity and origin,
+          integrity only, or fail.</p>
+      </div>
+      <div class="cell">
+        <div class="cmd">reproduce</div>
+        <h3>Re-derive on demand</h3>
+        <p>The agent re-runs the number on the recorded inputs and confirms it lands in the committed band
+          before it presents a result.</p>
+      </div>
+    </div>
+    <p class="honest">The verify and reproduce tools ship over MCP in a proof-core edition today, so any
+      MCP-capable assistant plugs in with no bespoke integration. A bundle one agent sealed, another can verify
+      through the same tools.</p>
+  </section>
+</div>
+
+<div class="wrap">
+  <section class="sec">
+    <p class="kicker">The honest boundary</p>
+    <p class="note"><b>A seal makes a result checkable by whoever holds the file. It does not make the answer
+      right.</b> proof-core proves provenance and re-derivability, not correctness. A faithfully sealed number
+      from a bad input is a faithfully preserved wrong answer. That is why reproduce, and independent
+      reproduction, sit above the seal.</p>
+  </section>
+</div>
+
+<div class="wrap" id="contact">
+  <section class="sec contact">
+    <p class="kicker warm">Open, and yours to build on</p>
+    <h2>Read it, run it, build on it.</h2>
+    <p>proof-core is public and MIT. SMRFORGE is the reactor-physics case that shows the evidence holds where
+      being wrong is expensive. Questions, or want to seal your own output: <a href="mailto:support@smrforge.io">support@smrforge.io</a>.</p>
+    <div class="install">
+      <div class="ik">repos</div>
+      <div>
+        <span class="cmd"><span class="p">proof-core</span> (MIT) &middot; <a href="https://gitlab.com/proof-core/proof-core">gitlab.com/proof-core/proof-core</a></span>
+        <span class="cmd"><span class="p">SMRFORGE</span> &middot; <a href="https://gitlab.com/smrforge/smrforge">gitlab.com/smrforge/smrforge</a></span>
+        <p>Both are standard-library only, with zero third-party dependencies, so they run fully offline, in a
+          SCIF or behind a firewall.</p>
+      </div>
+    </div>
+    <div class="ctas" style="margin-top:1.8rem">
+      <a class="btn primary" href="https://gitlab.com/proof-core/proof-core">Open proof-core &rarr;</a>
+      <a class="btn line" href="https://gitlab.com/smrforge/smrforge">See SMRFORGE</a>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <footer>
+    <span>SMRFORGE &middot; reactor physics you can prove</span>
+    <span><a href="https://gitlab.com/proof-core/proof-core">proof-core (MIT)</a> &middot; <a href="https://gitlab.com/smrforge">gitlab.com/smrforge</a> &middot; <a href="proof-layer.html">Proof Layer</a> &middot; <a href="for-reviewers.html">For reviewers</a> &middot; <a href="check.html">Check a bundle</a> &middot; air-gap-safe</span>
+  </footer>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

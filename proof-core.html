@@ -203,6 +203,16 @@
     flex-wrap:wrap;gap:12px;font-family:var(--mono);font-size:.74rem;color:var(--faint)}
   footer a{color:var(--muted);text-decoration:none}
   footer a:hover{color:var(--cyan)}
+  /* --- free / paid split --- */
+  .fp .fp-free{border-top:2px solid var(--cyan)}
+  .fp .fp-paid{border-top:2px solid var(--amber)}
+  .fp h3{font-family:var(--disp);font-weight:700;font-size:1.3rem;margin:0;letter-spacing:-.005em}
+  .fp .fp-tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:.3rem 0 0}
+  .fp .fp-free .fp-tag{color:var(--cyan)}
+  .fp .fp-paid .fp-tag{color:var(--amber)}
+  .fp-list{list-style:none;padding:0;margin:16px 0 0;display:grid;gap:12px}
+  .fp-list li{font-size:.95rem;color:var(--muted);line-height:1.5}
+  .fp-list li b{color:var(--ink);font-weight:600}
 </style>
 </head>
 <body>
@@ -468,6 +478,74 @@
       right.</b> proof-core proves provenance and re-derivability, not correctness. A faithfully sealed number
       from a bad input is a faithfully preserved wrong answer. That is why reproduce, and independent
       reproduction, sit above the seal.</p>
+  </section>
+</div>
+
+<div class="wrap" id="whyopen">
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <p class="kicker">Why open</p>
+        <h2>Why I open-sourced it instead of selling it.</h2>
+      </div>
+      <p class="lead">A trust layer can&rsquo;t be a black box. If I&rsquo;m asking a skeptic to check a result,
+        the checker has to be open to read and free to run. &ldquo;Don&rsquo;t trust me, check me&rdquo; is an
+        empty line otherwise.</p>
+    </div>
+    <div class="grid c3">
+      <div class="cell">
+        <div class="cmd">it spreads</div>
+        <h3>Provenance is worth more the more things carry it</h3>
+        <p>So the kernel is free and MIT, and anyone can build on it without asking me.</p>
+      </div>
+      <div class="cell">
+        <div class="cmd">free raises paid</div>
+        <h3>Giving the kernel away makes the paid thing worth more</h3>
+        <p>Once provenance is common, the scarce thing is independent re-derivation, someone re-running the
+          number and standing behind it. That is what I sell.</p>
+      </div>
+      <div class="cell">
+        <div class="cmd">not the moat</div>
+        <h3>The code was never the moat</h3>
+        <p>The physics and the plumbing are free and stay free. A seal doesn&rsquo;t make a result right, it
+          makes it checkable, and checking should cost nothing.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap" id="free-paid">
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <p class="kicker">What&rsquo;s free, what&rsquo;s paid</p>
+        <h2>You never pay to check the work.</h2>
+      </div>
+      <p class="lead">You pay for independent reproduction and the assurance layer, never for the kernel or the
+        physics.</p>
+    </div>
+    <div class="grid c2 fp">
+      <div class="fp-free">
+        <h3>Free</h3>
+        <p class="fp-tag">open, MIT, forever</p>
+        <ul class="fp-list">
+          <li><b>proof-core, the evidence kernel.</b> Seal, verify, reproduce, redact, chain-walk, the standalone verifier, and the file format itself.</li>
+          <li><b>SMRFORGE&rsquo;s screening physics engine.</b> Nodal diffusion and NEM, Monte Carlo, S<sub>N</sub> and SP<sub>3</sub>, burnup, kinetics, and the OpenMC escalation path.</li>
+          <li><b>The evidence spine.</b> Sealed bundles, offline verify, reproduce, and chain walking.</li>
+          <li><b>Everything needed to check a result yourself.</b> Verify offline, re-run on the open engine, walk the derivation. Never behind a paywall.</li>
+        </ul>
+      </div>
+      <div class="fp-paid">
+        <h3>Paid</h3>
+        <p class="fp-tag">the scarce part</p>
+        <ul class="fp-list">
+          <li><b>L5 independent reproduction.</b> I re-run the number under controlled conditions and vouch for it as an independent party. It can&rsquo;t be self-served. A service and a reputation, not a library, sold by hand.</li>
+          <li><b>SMRFORGE Pro, the assurance and regulatory layer.</b> The signed assess deliverable with a PASS or FAIL verdict against the safety floor, coverage, watch, signed reports, and the Evidence Console.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="honest">Physics is free and stays free. proof-core is free and stays free. You pay for independent
+      reproduction and for the assurance a regulator reads, never for the kernel or the physics.</p>
   </section>
 </div>
 

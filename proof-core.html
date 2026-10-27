@@ -320,7 +320,7 @@
     </div>
 
     <figure class="shapes-fig">
-      <svg viewBox="0 0 580 316" role="img" aria-label="Four applications, SMRFORGE, a requirements check, a signal check, and an AI agent, each feed down into the proof-core kernel, which seals, verifies and reproduces. The kernel emits one signed bundle, which anyone can verify offline and re-run.">
+      <svg viewBox="0 0 580 316" role="img" aria-label="Four applications, SMRFORGE, a requirements check, an autonomy evaluation, and an AI agent, each feed down into the proof-core kernel, which seals, verifies and reproduces. The kernel emits one signed bundle, which anyone can verify offline and re-run.">
         <defs>
           <marker id="pcarr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
         </defs>
@@ -333,8 +333,8 @@
           <text class="ink" x="212" y="39" font-size="12.5" text-anchor="middle">requirements</text>
           <text class="fnt" x="212" y="54" font-size="9" text-anchor="middle">pass / fail check</text>
           <rect class="tile" x="288" y="16" width="120" height="50" rx="3"/>
-          <text class="ink" x="348" y="39" font-size="12.5" text-anchor="middle">signals</text>
-          <text class="fnt" x="348" y="54" font-size="9" text-anchor="middle">test-data check</text>
+          <text class="ink" x="348" y="39" font-size="12.5" text-anchor="middle">autonomy</text>
+          <text class="fnt" x="348" y="54" font-size="9" text-anchor="middle">evaluation run</text>
           <rect class="tile" x="424" y="16" width="120" height="50" rx="3"/>
           <text class="ink" x="484" y="39" font-size="12.5" text-anchor="middle">AI agent</text>
           <text class="fnt" x="484" y="54" font-size="9" text-anchor="middle">an answer</text>
@@ -377,9 +377,10 @@
           inputs and confirm the verdict follows from them.</p>
       </div>
       <div class="cell">
-        <div class="cmd">test data</div>
-        <h3>A signal check</h3>
-        <p>Seals a measurement screen with its thresholds, so the result travels with the evidence behind it.</p>
+        <div class="cmd">a logged run</div>
+        <h3>An autonomy evaluation</h3>
+        <p>Seals a robot&rsquo;s recorded run with the spec it was scored against, so a party that doesn&rsquo;t trust
+          the producer can replay it and confirm the score follows from the log.</p>
       </div>
       <div class="cell">
         <div class="cmd">an answer</div>

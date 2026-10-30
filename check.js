@@ -54,7 +54,9 @@ function parseJSON(text) {
       if (seen.has(k)) throw new Error('duplicate key ' + JSON.stringify(k) + ' in bundle JSON (ambiguous; rejected)');
       seen.add(k);
       expect(':');
-      o[k] = val();
+      // defineProperty, NOT o[k] = ...: a JSON key "__proto__" would otherwise set the PROTOTYPE (dropping out of
+      // the seal while reads still see it). As an own property it is sealed like any key (matches the reference).
+      Object.defineProperty(o, k, { value: val(), enumerable: true, writable: true, configurable: true });
       ws();
       if (text[i] === ',') { i++; continue; }
       if (text[i] === '}') { i++; return o; }

@@ -398,5 +398,28 @@ check(`ADR-044: all ${_kat.vectors.length} canonical KAT vectors match (CLI pari
 // and the genuine embedded bundle is UNAFFECTED by the hardening
 check('ADR-044: the genuine embedded bundle still verifies after hardening', verifyBundle(fresh()).ok === true);
 
+// "__proto__" is an ORDINARY JSON member. A parser that assigns o[k] sets the PROTOTYPE instead: the member
+// drops out of the seal while reads still see it, so an unsealed forgery verified. Inject one into the RAW TEXT
+// (no re-seal) at three places; each must FAIL, and a parsed "__proto__" must be an own property.
+{
+  const injectAfter = (text, anchor, member) => {
+    const at = text.indexOf(anchor);
+    const brace = text.indexOf('{', at + anchor.length - 1);
+    return text.slice(0, brace + 1) + member + ', ' + text.slice(brace + 1);
+  };
+  const T = BUNDLE_TEXT;
+  const member = '"__proto__": {"forged": "APPROVED"}';
+  const prov = injectAfter(T, '"provenance"', member);
+  const top = '{' + member + ', ' + T.slice(T.indexOf('{') + 1);
+  const res = injectAfter(T, '"result"', member);
+  for (const [name, text] of [['provenance', prov], ['top level', top], ['result', res]]) {
+    check(`__proto__ injected into ${name}: the text really carries it`, text.includes('"__proto__"') && text !== T);
+    check(`__proto__ injected into ${name} (unsealed): verify FAILs`, verifyBundle(parseJSON(text)).ok === false);
+  }
+  const parsed = parseJSON('{"__proto__": {"x": 1}}');
+  check('__proto__: a parsed member is an OWN property, never the prototype',
+    Object.prototype.hasOwnProperty.call(parsed, '__proto__') && parsed.x === undefined);
+}
+
 console.log(failures ? `\n${failures} FAILURE(S)` : '\nall parity checks passed');
 process.exit(failures ? 1 : 0);
